@@ -46,8 +46,8 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview      ">
-                <a href="#" class="nav-link ">
+              <li class="nav-item has-treeview {{ (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  )?'menu-open':'' }}     ">
+                <a href="#" class="nav-link {{ (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  )?'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                      الحسابات
@@ -55,9 +55,23 @@
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                
+                  <li class="nav-item">
+                    <a href="{{ route('admin.accountTypes.index') }}" class="nav-link {{ (request()->is('admin/accountTypes*'))?'active':'' }}">
+                     
+                      <p>
+         انواع الحسابات المالية         
+                      </p>
+                    </a>
+                  </li>
              
-
+                  <li class="nav-item">
+                    <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ (request()->is('admin/accounts*') )?'active':'' }}">
+                 
+                      <p>
+          الحسابات المالية         
+                      </p>
+                    </a>
+                  </li>
                 
                 </ul>
               </li>

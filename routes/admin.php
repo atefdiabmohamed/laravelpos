@@ -10,6 +10,10 @@ use App\Http\Controllers\Admin\StoresController;
 use App\Http\Controllers\Admin\Inv_UomController;
 use App\Http\Controllers\Admin\Inv_itemcard_categories;
 use App\Http\Controllers\Admin\InvItemCardController;
+use App\Http\Controllers\Admin\AccountsController;
+use App\Http\Controllers\Admin\Account_types_controller;
+
+
 
 
 
@@ -106,8 +110,24 @@ Route::get('/itemcard/show/{id}',[InvItemCardController::class,'show'])->name('a
 
 /*           end Item Card                */
 
+/*         start  account types              */
+Route::get('/accountTypes/index',[Account_types_controller::class,'index'])->name('admin.accountTypes.index');
+
+/*           end account types                */
 
 
+/*         start  accounts                */
+Route::get('/accounts/index',[AccountsController::class,'index'])->name('admin.accounts.index');
+Route::get('/accounts/create',[AccountsController::class,'create'])->name('admin.accounts.create');
+Route::post('/accounts/store',[AccountsController::class,'store'])->name('admin.accounts.store');
+Route::get('/accounts/edit/{id}',[AccountsController::class,'edit'])->name('admin.accounts.edit');
+Route::post('/accounts/update/{id}',[AccountsController::class,'update'])->name('admin.accounts.update');
+Route::get('/accounts/delete/{id}',[AccountsController::class,'delete'])->name('admin.accounts.delete');
+Route::post('/accounts/ajax_search',[AccountsController::class,'ajax_search'])->name('admin.accounts.ajax_search');
+Route::get('/accounts/show/{id}',[AccountsController::class,'show'])->name('admin.accounts.show');
+
+
+/*           end accounts                */
 
 
 

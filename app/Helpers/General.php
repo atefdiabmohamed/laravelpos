@@ -23,7 +23,12 @@ function get_cols_where($model, $columns_names = array(), $where = array(), $ord
   $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->get();
   return $data;
 }
-
+/*get some cols  table */
+function get_cols($model, $columns_names = array(), $order_field,$order_type)
+{
+  $data = $model::select($columns_names)->orderby($order_field, $order_type)->get();
+  return $data;
+}
 /*get some cols row table */
 function get_cols_where_row($model, $columns_names = array(), $where = array())
 {
