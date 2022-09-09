@@ -69,7 +69,7 @@
 
         <div id="ajax_responce_serarchDiv" class="col-md-12">
           
-          @if (@isset($data) && !@empty($data))
+          @if (@isset($data) && !@empty($data) && count($data)>0)
 
           <table id="example2" class="table table-bordered table-hover">
             <thead class="custom_thead">
@@ -132,10 +132,6 @@
         </div>
      
 </div>
-
-
-
-
 
 @endsection
 

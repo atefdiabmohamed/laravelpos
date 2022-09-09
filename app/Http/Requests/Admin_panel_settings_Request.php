@@ -27,6 +27,9 @@ class Admin_panel_settings_Request extends FormRequest
          'system_name'=>'required',
          'address'=>'required',
          'phone'=>'required',
+         'customer_parent_account_number'=>'required',
+
+         
 
         ];
     }
@@ -36,7 +39,9 @@ class Admin_panel_settings_Request extends FormRequest
         return [
         'system_name.required'=>'اسم الشركة مطلوب',
         'address.required'=>'عنوان الشركة مطلوب'  ,
-        'phone.required'=>'هاتف الشركة مطلوب'    
+        'phone.required'=>'هاتف الشركة مطلوب'  , 
+        'customer_parent_account_number.required'=>' رقم الحساب المالي للمودين الاب مطلوب'    
+ 
   
         ];
     }

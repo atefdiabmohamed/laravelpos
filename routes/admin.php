@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\Inv_itemcard_categories;
 use App\Http\Controllers\Admin\InvItemCardController;
 use App\Http\Controllers\Admin\AccountsController;
 use App\Http\Controllers\Admin\Account_types_controller;
+use App\Http\Controllers\Admin\CustomerController;
+
+
 
 
 /*
@@ -120,6 +123,18 @@ Route::get('/accounts/show/{id}',[AccountsController::class,'show'])->name('admi
 
 /*           end accounts                */
 
+/*         start  customer                */
+Route::get('/customer/index',[CustomerController::class,'index'])->name('admin.customer.index');
+Route::get('/customer/create',[CustomerController::class,'create'])->name('admin.customer.create');
+Route::post('/customer/store',[CustomerController::class,'store'])->name('admin.customer.store');
+Route::get('/customer/edit/{id}',[CustomerController::class,'edit'])->name('admin.customer.edit');
+Route::post('/customer/update/{id}',[CustomerController::class,'update'])->name('admin.customer.update');
+Route::get('/customer/delete/{id}',[CustomerController::class,'delete'])->name('admin.customer.delete');
+Route::post('/customer/ajax_search',[CustomerController::class,'ajax_search'])->name('admin.customer.ajax_search');
+Route::get('/customer/show/{id}',[CustomerController::class,'show'])->name('admin.customer.show');
+
+
+/*           end customer                */
 
 
 });

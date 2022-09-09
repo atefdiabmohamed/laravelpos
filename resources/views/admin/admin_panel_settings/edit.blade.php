@@ -55,6 +55,24 @@
                 @enderror   
               </div>
 
+
+                <div class="form-group"> 
+                  <label>    الحساب الاب للعملاء بالشجرة المحاسبية</label>
+                  <select name="customer_parent_account_number" id="customer_parent_account_number" class="form-control ">
+                    <option value="">اختر الحساب </option>
+                    @if (@isset($parent_accounts) && !@empty($parent_accounts))
+                   @foreach ($parent_accounts as $info )
+                     <option @if(old('customer_parent_account_number')==$info->account_number) selected="selected" @endif value="{{ $info->account_number }}"> {{ $info->name }} </option>
+                   @endforeach
+                    @endif
+                  </select>
+                  @error('customer_parent_account_number')
+                  <span class="text-danger">{{ $message }}</span>
+                  @enderror
+                  </div>
+               
+
+
               <div class="form-group">
                 <label>رسالة تنبية اعلي الشاشة </label>
                 <input name="general_alert" id="general_alert" class="form-control" value="{{ $data['general_alert'] }}" placeholder="ادخل اسم الشركة" oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}" >

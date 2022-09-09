@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Models\Account;
 use App\Models\Account_types;
 use App\Models\Admin;
