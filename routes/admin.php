@@ -14,15 +14,6 @@ use App\Http\Controllers\Admin\AccountsController;
 use App\Http\Controllers\Admin\Account_types_controller;
 
 
-
-
-
-
-
-
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

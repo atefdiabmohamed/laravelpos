@@ -33,14 +33,37 @@
         <div class="card-body">
           <div class="row">
           <div class="col-md-4">
-            <input  type="radio" name="searchbyradio" id="searchbyradio" value="item_code"> برقم الحساب
+            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
 
             <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب" class="form-control"> <br>
             
                       </div>
-                     
-                     
+                      <div class="col-md-4"> 
+                        <div class="form-group"> 
+                          <label>  بحث بنوع الحساب</label>
+                          <select name="account_type_search" id="account_type_search" class="form-control ">
+                            <option value="all"> بحث بالكل</option>
+                            @if (@isset($account_types) && !@empty($account_types))
+                           @foreach ($account_types as $info )
+                             <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                           @endforeach
+                            @endif
+                          </select>
+                       
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group"> 
+                            <label>   هل الحساب أب</label>
+                            <select name="is_parent_search" id="is_parent_search" class="form-control">
+                             <option value="all"> بحث بالكل</option>
+                            <option  value="1"> نعم</option>
+                             <option     value="0"> لا</option>
+                            </select>
+                           
+                            </div>
+                          </div>
                           </div>
                <div class="clearfix"></div>
 
@@ -117,7 +140,7 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('assets/admin/js/inv_itemcard.js') }}"></script>
+<script src="{{ asset('assets/admin/js/accounts.js') }}"></script>
 
 @endsection
 
