@@ -91,8 +91,8 @@
         <label>  حالة التفعيل</label>
         <select name="active" id="active" class="form-control">
          <option value="">اختر الحالة</option>
-        <option   @if(old('active')==1) selected="selected"  @endif value="1"> نعم</option>
-         <option @if(old('active')==0 and old('active')!="" ) selected="selected"   @endif value="0"> لا</option>
+        <option   @if(old('active')==1  || old('active')=="" ) selected="selected"  @endif value="1"> نعم</option>
+         <option @if( (old('active')==0 and old('active')!="")) selected="selected"  @endif   value="0"> لا</option>
         </select>
         @error('active')
         <span class="text-danger">{{ $message }}</span>
@@ -104,7 +104,7 @@
       <div class="col-md-12">
       <div class="form-group text-center">
         <button id="do_add_item_cardd" type="submit" class="btn btn-primary btn-sm"> اضافة</button>
-        <a href="{{ route('admin.accounts.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
+        <a href="{{ route('admin.customer.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
       
       </div>
     </div>

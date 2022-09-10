@@ -5,10 +5,8 @@
             <thead class="custom_thead">
         
            <th>الاسم </th>
+           <th>  الكود </th>
            <th> رقم الحساب </th>
-           <th> النوع </th>
-           <th>  هل أب </th>
-           <th>  الحساب الاب </th>
            <th>  الرصيد </th>
            <th>حالة التفعيل</th>
           <th></th>
@@ -19,19 +17,19 @@
             <tr>
            
              <td>{{ $info->name }}</td>  
+             <td>{{ $info->customer_code }}</td>  
+
+             
              <td>{{ $info->account_number }}</td>  
-             <td>{{ $info->account_types_name }}</td>  
-             <td>@if($info->is_parent==1) نعم  @else  لا @endif</td>  
-             <td>{{ $info->parent_account_name }}</td>  
              <td></td>  
 
              <td>@if($info->is_archived==1) مفعل @else معطل @endif</td> 
       
          <td>
 
-        <a href="{{ route('admin.accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-        <a href="{{ route('admin.accounts.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>   
+        <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.customer.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+        <a href="{{ route('admin.customer.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>   
 
          </td>
            

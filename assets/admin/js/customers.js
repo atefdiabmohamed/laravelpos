@@ -32,14 +32,7 @@ $(document).on('change','#start_balance_status',function(e){
   $(document).on('input','#search_by_text',function(e){
     make_search();
   });
-  $(document).on('input','#account_type_search',function(e){
-    make_search();
-  });
-  $(document).on('input','#is_parent_search',function(e){
-    make_search();
-  });
 
-  
 
   $('input[type=radio][name=searchbyradio]').change(function() {
     make_search();
@@ -49,8 +42,6 @@ $(document).on('change','#start_balance_status',function(e){
 
   function make_search(){
     var search_by_text=$("#search_by_text").val();
-    var account_type=$("#account_type_search").val();
-    var is_parent=$("#is_parent_search").val();
     var searchbyradio=$("input[type=radio][name=searchbyradio]:checked").val();
     var token_search=$("#token_search").val();
     var ajax_search_url=$("#ajax_search_url").val();
@@ -60,7 +51,7 @@ $(document).on('change','#start_balance_status',function(e){
       type:'post',
       dataType:'html',
       cache:false,
-      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio,account_type:account_type,is_parent:is_parent},
+      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio},
       success:function(data){
      
        $("#ajax_responce_serarchDiv").html(data);
@@ -75,8 +66,6 @@ $(document).on('change','#start_balance_status',function(e){
   $(document).on('click','#ajax_pagination_in_search a ',function(e){
     e.preventDefault();
     var search_by_text=$("#search_by_text").val();
-    var account_type=$("#account_type_search").val();
-    var is_parent=$("#is_parent_search").val();
     var searchbyradio=$("input[type=radio][name=searchbyradio]:checked").val();
     var token_search=$("#token_search").val();
     var url=$(this).attr("href");
@@ -86,7 +75,7 @@ $(document).on('change','#start_balance_status',function(e){
       type:'post',
       dataType:'html',
       cache:false,
-      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio,account_type:account_type,is_parent:is_parent},
+      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio},
       success:function(data){
      
        $("#ajax_responce_serarchDiv").html(data);

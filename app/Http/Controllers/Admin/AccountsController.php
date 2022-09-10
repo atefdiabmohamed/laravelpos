@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Account;
 use App\Models\Account_types;
 use App\Models\Admin;
+use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountsRequest;
@@ -112,7 +113,7 @@ class AccountsController extends Controller
   {
     $com_code = auth()->user()->com_code;
       $data =get_cols_where_row(new Account(),array("*"),array("id"=>$id,"com_code"=>$com_code));
-      $account_types = get_cols_where(new Account_types(), array("id", "name"), array("active" => 1, "relatediternalaccounts" => 0), 'id', 'ASC');
+      $account_types = get_cols_where(new Account_types(), array("id", "name"), array("active" => 1), 'id', 'ASC');
       $parent_accounts = get_cols_where(new Account(), array("account_number", "name"), array("is_parent" => 1, "com_code" => $com_code), 'id', 'ASC');
       return view('admin.accounts.edit', ['account_types' => $account_types, 'parent_accounts' => $parent_accounts,'data'=>$data]);
   
@@ -122,7 +123,7 @@ class AccountsController extends Controller
   {
       try {
           $com_code = auth()->user()->com_code;
-          $data =get_cols_where_row(new Account(),array("id"),array("id"=>$id,"com_code"=>$com_code));
+          $data =get_cols_where_row(new Account(),array("id","account_number","other_table_FK","account_type"),array("id"=>$id,"com_code"=>$com_code));
           if (empty($data)) {
               return redirect()->route('admin.accounts.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
           }
@@ -144,7 +145,17 @@ class AccountsController extends Controller
       $data_to_update['is_archived'] = $request->is_archived;
       $data_to_update['updated_by'] = auth()->user()->id;
           $data_to_update['updated_at'] = date("Y-m-d H:i:s");
-          update(new Account(),$data_to_update,array('id' => $id, 'com_code' => $com_code));
+        $flag=  update(new Account(),$data_to_update,array('id' => $id, 'com_code' => $com_code));
+ if($flag){
+  if($data['account_type']==3){
+    //update customer table row
+    $data_to_update_customer['name'] = $request->name;
+    $data_to_update_customer['updated_by'] = auth()->user()->id;
+    $data_to_update_customer['updated_at'] = date("Y-m-d H:i:s");
+update(new Customer(),$data_to_update_customer,array('account_number' => $data['account_number'],"customer_code"=>$data['other_table_FK'] ,'com_code' => $com_code));
+  }
+ }
+
           return redirect()->route('admin.accounts.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
       } catch (\Exception $ex) {
 
@@ -178,6 +189,7 @@ class AccountsController extends Controller
               ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
       }
   }
+  
   public function ajax_search(Request $request){
     if($request->ajax()){
     

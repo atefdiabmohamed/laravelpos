@@ -33,11 +33,12 @@
         <div class="card-body">
           <div class="row">
           <div class="col-md-4">
-            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
-            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="code"> برقم العميل
+            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code"> برقم العميل
+            <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
+
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
 
-            <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود العميل" class="form-control"> <br>
+            <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود العميل" class="form-control"> <br>
             
                       </div>
                      
