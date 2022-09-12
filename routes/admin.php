@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\InvItemCardController;
 use App\Http\Controllers\Admin\AccountsController;
 use App\Http\Controllers\Admin\Account_types_controller;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\SupplierCategoriesController;
+use App\Http\Controllers\Admin\SuppliersController;
+
 
 
 
@@ -136,8 +139,35 @@ Route::get('/customer/show/{id}',[CustomerController::class,'show'])->name('admi
 
 /*           end customer                */
 
+/*         start suppliers_categories                */
+Route::get('/suppliers_categories/index',[SupplierCategoriesController::class,'index'])->name('admin.suppliers_categories.index');
+Route::get('/suppliers_categories/create',[SupplierCategoriesController::class,'create'])->name('admin.suppliers_categories.create');
+Route::post('/suppliers_categories/store',[SupplierCategoriesController::class,'store'])->name('admin.suppliers_categories.store');
+Route::get('/suppliers_categories/edit/{id}',[SupplierCategoriesController::class,'edit'])->name('admin.suppliers_categories.edit');
+Route::post('/suppliers_categories/update/{id}',[SupplierCategoriesController::class,'update'])->name('admin.suppliers_categories.update');
+Route::get('/suppliers_categories/delete/{id}',[SupplierCategoriesController::class,'delete'])->name('admin.suppliers_categories.delete');
+
+/*           end suppliers_categories                */
+
+
+/*         start  suppliers                */
+Route::get('/supplier/index',[SuppliersController::class,'index'])->name('admin.supplier.index');
+Route::get('/supplier/create',[SuppliersController::class,'create'])->name('admin.supplier.create');
+Route::post('/supplier/store',[SuppliersController::class,'store'])->name('admin.supplier.store');
+Route::get('/supplier/edit/{id}',[SuppliersController::class,'edit'])->name('admin.supplier.edit');
+Route::post('/supplier/update/{id}',[SuppliersController::class,'update'])->name('admin.supplier.update');
+Route::get('/supplier/delete/{id}',[SuppliersController::class,'delete'])->name('admin.supplier.delete');
+Route::post('/supplier/ajax_search',[SuppliersController::class,'ajax_search'])->name('admin.supplier.ajax_search');
+Route::get('/supplier/show/{id}',[SuppliersController::class,'show'])->name('admin.supplier.show');
+
+
+/*           end suppliers                */
+
+
 
 });
+
+
 
 
 Route::group(['namespace'=>'Admin','prefix'=>'admin','middleware'=>'guest:admin'],function(){

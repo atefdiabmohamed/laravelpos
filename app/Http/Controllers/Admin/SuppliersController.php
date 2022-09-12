@@ -1,46 +1,44 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Customer;
 use App\Models\Admin;
 use App\Models\Account;
+use App\Models\SupplierCategories;
+use App\Models\Supplier;
 use App\Models\Admin_panel_setting;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\supplier_request;
+use App\Http\Requests\SupplierUpdateRequest;
 
 
-use App\Http\Requests\CustomerRequest;
-use App\Http\Requests\CustomerEditRequest;
 
-
-
-class CustomerController extends Controller
+class SuppliersController extends Controller
 {
-
-  public function index()
+    public function index()
   {
     $com_code = auth()->user()->com_code;
-    $data = get_cols_where_p(new Customer(), array("*"), array("com_code" => $com_code), 'id', 'DESC', PAGINATION_COUNT);
+    $data = get_cols_where_p(new Supplier(), array("*"), array("com_code" => $com_code), 'id', 'DESC', PAGINATION_COUNT);
     if (!empty($data)) {
       foreach ($data as $info) {
         $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+        $info->suppliers_categories_name = SupplierCategories::where('id', $info->suppliers_categories_id)->value('name');
         if ($info->updated_by > 0 and $info->updated_by != null) {
           $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
         }
       }
     }
 
-    return view('admin.customers.index', ['data' => $data]);
+    return view('admin.suppliers.index', ['data' => $data]);
   }
   public function create()
   {
-    return view('admin.customers.create');
+    $com_code = auth()->user()->com_code;
+    $suppliers_categories=get_cols_where(new SupplierCategories(),array('id','name'),array('com_code'=>$com_code,'active'=>1),'id','DESC');     
+    return view('admin.suppliers.create',['suppliers_categories'=>$suppliers_categories]);
   }
 
-
-
-  public function store(CustomerRequest $request)
+  public function store(supplier_request $request)
   {
 
     try {
@@ -48,20 +46,20 @@ class CustomerController extends Controller
       $com_code = auth()->user()->com_code;
 
       //check if not exsits for name
-      $checkExists_name = get_cols_where_row(new Customer(), array("id"), array('name' => $request->name, 'com_code' => $com_code));
+      $checkExists_name = get_cols_where_row(new Supplier(), array("id"), array('name' => $request->name, 'com_code' => $com_code));
 
       if (!empty($checkExists_name)) {
         return redirect()->back()
-          ->with(['error' => 'عفوا اسم العميل مسجل من قبل'])
+          ->with(['error' => 'عفوا اسم المورد مسجل من قبل'])
           ->withInput();
       }
 
       //set customer code
-      $row = get_cols_where_row_orderby(new Customer(), array("customer_code"), array("com_code" => $com_code), 'id', 'DESC');
+      $row = get_cols_where_row_orderby(new Supplier(), array("suuplier_code"), array("com_code" => $com_code), 'id', 'DESC');
       if (!empty($row)) {
-        $data_insert['customer_code'] = $row['customer_code'] + 1;
+        $data_insert['suuplier_code'] = $row['suuplier_code'] + 1;
       } else {
-        $data_insert['customer_code'] = 1;
+        $data_insert['suuplier_code'] = 1;
       }
 
       //set account number
@@ -74,6 +72,7 @@ class CustomerController extends Controller
 
 
       $data_insert['name'] = $request->name;
+      $data_insert['suppliers_categories_id'] = $request->suppliers_categories_id;
       $data_insert['address'] = $request->address;
       $data_insert['start_balance_status'] = $request->start_balance_status;
       if ($data_insert['start_balance_status'] == 1) {
@@ -100,7 +99,7 @@ class CustomerController extends Controller
       $data_insert['created_at'] = date("Y-m-d H:i:s");
       $data_insert['date'] = date("Y-m-d");
       $data_insert['com_code'] = $com_code;
-      $flag = insert(new Customer(), $data_insert);
+      $flag = insert(new Supplier(), $data_insert);
       if ($flag) {
         //insert into accounts
         $data_insert_account['name'] = $request->name;
@@ -122,21 +121,21 @@ class CustomerController extends Controller
           $data_insert_account['start_balance'] = 0;
         }
 
-        $customer_parent_account_number = get_field_value(new Admin_panel_setting(), "customer_parent_account_number", array('com_code' => $com_code));
+        $suppliers_parent_account_number = get_field_value(new Admin_panel_setting(), "suppliers_parent_account_number", array('com_code' => $com_code));
         $data_insert_account['notes'] = $request->notes;
-        $data_insert_account['parent_account_number'] = $customer_parent_account_number;
+        $data_insert_account['parent_account_number'] = $suppliers_parent_account_number;
         $data_insert_account['is_parent'] = 0;
         $data_insert_account['account_number'] = $data_insert['account_number'];
-        $data_insert_account['account_type'] = 3;
+        $data_insert_account['account_type'] = 2;
         $data_insert_account['is_archived'] = $request->active;
         $data_insert_account['added_by'] = auth()->user()->id;
         $data_insert_account['created_at'] = date("Y-m-d H:i:s");
         $data_insert_account['date'] = date("Y-m-d");
         $data_insert_account['com_code'] = $com_code;
-        $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
+        $data_insert_account['other_table_FK'] = $data_insert['suuplier_code'];
         $flag = insert(new Account(), $data_insert_account);
       }
-      return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+      return redirect()->route('admin.supplier.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
     } catch (\Exception $ex) {
 
       return redirect()->back()
@@ -147,19 +146,21 @@ class CustomerController extends Controller
   public function edit($id)
   {
     $com_code = auth()->user()->com_code;
-    $data = get_cols_where_row(new Customer(), array("*"), array("id" => $id, "com_code" => $com_code));
-    return view('admin.customers.edit', ['data' => $data]);
+    $data = get_cols_where_row(new Supplier(), array("*"), array("id" => $id, "com_code" => $com_code));
+    $suppliers_categories=get_cols_where(new SupplierCategories(),array('id','name'),array('com_code'=>$com_code,'active'=>1),'id','DESC');     
+
+    return view('admin.suppliers.edit', ['data' => $data,'suppliers_categories'=>$suppliers_categories]);
   }
-  public function update($id, CustomerEditRequest $request)
+  public function update($id, SupplierUpdateRequest $request)
   {
     try {
       $com_code = auth()->user()->com_code;
-      $data = get_cols_where_row(new Customer(), array("id", "account_number", "customer_code"), array("id" => $id, "com_code" => $com_code));
+      $data = get_cols_where_row(new Supplier(), array("id", "account_number", "suuplier_code"), array("id" => $id, "com_code" => $com_code));
       if (empty($data)) {
-        return redirect()->route('admin.customers.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+        return redirect()->route('admin.supplier.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
       }
 
-      $checkExists = Customer::where(['name' => $request->name, 'com_code' => $com_code])->where('id', '!=', $id)->first();
+      $checkExists = Supplier::where(['name' => $request->name, 'com_code' => $com_code])->where('id', '!=', $id)->first();
       if ($checkExists != null) {
         return redirect()->back()
           ->with(['error' => 'عفوا اسم الحساب مسجل من قبل'])
@@ -173,14 +174,14 @@ class CustomerController extends Controller
       $data_to_update['active'] = $request->active;
       $data_to_update['updated_by'] = auth()->user()->id;
       $data_to_update['updated_at'] = date("Y-m-d H:i:s");
-      $flag = update(new Customer(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
+      $flag = update(new Supplier(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
       if ($flag) {
         $data_to_update_account['name'] = $request->name;
         $data_to_update_account['updated_by'] = auth()->user()->id;
         $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");
-        $flag = update(new Account(), $data_to_update_account, array('account_number' => $data['account_number'], 'other_table_FK' => $data['customer_code'], 'com_code' => $com_code, 'account_type' => 3));
+        $flag = update(new Account(), $data_to_update_account, array('account_number' => $data['account_number'], 'other_table_FK' => $data['suuplier_code'], 'com_code' => $com_code, 'account_type' => 2));
       }
-      return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
+      return redirect()->route('admin.supplier.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
     } catch (\Exception $ex) {
 
       return redirect()->back()
@@ -192,10 +193,10 @@ class CustomerController extends Controller
   {
     try {
       $com_code = auth()->user()->com_code;
-      $item_row = get_cols_where_row(new Customer(), array("name"), array("id" => $id, "com_code" => $com_code));
+      $item_row = get_cols_where_row(new Supplier(), array("name"), array("id" => $id, "com_code" => $com_code));
 
       if (!empty($item_row)) {
-        $flag = delete(new Customer(), ["id" => $id, "com_code" => $com_code]);
+        $flag = delete(new Supplier(), ["id" => $id, "com_code" => $com_code]);
         if ($flag) {
           return redirect()->back()
             ->with(['success' => '   تم حذف البيانات بنجاح']);
@@ -226,9 +227,9 @@ class CustomerController extends Controller
 
       if ($search_by_text != '') {
 
-        if ($searchbyradio == 'customer_code') {
+        if ($searchbyradio == 'suuplier_code') {
 
-          $field1 = "customer_code";
+          $field1 = "suuplier_code";
           $operator1 = "=";
           $value1 = $search_by_text;
         } elseif ($searchbyradio == 'account_number') {
@@ -251,19 +252,21 @@ class CustomerController extends Controller
 
 
 
-      $data = Customer::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+      $data = Supplier::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
       if (!empty($data)) {
         foreach ($data as $info) {
           $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+          $info->suppliers_categories_name = SupplierCategories::where('id', $info->suppliers_categories_id)->value('name');
           if ($info->updated_by > 0 and $info->updated_by != null) {
             $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
           }
         }
       }
 
-      return view('admin.customers.ajax_search', ['data' => $data]);
+      return view('admin.suppliers.ajax_search', ['data' => $data]);
     }
   }
 
   
+
 }

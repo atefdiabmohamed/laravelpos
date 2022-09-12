@@ -17,6 +17,10 @@ class Admin_panel_settingsController extends Controller
     if($data['updated_by']>0 and $data['updated_by']!=null){
     $data['updated_by_admin']=Admin::where('id',$data['updated_by'])->value('name'); 
     $data['customer_parent_account_name']=Account::where('account_number',$data['customer_parent_account_number'])->value('name');    
+    $data['supplier_parent_account_name']=Account::where('account_number',$data['suppliers_parent_account_number'])->value('name');    
+
+
+
     
     }
  }
@@ -43,7 +47,8 @@ try{
    $admin_panel_setting->phone=$request->phone;
    $admin_panel_setting->general_alert=$request->general_alert;
    $admin_panel_setting->customer_parent_account_number=$request->customer_parent_account_number;
-   
+   $admin_panel_setting->suppliers_parent_account_number=$request->suppliers_parent_account_number;
+
    $admin_panel_setting->updated_by=auth()->user()->id;
    $admin_panel_setting->updated_at=date("Y-m-d H:i:s");
    $oldphotoPath=$admin_panel_setting->photo;
