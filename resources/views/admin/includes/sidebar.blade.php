@@ -46,8 +46,8 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview {{ (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*')  )?'menu-open':''  }}     ">
-                <a href="#" class="nav-link {{ (request()->is('admin/accountTypes*')||request()->is('admin/accounts*') ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*')   )?'active':'' }}">
+              <li class="nav-item has-treeview {{ ( (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*')) && !request()->is('admin/suppliers_orders*')  )?'menu-open':''  }}     ">
+                <a href="#" class="nav-link {{ ((request()->is('admin/accountTypes*')||request()->is('admin/accounts*') ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*')) && !request()->is('admin/suppliers_orders*')   )?'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                      الحسابات
@@ -164,9 +164,10 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview      ">
-                <a href="#" class="nav-link ">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
+            
+              <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*'))?'menu-open':'' }}     ">
+                <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') )?'active':'' }}">
+                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                      حركات مخزنية
                     <i class="right fas fa-angle-left"></i>
@@ -174,7 +175,14 @@
                 </a>
                 <ul class="nav nav-treeview">
                 
-             
+                  <li class="nav-item">
+                    <a href="{{ route('admin.suppliers_orders.index') }}" class="nav-link {{ (request()->is('admin/suppliers_orders*') )?'active':'' }}">
+                     
+                      <p>
+         فواتير المشتريات         
+                      </p>
+                    </a>
+                  </li>
 
                 
                 </ul>

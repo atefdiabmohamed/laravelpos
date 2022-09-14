@@ -18,8 +18,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('assets/admin/fonts/SansPro/SansPro.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/custom_rtl.css')}}">
-  <link rel="stylesheet" href="{{ asset('assets/admin/css/mycustomstyle.css')}}">
   
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/mycustomstyle.css')}}">
+  @yield('css')
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -54,6 +55,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- AdminLTE App -->
 <script src="{{ asset('assets/admin/dist/js/adminlte.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/general.js') }}"></script>
+
 
 @yield('script')
 
