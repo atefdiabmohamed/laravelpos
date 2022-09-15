@@ -399,7 +399,8 @@ public function edit_item_details(Request $request){
    $dataUpdateParent['updated_by'] = auth()->user()->id;
    $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
   update(new Suppliers_with_orders(),$dataUpdateParent,array("auto_serial"=>$request->autoserailparent,"com_code"=>$com_code,'order_type'=>1));
-      echo json_encode("done");
+  
+  echo json_encode("done");
     }
 
    }
@@ -417,4 +418,93 @@ public function edit_item_details(Request $request){
 
 
 
+public function delete($id)
+{
+    try {
+        $com_code=auth()->user()->com_code;  
+        $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved","auto_serial"), array("id" => $id, "com_code" => $com_code,'order_type'=>1));
+        if(empty($parent_pill_data)){
+            return redirect()->back()
+            ->with(['error' => 'عفوا حدث خطأ ما']);
+        }
+
+      if($parent_pill_data['is_approved']==1){
+        if(empty($parent_pill_data)){
+            return redirect()->back()
+            ->with(['error' => 'عفوا  لايمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
+        }
+
+      }
+      $flag=delete(new Suppliers_with_orders(), array("id" => $id, "com_code" => $com_code,'order_type'=>1));
+if($flag){
+    delete(new Suppliers_with_orders_details(), array("suppliers_with_orders_auto_serial" => $parent_pill_data['auto_serial'], "com_code" => $com_code,'order_type'=>1));  
+    return redirect()->route('admin.suppliers_orders.index')->with(['success' => 'لقد تم حذف  البيانات بنجاح']);
+
+}
+
+
+
+    } catch (\Exception $ex) {
+
+        return redirect()->back()
+            ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+}
+
+
+public function delete_details($id,$parent_id)
+{
+    try {
+        $com_code=auth()->user()->com_code;  
+        $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved","auto_serial"), array("id" => $parent_id, "com_code" => $com_code,'order_type'=>1));
+        if(empty($parent_pill_data)){
+            return redirect()->back()
+            ->with(['error' => 'عفوا حدث خطأ ما']);
+        }
+
+      if($parent_pill_data['is_approved']==1){
+        if(empty($parent_pill_data)){
+            return redirect()->back()
+            ->with(['error' => 'عفوا  لايمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
+        }
+
+      }
+        $item_row = Suppliers_with_orders_details::find($id);
+        if (!empty($item_row)) {
+            $flag = $item_row->delete();
+            if ($flag) {
+   /** update parent pill */   
+   $total_detials_sum=get_sum_where(new Suppliers_with_orders_details(),'total_price',array("suppliers_with_orders_auto_serial"=>$parent_pill_data['auto_serial'],'order_type'=>1,'com_code'=>$com_code));
+   $dataUpdateParent['total_cost_items']=$total_detials_sum;
+   $dataUpdateParent['total_befor_discount']=$total_detials_sum+$parent_pill_data['tax_value'];
+   $dataUpdateParent['total_cost']=$dataUpdateParent['total_befor_discount']-$parent_pill_data['discount_value'];
+   $dataUpdateParent['updated_by'] = auth()->user()->id;
+   $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
+  update(new Suppliers_with_orders(),$dataUpdateParent,array("id"=>$parent_id,"com_code"=>$com_code,'order_type'=>1));
+  
+
+
+                return redirect()->back()
+                    ->with(['success' => '   تم حذف البيانات بنجاح']);
+            } else {
+                return redirect()->back()
+                    ->with(['error' => 'عفوا حدث خطأ ما']);
+            }
+        } else {
+            return redirect()->back()
+                ->with(['error' => 'عفوا غير قادر الي الوصول للبيانات المطلوبة']);
+        }
+
+
+
+    } catch (\Exception $ex) {
+
+        return redirect()->back()
+            ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+}
+
+public function do_approved($id){
+
+}
 }

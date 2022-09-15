@@ -165,8 +165,10 @@
 لايوجد تحديث
        @endif
        @if($data['is_approved']==0)
-
+<a href="{{ route('admin.suppliers_orders.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
 <a href="{{ route('admin.suppliers_orders.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+<a href="{{ route('admin.suppliers_orders.do_approved',$data['id']) }}" class="btn btn-sm btn-primary">الاعتماد</a>
+
 @endif
 
                 </td>
@@ -248,7 +250,7 @@
        @if($data['is_approved']==0)
 
        <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-       <a href="" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+       <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
      
 
 
