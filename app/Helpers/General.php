@@ -70,3 +70,8 @@ function delete($model,$where=array()){
   $flag=$model::where($where)->delete();
   return $flag;
 }
+
+function get_sum_where($model,$field_name,$where=array()){
+  $sum=$model::where($where)->sum($field_name);
+  return $sum;
+}

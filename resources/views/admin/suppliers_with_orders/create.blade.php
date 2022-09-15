@@ -2,6 +2,11 @@
 @section('title')
 المشتريات
 @endsection
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+@endsection
 @section('contentheader')
 حركات مخزنية
 @endsection
@@ -41,7 +46,7 @@
         </div>
           <div class="form-group"> 
             <label>   بيانات الموردين</label>
-            <select name="suuplier_code" id="suuplier_code" class="form-control ">
+            <select name="suuplier_code" id="suuplier_code" class="form-control select2">
               <option value="">اختر المورد</option>
               @if (@isset($suupliers) && !@empty($suupliers))
              @foreach ($suupliers as $info )
@@ -66,6 +71,20 @@
   <span class="text-danger">{{ $message }}</span>
   @enderror
   </div>
+  <div class="form-group"> 
+    <label>    بيانات المخازن</label>
+    <select name="store_id" id="store_id" class="form-control select2">
+      <option value=""> اختر المخزن المستلم للفاتورة</option>
+      @if (@isset($stores) && !@empty($stores))
+     @foreach ($stores as $info )
+       <option @if(old('store_id')==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+     @endforeach
+      @endif
+    </select>
+    @error('store_id')
+    <span class="text-danger">{{ $message }}</span>
+    @enderror
+    </div>
 
   <div class="form-group">
     <label>  ملاحظات</label>
@@ -96,10 +115,17 @@
     </div>
 </div>
 
+@endsection
 
+@section("script")
 
-
-
+<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+<script>
+  //Initialize Select2 Elements
+  $('.select2').select2({
+    theme: 'bootstrap4'
+  });
+  </script>
 @endsection
 
 

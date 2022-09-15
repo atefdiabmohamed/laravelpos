@@ -40,7 +40,9 @@
            <th> المورد</th>
            <th> تاريخ الفاتورة</th>
            <th>  نوع الفاتورة</th>
+           <th>   المخزن المستلم</th>
 
+           
            <th>حالة الفاتورة</th>
 
            <th></th>
@@ -53,6 +55,8 @@
               <td>{{ $info->supplier_name }}</td>  
               <td>{{ $info->order_date }}</td>  
              <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td> 
+             <td>{{ $info->store_name }}</td>  
+
              <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td> 
 
          <td>

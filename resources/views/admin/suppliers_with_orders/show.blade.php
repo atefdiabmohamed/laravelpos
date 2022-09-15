@@ -31,6 +31,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
+          <div id="ajax_responce_serarchDivparentpill">
         @if (@isset($data) && !@empty($data))
         <table id="example2" class="table table-bordered table-hover">
          
@@ -54,6 +55,12 @@
                 <td class="width30"> نوع الفاتورة</td> 
                 <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
             </tr>
+            <tr>
+              <td class="width30">   المخزن المستلم للفاتورة </td> 
+              <td > {{ $data['store_name'] }}</td>
+          </tr>
+
+            
             <tr>
               <td class="width30">  اسم المورد </td> 
               <td > {{ $data['supplier_name'] }}</td>
@@ -159,19 +166,25 @@
        @endif
        @if($data['is_approved']==0)
 
-<a href="{{ route('admin.treasuries.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+<a href="{{ route('admin.suppliers_orders.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
 @endif
 
                 </td>
             </tr> 
            
           </table>
+      
+
+          
+
+        </div>
+
      <!--  treasuries_delivery   -->
      <div class="card-header">
         <h3 class="card-title card_title_center">
         الاصناف المضافة للفاتورة
         @if($data['is_approved']==0)
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Add_item_Modal">
+        <button type="button" class="btn btn-info" id="load_modal_add_detailsBtn">
           اضافة صنف للفاتورة
         </button>
        @endif
@@ -179,13 +192,22 @@
         <input type="hidden" id="token_search" value="{{csrf_token() }}">
         <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.suppliers_orders.get_item_uoms') }}">
         <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.suppliers_orders.add_new_details') }}">
+        <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders.reload_itemsdetials') }}">
+        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders.reload_parent_pill') }}">
+        <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
+        <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
+        <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
+
+        
+        
+     
         <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
 
 
 
 
     </div>
-     <div id="ajax_responce_serarchDiv">
+     <div id="ajax_responce_serarchDivDetails">
           
         @if (@isset($details) && !@empty($details) && count($details)>0)
         @php
@@ -225,8 +247,8 @@
          <td>
        @if($data['is_approved']==0)
 
-       <a href="{{ route('admin.suppliers_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-       <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+       <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
+       <a href="" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
      
 
 
@@ -286,69 +308,7 @@
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body" id="Add_item_Modal_body" style="background-color: white !important; color:black;">
-      <div class="row">
-   <div class="col-md-4">
-    <div class="form-group"> 
-      <label>   بيانات الاصناف</label>
-      <select  id="item_code_add" class="form-control select2" style="width: 100%;">
-        <option value="">اختر الصنف</option>
-        @if (@isset($item_cards) && !@empty($item_cards))
-       @foreach ($item_cards as $info )
-         <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} </option>
-       @endforeach
-        @endif
-      </select>
-      @error('suuplier_code')
-      <span class="text-danger">{{ $message }}</span>
-      @enderror
-      </div>
-   </div>
-
-   <div class="col-md-4  relatied_to_itemCard" style="display: none;" id="UomDivAdd">
     
-   </div>
-   <div class="col-md-4 relatied_to_itemCard" style="display: none;">
-   <div class="form-group">
-    <label> الكمية المستلمة</label>
-    <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="quantity_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-    </div>
-  </div>
-  <div class="col-md-4 relatied_to_itemCard" style="display: none;">
-    <div class="form-group">
-     <label>  سعر الوحدة</label>
-     <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="price_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
-
-   <div class="col-md-4 relatied_to_date" style="display: none;">
-    <div class="form-group">
-     <label>   تاريخ الانتاج</label>
-     <input type="date"    id="production_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
-
-   <div class="col-md-4 relatied_to_date" style="display: none;">
-    <div class="form-group">
-     <label>   تاريخ انتهاء الصلاحية</label>
-     <input type="date"    id="expire_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
-   <div class="col-md-4 relatied_to_itemCard" style="display: none;">
-    <div class="form-group">
-     <label>   الاجمالي</label>
-     <input   readonly  id="total_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
-
-   <div class="col-md-12">
-    <div class="form-group text-center">
-    <button type="button" class="btn btn-sm btn-danger" id="AddToBill">اضف للفاتورة</button>
-  </div>
-   </div>
-
-      </div>
-
-
 
 
       </div>
@@ -361,6 +321,32 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+
+<div class="modal fade " id="edit_item_Modal">
+  <div class="modal-dialog modal-xl" >
+    <div class="modal-content bg-info">
+      <div class="modal-header">
+        <h4 class="modal-title text-center">تحديث صنف  بالفاتورة</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body" id="edit_item_Modal_body" style="background-color: white !important; color:black;">
+     
+
+
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+
 @endsection
 
 @section("script")

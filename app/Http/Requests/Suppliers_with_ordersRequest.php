@@ -26,7 +26,8 @@ class Suppliers_with_ordersRequest extends FormRequest
         return [
          'suuplier_code'=>'required',
          'pill_type'=>'required',
-         'order_date'=>'required'
+         'order_date'=>'required',
+         'store_id'=>'required'
         ];
     }
 
@@ -36,6 +37,7 @@ class Suppliers_with_ordersRequest extends FormRequest
         'suuplier_code.required'=>'اسم  المورد',
         'pill_type.required'=>'نوع الفاتورة مطلوب',
         'order_date.required'=>'تاريخ الفاتورة مطلوب',
+        'store_id.required'=>' المخزن المستلم للفاتورة مطلوب',
 
         ];
     }

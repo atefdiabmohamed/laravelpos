@@ -175,7 +175,12 @@ Route::get('/suppliers_orders/delete/{id}',[Suppliers_with_ordersController::cla
 Route::post('/suppliers_orders/ajax_search',[Suppliers_with_ordersController::class,'ajax_search'])->name('admin.suppliers_orders.ajax_search');
 Route::get('/suppliers_orders/show/{id}',[Suppliers_with_ordersController::class,'show'])->name('admin.suppliers_orders.show');
 Route::post('/suppliers_orders/get_item_uoms',[Suppliers_with_ordersController::class,'get_item_uoms'])->name('admin.suppliers_orders.get_item_uoms');
+Route::post('/suppliers_orders/load_modal_add_details',[Suppliers_with_ordersController::class,'load_modal_add_details'])->name('admin.suppliers_orders.load_modal_add_details');
 Route::post('/suppliers_orders/add_new_details',[Suppliers_with_ordersController::class,'add_new_details'])->name('admin.suppliers_orders.add_new_details');
+Route::post('/suppliers_orders/reload_itemsdetials',[Suppliers_with_ordersController::class,'reload_itemsdetials'])->name('admin.suppliers_orders.reload_itemsdetials');
+Route::post('/suppliers_orders/reload_parent_pill',[Suppliers_with_ordersController::class,'reload_parent_pill'])->name('admin.suppliers_orders.reload_parent_pill');
+Route::post('/suppliers_orders/load_edit_item_details',[Suppliers_with_ordersController::class,'load_edit_item_details'])->name('admin.suppliers_orders.load_edit_item_details');
+Route::post('/suppliers_orders/edit_item_details',[Suppliers_with_ordersController::class,'edit_item_details'])->name('admin.suppliers_orders.edit_item_details');
 
 
 
