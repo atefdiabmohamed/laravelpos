@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SupplierCategoriesController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\Suppliers_with_ordersController;
+use App\Http\Controllers\Admin\AdminController;
 
 
 
@@ -185,9 +186,25 @@ Route::get('/suppliers_orders/delete_details/{id}/{id_parent}',[Suppliers_with_o
 Route::get('/suppliers_orders/do_approved/{id}',[Suppliers_with_ordersController::class,'do_approved'])->name('admin.suppliers_orders.do_approved');
 
 
-
-
 /*           end Item Card                */
+
+/*         start treasuries                */
+Route::get('/admins_accounts/index',[AdminController::class,'index'])->name('admin.admins_accounts.index');
+Route::get('/admins_accounts/create',[AdminController::class,'create'])->name('admin.admins_accounts.create');
+Route::post('/admins_accounts/store',[AdminController::class,'store'])->name('admin.admins_accounts.store');
+Route::get('/admins_accounts/edit/{id}',[AdminController::class,'edit'])->name('admin.admins_accounts.edit');
+Route::post('/admins_accounts/update/{id}',[AdminController::class,'update'])->name('admin.admins_accounts.update');
+Route::post('/admins_accounts/ajax_search',[AdminController::class,'ajax_search'])->name('admin.admins_accounts.ajax_search');
+Route::get('/admins_accounts/details/{id}',[AdminController::class,'details'])->name('admin.admins_accounts.details');
+Route::get('/admins_accounts/Add_treasuries_delivery/{id}',[AdminController::class,'Add_treasuries_delivery'])->name('admin.admins_accounts.Add_treasuries_delivery');
+Route::post('/admins_accounts/Add_treasuries_To_Admin/{id}',[AdminController::class,'Add_treasuries_To_Admin'])->name('admin.admins_accounts.Add_treasuries_To_Admin');
+Route::get('/admins_accounts/delete_treasuries_delivery/{id}',[AdminController::class,'delete_treasuries_delivery'])->name('admin.admins_accounts.delete_treasuries_delivery');
+
+/*           end treasuries                */
+
+
+
+
 
 
 });
