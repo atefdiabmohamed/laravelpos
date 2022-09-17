@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\SupplierCategoriesController;
 use App\Http\Controllers\Admin\SuppliersController;
 use App\Http\Controllers\Admin\Suppliers_with_ordersController;
 use App\Http\Controllers\Admin\AdminController;
-
+use App\Http\Controllers\Admin\Admins_ShiftsContoller;
 
 
 
@@ -203,6 +203,13 @@ Route::get('/admins_accounts/delete_treasuries_delivery/{id}',[AdminController::
 /*           end treasuries                */
 
 
+
+/*         start admins shifts                */
+Route::get('/admin_shift/index',[Admins_ShiftsContoller::class,'index'])->name('admin.admin_shift.index');
+Route::get('/admin_shift/create',[Admins_ShiftsContoller::class,'create'])->name('admin.admin_shift.create');
+Route::post('/admin_shift/store',[Admins_ShiftsContoller::class,'store'])->name('admin.admin_shift.store');
+
+/*           end admins shifts                  */
 
 
 

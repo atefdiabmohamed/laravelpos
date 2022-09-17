@@ -226,17 +226,24 @@
 
 
               
-              <li class="nav-item has-treeview      ">
-                <a href="#" class="nav-link ">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
+              <li class="nav-item has-treeview {{ (request()->is('admin/admin_shift*'))?'menu-open':'' }}     ">
+                <a href="#" class="nav-link {{ (request()->is('admin/admin_shift*') )?'active':'' }}">
+                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
-                حركة شفت الخزنية
+                     حركة شفت الخزينة  
                     <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
                 
-             
+                  <li class="nav-item">
+                    <a href="{{ route('admin.admin_shift.index') }}" class="nav-link {{ (request()->is('admin/admin_shift*') )?'active':'' }}">
+                     
+                      <p>
+          شفتات الخزن         
+                      </p>
+                    </a>
+                  </li>
 
                 
                 </ul>
