@@ -15,7 +15,13 @@ function get_cols_where_p($model, $columns_names = array(), $where = array(), $o
   $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->paginate($pagination_counter);
   return $data;
 }
-
+/*get some cols by pagination table where 2 */
+function get_cols_where2_p($model, $columns_names = array(), $where = array(),$where2field,$where2operator,$where2value, $order_field,$order_type,$pagination_counter)
+{
+  $data = $model::select($columns_names)->where($where)->where($where2field,$where2operator,$where2value)->
+  orderby($order_field, $order_type)->paginate($pagination_counter);
+  return $data;
+}
 
 /*get some cols  table */
 function get_cols_where($model, $columns_names = array(), $where = array(), $order_field,$order_type)

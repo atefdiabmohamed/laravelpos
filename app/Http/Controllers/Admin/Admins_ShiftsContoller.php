@@ -75,6 +75,15 @@ if($checkExistsOpentreasuries!=null and !empty($checkExistsOpentreasuries)){
 }
 
 
+ //set Shift code
+ $row = get_cols_where_row_orderby(new Admins_Shifts(), array("shift_code"), array("com_code" => $com_code), 'id', 'DESC');
+ if (!empty($row)) {
+   $data_insert['shift_code'] = $row['shift_code'] + 1;
+ } else {
+   $data_insert['shift_code'] = 1;
+ }
+
+
 $data_insert['admin_id']=$admin_id;
 $data_insert['treasuries_id']=$request->treasuries_id;
 $data_insert['start_date']=date("Y-m-d H:i:s");

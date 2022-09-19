@@ -25,7 +25,7 @@
              <td>{{ $info->parent_account_name }}</td>  
              <td></td>  
 
-             <td>@if($info->is_archived==1) مفعل @else معطل @endif</td> 
+             <td>@if($info->is_archived==0) مفعل @else معطل @endif</td> 
       
          <td>
 
