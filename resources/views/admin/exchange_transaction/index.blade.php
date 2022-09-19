@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-شاشة تحصيل النقدية
+شاشة صرف النقدية
 @endsection
 @section("css")
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
@@ -12,7 +12,7 @@
 @endsection
 
 @section('contentheaderlink')
-<a href="{{ route('admin.collect_transaction.index') }}"> شاشه تحصيل النقدية </a>
+<a href="{{ route('admin.collect_transaction.index') }}"> شاشه صرف النقدية </a>
 @endsection
 
 @section('contentheaderactive')
@@ -27,7 +27,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center">  بيانات حركة تحصيل النقدية بالنظام</h3>
+          <h3 class="card-title card_title_center">  بيانات حركة صرف النقدية بالنظام</h3>
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
         
         </div>
@@ -36,7 +36,7 @@
           @if(!@empty($checkExistsOpenShift))
               
         
-          <form action="{{ route('admin.collect_transaction.store') }}" method="post"  class="custom_form">
+          <form action="{{ route('admin.exchange_transaction.store') }}" method="post"  class="custom_form">
             <div class="row">
             @csrf
             <div class="col-md-4 > 
@@ -52,10 +52,10 @@
                   <div class="form-group"> 
                     <label>   الحسابات المالية</label>
                     <select name="account_number" id="account_number" class="form-control select2 ">
-                      <option value="">اختر الحساب المالي المحصل منه</option>
+                      <option value="">اختر الحساب المالي المصروف له</option>
                       @if (@isset($accounts) && !@empty($accounts))
                      @foreach ($accounts as $info )
-                       <option data-type="{{ $info->account_type }}"    @if(old('account_number')==$info->account_number) selected="selected" @endif value="{{ $info->account_number }}"> {{ $info->name }} ({{ $info->account_type_name }}) </option>
+                       <option data-type="{{ $info->account_type }}"   @if(old('account_number')==$info->account_number) selected="selected" @endif value="{{ $info->account_number }}"> {{ $info->name }} ({{ $info->account_type_name }}) </option>
                      @endforeach
                       @endif
                     </select>
@@ -109,7 +109,7 @@
 
         <div class="col-md-4 > 
           <div class="form-group">
-            <label>قيمة المبلغ المحصل   </label>
+            <label>قيمة المبلغ المصروف   </label>
             <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="money" id="money" class="form-control"  value="{{ old('money') }}"  >
             @error('money')
             <span class="text-danger">{{ $message }}</span>
@@ -119,7 +119,7 @@
               <div class="col-md-8">   
                 <div class="form-group">
                   <label>   البيان</label>
-              <textarea name="byan" id="byan" class="form-control" rows="4" cols="10"> {{ old("byan","تحصيل نظير ") }} </textarea>
+              <textarea name="byan" id="byan" class="form-control" rows="4" cols="10"> {{ old("byan","صرف نظير ") }} </textarea>
                   @error('byan')
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
@@ -130,7 +130,7 @@
           
           <div class="col-md-12">
           <div class="form-group text-center">
-            <button id="do_collect_now_btn" type="submit" class="btn btn-success btn-sm"> تحصيل الان</button>
+            <button id="do_exchange_now_btn" type="submit" class="btn btn-success btn-sm"> صرف الان</button>
           
           </div>
         </div>
@@ -140,7 +140,7 @@
 
       @else          
       <div class="alert alert-warning" style="color:brown !important">
-    تنبيه لايوجد شفت مفتوح لك لكي تتمكن من التحصيل
+    تنبيه لايوجد شفت مفتوح لك لكي تتمكن من الصرف
       </div>    
       @endif
 
@@ -169,7 +169,7 @@
              <td>{{ $info->auto_serial }}</td>  
              <td>{{ $info->isal_number }}</td>  
              <td>{{ $info->treasuries_name }}</td>  
-             <td>{{ $info->money*(1) }}</td>  
+             <td>{{ $info->money*(1)*(-1) }}</td>  
              <td>{{ $info->mov_type_name }}</td>  
             
              <td>{{ $info->byan }}</td> 
@@ -237,7 +237,7 @@
 @section("script")
 
 <script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
-<script  src="{{ asset('assets/admin/js/collect_transaction.js') }}"> </script>
+<script  src="{{ asset('assets/admin/js/exchange_transaction.js') }}"> </script>
 
 <script>
   //Initialize Select2 Elements

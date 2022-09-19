@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Suppliers_with_ordersController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Admins_ShiftsContoller;
 use App\Http\Controllers\Admin\CollectController;
+use App\Http\Controllers\Admin\ExchangeController;
 
 
 
@@ -213,12 +214,19 @@ Route::post('/admin_shift/store',[Admins_ShiftsContoller::class,'store'])->name(
 
 
 
-/*         start admins shifts                */
+/*         start  collect_transaction                */
 Route::get('/collect_transaction/index',[CollectController::class,'index'])->name('admin.collect_transaction.index');
 Route::get('/collect_transaction/create',[CollectController::class,'create'])->name('admin.collect_transaction.create');
 Route::post('/collect_transaction/store',[CollectController::class,'store'])->name('admin.collect_transaction.store');
 
-/*           end admins shifts                  */
+/*           end  collect_transaction                  */
+
+/*         start  exchange_transaction                */
+Route::get('/exchange_transaction/index',[ExchangeController::class,'index'])->name('admin.exchange_transaction.index');
+Route::get('/exchange_transaction/create',[ExchangeController::class,'create'])->name('admin.exchange_transaction.create');
+Route::post('/exchange_transaction/store',[ExchangeController::class,'store'])->name('admin.exchange_transaction.store');
+
+/*           end  exchange_transaction                  */
 
 });
 

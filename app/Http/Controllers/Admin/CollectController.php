@@ -10,6 +10,8 @@ use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
 use App\Models\Account;
 use App\Models\Mov_type;
+use App\Models\Account_types;
+
 use App\Http\Requests\Collect_transactionRequest;
 
 class CollectController extends Controller
@@ -24,6 +26,8 @@ class CollectController extends Controller
         $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
         $info->treasuries_name = Treasuries::where('id', $info->treasuries_id)->value('name');
         $info->mov_type_name = Mov_type::where('id', $info->mov_type)->value('name');
+        $info->account_type=Account::where(["account_number"=>$info->account_number,"com_code"=>$com_code])->value("account_type");
+      $info->account_type_name=Account_types::where(["id"=>$info->account_type])->value("name");
 
 
       }
@@ -38,7 +42,13 @@ class CollectController extends Controller
     
     }
     $mov_type=get_cols_where(new Mov_type(),array("id","name"),array("active"=>1,'in_screen'=>2,'is_private_internal'=>0),'id','ASC');
-    $accounts=get_cols_where(new Account(),array("name","account_number"),array("com_code"=>$com_code,"is_archived"=>0,"is_parent"=>0),'id','DESC');
+    $accounts=get_cols_where(new Account(),array("name","account_number","account_type"),array("com_code"=>$com_code,"is_archived"=>0,"is_parent"=>0),'id','DESC');
+   if(!empty( $accounts)){
+    foreach($accounts as $info){
+      $info->account_type_name=Account_types::where(["id"=>$info->account_type])->value("name");
+
+    }
+   }
     return view('admin.collect_transactions.index', ['data' => $data,'checkExistsOpenShift'=>$checkExistsOpenShift,'accounts'=>$accounts,'mov_type'=>$mov_type]);
   }
   //for collect money
