@@ -7,7 +7,9 @@ use App\Models\Suppliers_with_orders_details;
 use App\Models\Inv_itemCard;
 use App\Models\Inv_uom;
 use App\Models\Store;
-
+use App\Models\Admins_Shifts;
+use App\Models\Treasuries;
+use App\Models\Treasuries_transactions;
 use App\Models\Supplier;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -504,7 +506,35 @@ public function delete_details($id,$parent_id)
     }
 }
 
-public function do_approved($id){
 
+
+   public function load_modal_approve_invoice (Request $request){
+            if($request->ajax()){
+          
+            $com_code=auth()->user()->com_code;
+            $data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code,'order_type'=>1));
+ //current user shift
+ $user_shift=get_user_shift(new Admins_Shifts(),new Treasuries(),new Treasuries_transactions());
+ 
 }
+
+ return view("admin.suppliers_with_orders.load_modal_approve_invoice",['data'=>$data,'user_shift'=>$user_shift]);
+       
+            }        
+
+            public function load_usershiftDiv (Request $request){
+                if($request->ajax()){
+              
+                $com_code=auth()->user()->com_code;
+     //current user shift
+     $user_shift=get_user_shift(new Admins_Shifts(),new Treasuries(),new Treasuries_transactions());
+     
+    }
+    
+     return view("admin.suppliers_with_orders.load_usershiftDiv",['user_shift'=>$user_shift]);
+           
+                }
+
+            
 }
+

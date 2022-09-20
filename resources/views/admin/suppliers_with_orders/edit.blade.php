@@ -66,7 +66,6 @@
 <div class="form-group"> 
 <label>   نوع الفاتورة</label>
 <select name="pill_type" id="pill_type" class="form-control">
- <option value="">اختر النوع</option>
 <option   @if(old('pill_type',$data['pill_type'])==1) selected="selected"  @endif value="1">  كاش</option>
  <option @if(old('pill_type',$data['pill_type'])==2 ) selected="selected"   @endif value="2">  اجل</option>
 </select>

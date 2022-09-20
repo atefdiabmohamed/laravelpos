@@ -81,3 +81,14 @@ function get_sum_where($model,$field_name,$where=array()){
   $sum=$model::where($where)->sum($field_name);
   return $sum;
 }
+
+function get_user_shift($Admins_Shifts,$Treasuries,$Treasuries_transactions){
+  $com_code=auth()->user()->com_code;
+  $data = $Admins_Shifts::select("treasuries_id","shift_code")->where(["com_code"=>$com_code,"admin_id"=>auth()->user()->id,"is_finished"=>0])->first();
+  if(!empty($data)){
+    $data['name']=$Treasuries::where(["id"=>$data["treasuries_id"],"com_code"=>$com_code])->value("name");
+    $data['balance']=$Treasuries_transactions::where(["shift_code"=>$data["shift_code"],"com_code"=>$com_code])->sum("money");
+
+  }
+  return $data;
+}

@@ -25,3 +25,7 @@ table .btn{ margin-top: 2px;}
     background-color:white;
     margin-bottom: 7px;
 }
+h4.modal-title {
+    text-align: center;
+    width: 100%;
+}
