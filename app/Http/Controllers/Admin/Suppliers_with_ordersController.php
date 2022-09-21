@@ -11,9 +11,12 @@ use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
 use App\Models\Treasuries_transactions;
 use App\Models\Supplier;
+use App\Models\Inv_itemcard_batches;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Suppliers_with_ordersRequest;
+use App\Http\Requests\SupplierWithOrdersApproveBursahseRequst;
+
 class Suppliers_with_ordersController extends Controller
 {
     public function index()
@@ -534,6 +537,235 @@ public function delete_details($id,$parent_id)
      return view("admin.suppliers_with_orders.load_usershiftDiv",['user_shift'=>$user_shift]);
            
                 }
+
+
+function do_approve($auto_serial,Request $request){
+
+    $com_code=auth()->user()->com_code;
+//check is not approved 
+$data = get_cols_where_row(new Suppliers_with_orders(), array("total_cost_items","is_approved","id","account_number","store_id"), array("auto_serial" => $auto_serial, "com_code" => $com_code,'order_type'=>1));
+if(empty($data)){
+ return redirect()->route("admin.suppliers_orders.index")->with(['error'=>"عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
+}
+
+if($data['is_approved']==1){
+ return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>"عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
+   }
+$dataUpdateParent['tax_percent']=$request['tax_percent'];
+$dataUpdateParent['tax_value']=$request['tax_value'];
+$dataUpdateParent['total_befor_discount']=$request['total_befor_discount'];
+$dataUpdateParent['discount_type']=$request['discount_type'];
+$dataUpdateParent['discount_percent']=$request['discount_percent'];
+$dataUpdateParent['discount_value']=$request['discount_value'];
+$dataUpdateParent['total_cost']=$request['total_cost'];
+$dataUpdateParent['pill_type']=$request['pill_type'];
+$dataUpdateParent['money_for_account']=$request['total_cost']*(-1);
+$dataUpdateParent['is_approved']=1;
+$dataUpdateParent['approved_by']=auth()->user()->com_code;
+$dataUpdateParent['updated_at']=date("Y-m-d H:i:s");
+$dataUpdateParent['updated_by']=auth()->user()->com_code;
+//first check for pill type sate cash
+if($request['pill_type']==1){
+    if($request['what_paid']!=$request['total_cost']){
+        return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>"عفوا يجب ان يكون المبلغ بالكامل مدفوع في حالة الفاتورة كاش !!"]);
+
+    }
+}
+
+//second  check for pill type sate agel
+if($request['pill_type']==2){
+    if($request['what_paid']== $request['total_cost']){
+        return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>"عفوا يجب ان لايكون المبلغ بالكامل مدفوع في حالة الفاتورة اجل !!"]);
+
+    }
+}
+
+$dataUpdateParent['what_paid']=$request['what_paid'];
+$dataUpdateParent['what_remain']=$request['what_remain'];
+
+//thaird  check for what paid 
+if($request['what_paid']>0){
+    if($request['what_paid']>$request['total_cost']){
+        return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>"عفوا يجب ان لايكون المبلغ المدفوع اكبر من اجمالي الفاتورة      !!"]);
+
+    }
+//check for user shift
+$user_shift=get_user_shift(new Admins_Shifts(),new Treasuries(),new Treasuries_transactions());
+//chehck if is empty
+if(empty($user_shift)){
+    return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>" عفوا لاتملتك الان شفت خزنة مفتوح لكي تتمكن من اتمام عمليه الصرف"]);
+}
+
+//check for blance
+if($user_shift['balance']<$request['what_paid']){
+    return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>" عفوا لاتملتك الان رصيد كافي بخزنة الصرف  لكي تتمكن من اتمام عمليه الصرف"]);
+}
+
+}
+
+$flag=update(new Suppliers_with_orders(),$dataUpdateParent,array("auto_serial" => $auto_serial, "com_code" => $com_code,'order_type'=>1));
+if($flag){
+//حركات  مختلفه
+//first make treasuries_transactions  action if what paid >0
+if($request['what_paid']>0){
+
+   //first get isal number with treasuries 
+   $treasury_date=get_cols_where_row(new Treasuries(),array("last_isal_exhcange"),array("com_code"=>$com_code,"id"=>$user_shift['treasuries_id']));
+   if(empty($treasury_date)){
+    return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>" عفوا غير قادر علي الوصول الي بيانات الخزنة المطلوبة"]);
+   }
+
+$last_record_treasuries_transactions_record=get_cols_where_row_orderby(new Treasuries_transactions(),array("auto_serial"),array("com_code"=>$com_code),"auto_serial","DESC");
+if(!empty($last_record_treasuries_transactions_record)){
+ $dataInsert_treasuries_transactions['auto_serial']=$last_record_treasuries_transactions_record['auto_serial']+1;
+}else{
+ $dataInsert_treasuries_transactions['auto_serial']=1;
+
+}
+
+$dataInsert_treasuries_transactions['isal_number']=$treasury_date['last_isal_exhcange']+1;
+$dataInsert_treasuries_transactions['shift_code']=$user_shift['shift_code'];
+//Credit دائن
+$dataInsert_treasuries_transactions['money']=$request['what_paid']*(-1);
+$dataInsert_treasuries_transactions['treasuries_id']=$user_shift['treasuries_id'];
+$dataInsert_treasuries_transactions['mov_type']=9;
+$dataInsert_treasuries_transactions['move_date']=date("Y-m-d");
+$dataInsert_treasuries_transactions['account_number']=$data["account_number"];
+$dataInsert_treasuries_transactions['is_account']=1;
+$dataInsert_treasuries_transactions['is_approved']=1;
+$dataInsert_treasuries_transactions['the_foregin_key']=$data["auto_serial"];
+//debit مدين
+$dataInsert_treasuries_transactions['money_for_account']=$request['what_paid'];
+$dataInsert_treasuries_transactions['byan']="صرف نظير فاتورة مشتريات  رقم".$auto_serial;
+$dataInsert_treasuries_transactions['created_at']=date("Y-m-Y H:i:s");
+$dataInsert_treasuries_transactions['added_by']=auth()->user()->id;
+$dataInsert_treasuries_transactions['com_code']=$com_code;
+$flag=insert(new Treasuries_transactions(),$dataInsert_treasuries_transactions);
+if($flag){
+     //update Treasuries last_isal_collect
+$dataUpdateTreasuries['last_isal_exhcange']=$dataInsert_treasuries_transactions['isal_number'];
+update(new Treasuries(),$dataUpdateTreasuries,array("com_code"=>$com_code,"id"=>$user_shift['treasuries_id']));
+
+}
+
+
+}
+
+//store move حركة المخزن
+//first Get item card data جنجيب الاصناف اللي علي الفاتورة
+$items=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("suppliers_with_orders_auto_serial"=>$auto_serial,"com_code"=>$com_code,"order_type"=>1),"id","ASC");
+if(!empty($items)){
+    foreach($items as $info){
+//get itemCard Data
+$itemCard_Data=get_cols_where_row(new Inv_itemCard(),array("uom_id","retail_uom_quntToParent","retail_uom_id"),array("com_code"=>$com_code,"item_code"=>$info->item_code));
+if(!empty($itemCard_Data)){
+    //if is parent Uom لو وحده اب
+if($info->isparentuom==1){
+$quntity=$info->deliverd_quantity;
+$unit_price=$info->unit_price;
+}else{
+    // if is retail  لو كان بوحده الابن التجزئة
+        //التحويل من الاب للابن بنضرب   في النسبة بينهم - اما التحويل من الابن للاب بنقسم علي النسبه بينهما 
+    $quntity=($info->deliverd_quantity/$itemCard_Data['retail_uom_quntToParent']) ;
+    $unit_price=$info->unit_price*$itemCard_Data['retail_uom_quntToParent'];
+
+}
+//بندخل الكميات للمخزن بوحده القياس الاب  اجباري 
+
+//لو الصنف استهلاكي له تاريخ صلاحيه وانتاج فبعمل تحقق بسعر الشراء مع التواريخ
+//لو الصنف  غير استهلاكي يبقي بعمل تحقق فقط بسعر الشراء
+
+if($info->item_card_type==2){
+   //استهلاكي بتواريخ 
+   $dataInsertBatch["store_id"]=$data['store_id'];
+   $dataInsertBatch["item_code"]=$info->item_code;
+   $dataInsertBatch["production_date"]=$info->production_date;
+   $dataInsertBatch["expired_date"]=$info->expire_date;
+   $dataInsertBatch["unit_cost_price"]=$unit_price;
+   $dataInsertBatch["inv_uoms_id"]=$itemCard_Data['uom_id'];
+
+
+}else{
+    //بسعر فقط
+    $dataInsertBatch["store_id"]=$data['store_id'];
+    $dataInsertBatch["item_code"]=$info->item_code;
+    $dataInsertBatch["unit_cost_price"]=$unit_price;
+    $dataInsertBatch["inv_uoms_id"]=$itemCard_Data['uom_id'];
+
+}
+
+$OldBatchExsists=get_cols_where_row(new Inv_itemcard_batches(),array("quantity","id","unit_cost_price"),$dataInsertBatch);
+if(!empty($OldBatchExsists)){
+    //update current Batch تحديث علي الباتش القديمة
+$dataUpdateOldBatch['quantity']=$OldBatchExsists['quantity']+$quntity;
+$dataUpdateOldBatch['total_cost_price']=$OldBatchExsists['unit_cost_price']*$dataUpdateOldBatch['quantity'];
+$dataUpdateOldBatch["created_at"]=date("Y-m-d H:i:s");
+$dataUpdateOldBatch["added_by"]=auth()->user()->id;
+update(new Inv_itemcard_batches(),$dataUpdateOldBatch,array("id"=>$OldBatchExsists['id'],"com_code"=>$com_code));
+
+    
+}else{
+    //insert new Batch ادخال باتش جديده
+    $dataInsertBatch["quantity"]=$quntity;
+    $dataInsertBatch["total_cost_price"]=$info->total_price;
+    $dataInsertBatch["created_at"]=date("Y-m-d H:i:s");
+    $dataInsertBatch["added_by"]=auth()->user()->id;
+    $dataInsertBatch["com_code"]=$com_code;
+    $row=get_cols_where_row_orderby(new Suppliers_with_orders(),array("auto_serial"),array("com_code"=>$com_code),'id','DESC' );
+    if(!empty($row)){
+        $dataInsertBatch['auto_serial']=$row['auto_serial']+1;
+    }else{
+        $dataInsertBatch['auto_serial']=1;
+    }
+
+    insert(new Inv_itemcard_batches(),$dataInsertBatch);
+
+}
+
+//item Move Card حركة الصنف 
+
+
+
+}
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['success'=>" تم اعتماد وترحيل الفاتورة بنجاح  "]);
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
             
 }

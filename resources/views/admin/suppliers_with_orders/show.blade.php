@@ -33,6 +33,7 @@
         <div class="card-body">
           <div id="ajax_responce_serarchDivparentpill">
         @if (@isset($data) && !@empty($data))
+        
         <table id="example2" class="table table-bordered table-hover">
          
             <tr>

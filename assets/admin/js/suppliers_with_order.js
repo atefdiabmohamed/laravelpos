@@ -398,6 +398,8 @@ $(document).on('click','#load_modal_add_detailsBtn',function(e){
         discount_type=$(this).val();
         if(discount_type==""){
           $("#discount_percent").val(0);
+          $("#discount_value").val(0);
+
           $("#discount_percent").attr("readonly",true);
 
 
@@ -519,6 +521,7 @@ $("#total_cost").val(total_cost*1);
 
 
 }else{
+  $("#discount_value").val(0);
   var total_cost=total_befor_discount;
   $("#total_cost").val(total_cost);
 

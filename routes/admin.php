@@ -184,7 +184,7 @@ Route::post('/suppliers_orders/reload_parent_pill',[Suppliers_with_ordersControl
 Route::post('/suppliers_orders/load_edit_item_details',[Suppliers_with_ordersController::class,'load_edit_item_details'])->name('admin.suppliers_orders.load_edit_item_details');
 Route::post('/suppliers_orders/edit_item_details',[Suppliers_with_ordersController::class,'edit_item_details'])->name('admin.suppliers_orders.edit_item_details');
 Route::get('/suppliers_orders/delete_details/{id}/{id_parent}',[Suppliers_with_ordersController::class,'delete_details'])->name('admin.suppliers_orders.delete_details');
-Route::get('/suppliers_orders/do_approved/{id}',[Suppliers_with_ordersController::class,'do_approved'])->name('admin.suppliers_orders.do_approved');
+Route::post('/suppliers_orders/do_approve/{id}',[Suppliers_with_ordersController::class,'do_approve'])->name('admin.suppliers_orders.do_approve');
 Route::post('/suppliers_orders/load_modal_approve_invoice',[Suppliers_with_ordersController::class,'load_modal_approve_invoice'])->name('admin.suppliers_orders.load_modal_approve_invoice');
 Route::post('/suppliers_orders/load_usershiftDiv',[Suppliers_with_ordersController::class,'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 
