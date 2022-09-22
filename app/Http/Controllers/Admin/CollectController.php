@@ -11,6 +11,8 @@ use App\Models\Treasuries;
 use App\Models\Account;
 use App\Models\Mov_type;
 use App\Models\Account_types;
+use App\Models\Supplier;
+use App\Models\Suppliers_with_orders;
 
 use App\Http\Requests\Collect_transactionRequest;
 
@@ -97,6 +99,7 @@ if($flag){
   //update Treasuries last_isal_collect
 $dataUpdateTreasuries['last_isal_collect']=$dataInsert['isal_number'];
 update(new Treasuries(),$dataUpdateTreasuries,array("com_code"=>$com_code,"id"=>$request->treasuries_id));
+refresh_account_blance($request->account_number,new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),false);
 return redirect()->route('admin.collect_transaction.index')->with(['success'=>"لقد تم اضافة البيانات بنجاح "]);
 
 

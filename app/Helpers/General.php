@@ -94,3 +94,34 @@ function get_user_shift($Admins_Shifts,$Treasuries=null,$Treasuries_transactions
   }
   return $data;
 }
+//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي حسب النوع
+function refresh_account_blance($account_number=null,$AccountModel=null,$SupplierModel=null,$treasuries_transactionsModel=null,$suppliers_with_ordersModel=null,$returnFlag=false){
+  $com_code=auth()->user()->com_code;
+ //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
+  $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+   //لو مورد
+   if($AccountData['account_type']==2){
+
+    //صافي مجموع المشتريات والمرتجعات للمورد   
+$the_net_in_suppliers_with_orders=$suppliers_with_ordersModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+//صافي حركة النقديه بالخزن علي حساب المورد
+$the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+
+//الرصيد النهائي للمورد
+$the_final_Balance=$AccountData['start_balance']+$the_net_in_suppliers_with_orders+$the_net_in_treasuries_transactions;
+$dataToUpdateAccount['current_balance']=$the_final_Balance;
+//update in Accounts حندث جدول الحسابات المالية بحقل المورد
+
+$AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
+$dataToUpdateSupplier['current_balance']=$the_final_Balance;
+//update in Accounts حندث جدول الموردين  بحقل المورد
+$SupplierModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateSupplier);
+if($returnFlag){
+  return $the_final_Balance;
+}
+
+   }
+
+
+
+}

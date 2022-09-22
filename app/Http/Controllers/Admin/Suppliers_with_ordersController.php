@@ -11,6 +11,7 @@ use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
 use App\Models\Treasuries_transactions;
 use App\Models\Inv_itemcard_movements;
+use App\Models\Account;
 
 use App\Models\Supplier;
 use App\Models\Inv_itemcard_batches;
@@ -612,6 +613,11 @@ if($user_shift['balance']<$request['what_paid']){
 
 $flag=update(new Suppliers_with_orders(),$dataUpdateParent,array("auto_serial" => $auto_serial, "com_code" => $com_code,'order_type'=>1));
 if($flag){
+//Affect on Supplier Balance  حنأثر في رصيد المورد
+//حنجيب  سجل المورد من الشجره المحاسبية برقم الحساب المالب
+
+refresh_account_blance($data['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),false);
+
 //حركات  مختلفه
 //first make treasuries_transactions  action if what paid >0
 if($request['what_paid']>0){
