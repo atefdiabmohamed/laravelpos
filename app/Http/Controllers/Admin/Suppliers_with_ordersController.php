@@ -10,6 +10,8 @@ use App\Models\Store;
 use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
 use App\Models\Treasuries_transactions;
+use App\Models\Inv_itemcard_movements;
+
 use App\Models\Supplier;
 use App\Models\Inv_itemcard_batches;
 use App\Http\Controllers\Controller;
@@ -79,7 +81,11 @@ public function store(Suppliers_with_ordersRequest $request)
            $data_insert['date'] = date("Y-m-d");
            $data_insert['com_code'] = $com_code;
            Suppliers_with_orders::create($data_insert);
-           return redirect()->route('admin.suppliers_orders.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+           $id=get_field_value(new Suppliers_with_orders(),"id",array("auto_serial"=>$data_insert['auto_serial'],"com_code"=>$com_code,"order_type"=>1));
+           
+           return redirect()->route("admin.suppliers_orders.show",$id)->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+
+      
         }catch (\Exception $ex) {
     
             return redirect()->back()
@@ -543,10 +549,11 @@ function do_approve($auto_serial,Request $request){
 
     $com_code=auth()->user()->com_code;
 //check is not approved 
-$data = get_cols_where_row(new Suppliers_with_orders(), array("total_cost_items","is_approved","id","account_number","store_id"), array("auto_serial" => $auto_serial, "com_code" => $com_code,'order_type'=>1));
+$data = get_cols_where_row(new Suppliers_with_orders(), array("total_cost_items","is_approved","id","account_number","store_id","suuplier_code"), array("auto_serial" => $auto_serial, "com_code" => $com_code,'order_type'=>1));
 if(empty($data)){
  return redirect()->route("admin.suppliers_orders.index")->with(['error'=>"عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
 }
+$SupplierName=get_field_value(new Supplier(),"name",array("com_code"=>$com_code,"suuplier_code"=>$data['suuplier_code']));
 
 if($data['is_approved']==1){
  return redirect()->route("admin.suppliers_orders.show",$data['id'])->with(['error'=>"عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
@@ -659,6 +666,11 @@ if(!empty($items)){
 //get itemCard Data
 $itemCard_Data=get_cols_where_row(new Inv_itemCard(),array("uom_id","retail_uom_quntToParent","retail_uom_id"),array("com_code"=>$com_code,"item_code"=>$info->item_code));
 if(!empty($itemCard_Data)){
+//get Quantity Befor any Action  حنجيب كيمة الصنف قبل الحركة
+$quantityBeforMove=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code));
+$MainUomName=get_field_value(new Inv_uom(),"name",array("com_code"=>$com_code,"id"=>$itemCard_Data['uom_id']));
+
+
     //if is parent Uom لو وحده اب
 if($info->isparentuom==1){
 $quntity=$info->deliverd_quantity;
@@ -722,7 +734,34 @@ update(new Inv_itemcard_batches(),$dataUpdateOldBatch,array("id"=>$OldBatchExsis
 
 }
 
+$quantityAfterMove=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code));
+
+$dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories']=1;
+$dataInsert_inv_itemcard_movements['items_movements_types']=1;
+$dataInsert_inv_itemcard_movements['item_code']=$info->item_code;
+//كود الفاتورة الاب
+$dataInsert_inv_itemcard_movements['FK_table']=$auto_serial;
+//كود صف الابن بتفاصيل الفاتورة
+$dataInsert_inv_itemcard_movements['FK_table_details']=$info->id;
+$dataInsert_inv_itemcard_movements['byan']="نظير مشتريات من المورد "." ".$SupplierName." فاتورة رقم"." ".$auto_serial;
+//الكمية قبل
+$dataInsert_inv_itemcard_movements['quantity_befor_movement']="عدد "." ".($quantityBeforMove*1)." ".$MainUomName;
+//الكمية بعد
+$dataInsert_inv_itemcard_movements['quantity_after_move']="عدد "." ".($quantityAfterMove*1)." ".$MainUomName;
+$dataInsert_inv_itemcard_movements["created_at"]=date("Y-m-d H:i:s");
+$dataInsert_inv_itemcard_movements["added_by"]=auth()->user()->id;
+$dataInsert_inv_itemcard_movements["date"]=date("Y-m-d");
+$dataInsert_inv_itemcard_movements["com_code"]=$com_code;
+
+insert(new Inv_itemcard_movements(),$dataInsert_inv_itemcard_movements);
+
+
 //item Move Card حركة الصنف 
+
+
+
+
+
 
 
 
