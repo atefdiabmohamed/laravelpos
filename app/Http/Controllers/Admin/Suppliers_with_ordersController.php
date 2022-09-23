@@ -545,7 +545,7 @@ public function delete_details($id,$parent_id)
            
                 }
 
-
+//اعتماد وترحيل فاتورة المشتريات 
 function do_approve($auto_serial,Request $request){
 
     $com_code=auth()->user()->com_code;
@@ -670,10 +670,15 @@ $items=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("supp
 if(!empty($items)){
     foreach($items as $info){
 //get itemCard Data
-$itemCard_Data=get_cols_where_row(new Inv_itemCard(),array("uom_id","retail_uom_quntToParent","retail_uom_id"),array("com_code"=>$com_code,"item_code"=>$info->item_code));
+$itemCard_Data=get_cols_where_row(new Inv_itemCard(),array("uom_id","retail_uom_quntToParent","retail_uom_id","does_has_retailunit"),array("com_code"=>$com_code,"item_code"=>$info->item_code));
 if(!empty($itemCard_Data)){
-//get Quantity Befor any Action  حنجيب كيمة الصنف قبل الحركة
+//get Quantity Befor any Action  حنجيب كيمة الصنف بكل المخازن قبل الحركة
 $quantityBeforMove=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code));
+//get Quantity Befor any Action  حنجيب كيمة الصنف  بمخزن فاتورة المشتريات الحالي قبل الحركة
+$quantityBeforMoveCurrntStore=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code,'store_id'=>$data['store_id']));
+
+
+
 $MainUomName=get_field_value(new Inv_uom(),"name",array("com_code"=>$com_code,"id"=>$itemCard_Data['uom_id']));
 
 
@@ -681,6 +686,9 @@ $MainUomName=get_field_value(new Inv_uom(),"name",array("com_code"=>$com_code,"i
 if($info->isparentuom==1){
 $quntity=$info->deliverd_quantity;
 $unit_price=$info->unit_price;
+
+
+
 }else{
     // if is retail  لو كان بوحده الابن التجزئة
         //التحويل من الاب للابن بنضرب   في النسبة بينهم - اما التحويل من الابن للاب بنقسم علي النسبه بينهما 
@@ -739,8 +747,10 @@ update(new Inv_itemcard_batches(),$dataUpdateOldBatch,array("id"=>$OldBatchExsis
     insert(new Inv_itemcard_batches(),$dataInsertBatch);
 
 }
-
+//كمية الصنف بكل المخازن بعد اتمام حركة الباتشات وترحيلها
 $quantityAfterMove=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code));
+//كمية الصنف بمخزن فاتورة الشراء  بعد اتمام حركة الباتشات وترحيلها
+$quantityAfterMoveCurrentStore=get_sum_where(new Inv_itemcard_batches(),"quantity",array("item_code"=>$info->item_code,"com_code"=>$com_code,'store_id'=>$data['store_id']));
 
 $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories']=1;
 $dataInsert_inv_itemcard_movements['items_movements_types']=1;
@@ -750,10 +760,18 @@ $dataInsert_inv_itemcard_movements['FK_table']=$auto_serial;
 //كود صف الابن بتفاصيل الفاتورة
 $dataInsert_inv_itemcard_movements['FK_table_details']=$info->id;
 $dataInsert_inv_itemcard_movements['byan']="نظير مشتريات من المورد "." ".$SupplierName." فاتورة رقم"." ".$auto_serial;
-//الكمية قبل
+//كمية الصنف بكل المخازن قبل الحركة
 $dataInsert_inv_itemcard_movements['quantity_befor_movement']="عدد "." ".($quantityBeforMove*1)." ".$MainUomName;
-//الكمية بعد
+// كمية الصنف بكل المخازن بعد  الحركة
 $dataInsert_inv_itemcard_movements['quantity_after_move']="عدد "." ".($quantityAfterMove*1)." ".$MainUomName;
+
+
+//كمية الصنف  المخزن الحالي قبل الحركة
+$dataInsert_inv_itemcard_movements['quantity_befor_move_store']="عدد "." ".($quantityBeforMoveCurrntStore*1)." ".$MainUomName;
+// كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+$dataInsert_inv_itemcard_movements['quantity_after_move_store']="عدد "." ".($quantityAfterMoveCurrentStore*1)." ".$MainUomName;
+$dataInsert_inv_itemcard_movements["store_id"]=$data['store_id'];
+
 $dataInsert_inv_itemcard_movements["created_at"]=date("Y-m-d H:i:s");
 $dataInsert_inv_itemcard_movements["added_by"]=auth()->user()->id;
 $dataInsert_inv_itemcard_movements["date"]=date("Y-m-d");
@@ -772,6 +790,29 @@ insert(new Inv_itemcard_movements(),$dataInsert_inv_itemcard_movements);
 
 
 }
+
+//update last Cost price   تحديث اخر سعر شراء للصنف
+if($info->isparentuom==1){
+//لو الوحده اللي اشتريت بيها كانت وحده اب 
+    $dataUpdateItemCardCosts['cost_price']=$info->unit_price;
+    if($itemCard_Data['does_has_retailunit']==1){
+        $dataUpdateItemCardCosts['cost_price_retail']=$info->unit_price/$itemCard_Data['retail_uom_quntToParent'];
+    }
+ 
+    }else{
+        // if is retail  لو كان بوحده الابن التجزئة
+            //التحويل من الاب للابن بنضرب   في النسبة بينهم - اما التحويل من الابن للاب بنقسم علي النسبه بينهما 
+            $dataUpdateItemCardCosts['cost_price']=$info->unit_price*$itemCard_Data['retail_uom_quntToParent'];
+            $dataUpdateItemCardCosts['cost_price_retail']=$info->unit_price;
+    }
+
+ update(new Inv_itemCard(),$dataUpdateItemCardCosts,array("com_code"=>$com_code,"item_code"=>$info->item_code));
+
+
+
+// update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+do_update_itemCardQuantity(new Inv_itemCard(),$info->item_code,new Inv_itemcard_batches(),$itemCard_Data['does_has_retailunit'],$itemCard_Data['retail_uom_quntToParent']);
+
 
 
     }

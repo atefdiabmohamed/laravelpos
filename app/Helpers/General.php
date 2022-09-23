@@ -122,6 +122,34 @@ if($returnFlag){
 
    }
 
+function do_update_itemCardQuantity($Inv_itemCard=null,$item_code=null,$Inv_itemcard_batches=null,$does_has_retailunit=null,$retail_uom_quntToParent=null){
+$com_code=auth()->user()->com_code;
+// update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+//حنجيب كمية الصنف من جدول الباتشات
+$allQuantityINBatches=  $sum=$Inv_itemcard_batches::where(["com_code"=>$com_code,"item_code"=>$item_code])->sum("quantity");
 
+
+//كل كمية الصنف بوحده الاب مباشره بدون اي تحويلات مثال  4شكارة وعلبتين
+$DataToUpdateItemCardQuantity['All_QUENTITY']=$allQuantityINBatches;
+if($does_has_retailunit==1){
+//all quantity in reatails  كل الكمية بوحده التجزئة
+//emaple 21 kilo
+ $QUENTITY_all_Retails=$allQuantityINBatches*$retail_uom_quntToParent;
+// 21kilo  21/10  -> int 2 شكارة
+ $parentQuanityUom=intdiv($QUENTITY_all_Retails,$retail_uom_quntToParent);    
+$DataToUpdateItemCardQuantity['QUENTITY']=$parentQuanityUom;
+
+//% modelus  21%10  - 1 علبة 
+$DataToUpdateItemCardQuantity['QUENTITY_Retail']=fmod($QUENTITY_all_Retails,$retail_uom_quntToParent);   
+$DataToUpdateItemCardQuantity['QUENTITY_all_Retails']=$QUENTITY_all_Retails;
+
+}else{
+    $DataToUpdateItemCardQuantity['QUENTITY']=$allQuantityINBatches;
+}
+
+update($Inv_itemCard,$DataToUpdateItemCardQuantity,array("com_code"=>$com_code,"item_code"=>$item_code));
+
+
+}
 
 }
