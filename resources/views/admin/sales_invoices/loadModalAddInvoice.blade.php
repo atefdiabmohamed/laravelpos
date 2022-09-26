@@ -58,7 +58,22 @@
                 <div class="clearfix"></div>
                 <hr style="border:1px solid #3c8dbc;">  
                 <div class="row">
-                  <div class="col-md-4" >
+                  <div class="col-md-3" >
+                  <div class="form-group"> 
+                    <label>    بيانات المخازن</label>
+                    <select name="store_id" id="store_id" class="form-control ">
+                      <option value=""> اختر المخزن  </option>
+                      @if (@isset($stores) && !@empty($stores))
+                     @foreach ($stores as $info )
+                       <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                     @endforeach
+                      @endif
+                    </select>
+                 
+                    </div>
+                  </div>
+
+                  <div class="col-md-3" >
                     <div class="form-group"> 
                      <label>    نوع البيع</label>
                      <select name="customer_code" id="customer_code" class="form-control select2">
@@ -69,14 +84,18 @@
                    
                      </div>
                    </div>
-                   <div class="col-md-4">
+                   <div class="col-md-3">
                     <div class="form-group"> 
                       <label>   بيانات الاصناف</label>
                       <select  id="item_code" class="form-control select2" style="width: 100%;">
                         <option value="">اختر الصنف</option>
                         @if (@isset($item_cards) && !@empty($item_cards))
                        @foreach ($item_cards as $info )
-                         <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} </option>
+                         <option data-item_type="{{ $info->item_type }}"
+
+                            value="{{ $info->item_code }}"> {{ $info->name }} 
+                          
+                          </option>
                        @endforeach
                         @endif
                       </select>
@@ -87,9 +106,14 @@
                    </div>
                    
               <!--  الوحدات للصنف-->
-                   <div class="col-md-4  " style="display: none;" id="UomDiv">
+                   <div class="col-md-3  " style="display: none;" id="UomDiv">
     
                   </div>
+  <!--   باتشات الكميات بالمخازن-->
+  <div class="col-md-3  " style="display: none;" id="inv_itemcard_batchesDiv">
+    
+  </div>
+
                   <div class="col-md-2  "
                   <div class="form-group">
                     <label> الكمية</label>
