@@ -242,6 +242,9 @@ Route::post('/SalesInvoices/ajax_search',[SalesInvoicesController::class,'ajax_s
 Route::get('/SalesInvoices/show/{id}',[SalesInvoicesController::class,'show'])->name('admin.SalesInvoices.show');
 Route::post('/SalesInvoices/get_item_uoms',[SalesInvoicesController::class,'get_item_uoms'])->name('admin.SalesInvoices.get_item_uoms');
 Route::post('/SalesInvoices/get_item_batches',[SalesInvoicesController::class,'get_item_batches'])->name('admin.SalesInvoices.get_item_batches');
+Route::post('/SalesInvoices/get_item_unit_price',[SalesInvoicesController::class,'get_item_unit_price'])->name('admin.SalesInvoices.get_item_unit_price');
+Route::post('/SalesInvoices/get_Add_new_item_row',[SalesInvoicesController::class,'get_Add_new_item_row'])->name('admin.SalesInvoices.get_Add_new_item_row');
+
 Route::post('/SalesInvoices/load_modal_add',[SalesInvoicesController::class,'load_modal_add'])->name('admin.SalesInvoices.load_modal_add');
 Route::post('/SalesInvoices/add_new_details',[SalesInvoicesController::class,'add_new_details'])->name('admin.SalesInvoices.add_new_details');
 Route::post('/SalesInvoices/reload_itemsdetials',[SalesInvoicesController::class,'reload_itemsdetials'])->name('admin.SalesInvoices.reload_itemsdetials');

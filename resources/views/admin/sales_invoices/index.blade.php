@@ -27,9 +27,13 @@
           <input type="hidden" id="ajax_get_item_uoms" value="{{ route('admin.SalesInvoices.get_item_uoms') }}">
           <input type="hidden" id="ajax_get_load_modal_add" value="{{ route('admin.SalesInvoices.load_modal_add') }}">
           <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.SalesInvoices.get_item_batches') }}">
+          <input type="hidden" id="ajax_get_item_unit_price" value="{{ route('admin.SalesInvoices.get_item_unit_price') }}">
+          <input type="hidden" id="ajax_get_Add_new_item_row" value="{{ route('admin.SalesInvoices.get_Add_new_item_row') }}">
 
+
+          
       
-
+          
           
           <button class="btn btn-sm btn-success" id="LoadModalAddBtn" >اضافة فاتورة جديدة</button>
         </div>

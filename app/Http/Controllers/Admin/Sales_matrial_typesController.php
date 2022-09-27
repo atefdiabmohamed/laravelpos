@@ -25,6 +25,7 @@ class Sales_matrial_typesController extends Controller
         }
 
 
+
         return view('admin.sales_matrial_types.index', ['data' => $data]);
     }
 

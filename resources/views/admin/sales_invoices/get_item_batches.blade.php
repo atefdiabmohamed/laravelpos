@@ -1,7 +1,7 @@
 @if (@isset($item_card_Data) && !@empty($item_card_Data))
 <div class="form-group"> 
     <label>      الكميات بالمخزن المحدد</label>
-    <select  id="uom_id" class="form-control " style="width: 100%;">
+    <select  id="inv_itemcard_batches_id" class="form-control " style="width: 100%;">
       @if (@isset($inv_itemcard_batches) && !@empty($inv_itemcard_batches) && count($inv_itemcard_batches)>0)
      <!-- لو كان مختار الوحده الاب يبقي الشغل علي وضعه لانه الكميات اساسا بالمخزن بالوحده الاب -->
       @if($uom_Data['is_master']==1)

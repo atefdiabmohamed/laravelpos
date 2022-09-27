@@ -76,7 +76,7 @@
                   <div class="col-md-3" >
                     <div class="form-group"> 
                      <label>    نوع البيع</label>
-                     <select name="customer_code" id="customer_code" class="form-control select2">
+                     <select name="sales_item_type" id="sales_item_type" class="form-control ">
                     <option value="1">قطاعي</option>
                     <option value="2">نص جملة</option>
                     <option value="3">جملة</option>
@@ -91,7 +91,7 @@
                         <option value="">اختر الصنف</option>
                         @if (@isset($item_cards) && !@empty($item_cards))
                        @foreach ($item_cards as $info )
-                         <option data-item_type="{{ $info->item_type }}"
+                         <option data-item_type="{{ $info->item_type }}"  
 
                             value="{{ $info->item_code }}"> {{ $info->name }} 
                           
@@ -110,21 +110,21 @@
     
                   </div>
   <!--   باتشات الكميات بالمخازن-->
-  <div class="col-md-3  " style="display: none;" id="inv_itemcard_batchesDiv">
+  <div class="col-md-6  " style="display: none;" id="inv_itemcard_batchesDiv">
     
   </div>
 
-                  <div class="col-md-2  "
+                  <div class="col-md-3  "
                   <div class="form-group">
                     <label> الكمية</label>
                     <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_quantity" id="item_quantity" class="form-control"  value="1"   >
                     </div>
-                    <div class="col-md-2  "
+                    <div class="col-md-3  "
                     <div class="form-group">
                       <label> السعر</label>
-                      <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_quantity" id="item_quantity" class="form-control"  value=""   >
+                      <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_price" id="item_price" class="form-control"  value=""   >
                       </div>
-                      <div class="col-md-4" >
+                      <div class="col-md-3" >
                         <div class="form-group"> 
                          <label> هل بيع عادي</label>
                          <select name="is_normal_orOther" id="is_normal_orOther" class="form-control ">
@@ -138,7 +138,7 @@
                          </div>
                        </div>
 
-                      <div class="col-md-2  "
+                      <div class="col-md-3  "
                       <div class="form-group">
                         <label> الاجمالي</label>
                         <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_total" id="item_total" class="form-control"  value=""   >
@@ -162,9 +162,9 @@
                         <th>سعر الوحدة</th>
                         <th>الكمية</th>
                         <th>الاجمالي</th>
-
+                        <th></th>
                       </thead>
-                      <tbody>
+                      <tbody id="itemsrowtableContainterBody">
 
                       </tbody>
 
