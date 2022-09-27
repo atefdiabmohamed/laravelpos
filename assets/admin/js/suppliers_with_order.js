@@ -489,6 +489,9 @@ $(document).ready(function () {
 
   });
 
+
+
+  
   function recalcualte() {
     var total_cost_items = $("#total_cost_items").val();
     if (total_cost_items == "") { total_cost_items = 0; }

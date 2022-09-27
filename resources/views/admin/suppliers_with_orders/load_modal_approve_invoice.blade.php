@@ -3,6 +3,7 @@
 
 <form action="{{ route("admin.suppliers_orders.do_approve",$data['auto_serial']) }}" method="post">
      @csrf
+     
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">

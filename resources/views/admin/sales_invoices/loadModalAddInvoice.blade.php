@@ -171,6 +171,126 @@
                     </table>
 
                   </div>
-                
+                  <div class="clearfix"></div>
+                  <hr style="border:1px solid #3c8dbc;">  
+<div class="row">
+  <div class="col-md-3">
+  <div class="form-group">
+        <label>اجمالي الاصناف  </label>
+        <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="total_cost_items"  id="total_cost_items" 
+        class="form-control"  value=""  >
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>    نسبة الضريبة </label>
+        <input  oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="tax_percent"  id="tax_percent" 
+        class="form-control"  value="0"  >
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>  قيمة الضريبة   </label>
+        <input readonly    id="tax_value" class="form-control"  name="tax_value" value="0"  >
+   </div>
+  </div>
+  <div class="col-md-3">
+  <div class="form-group">
+        <label>     الاجمالي قبل الخصم </label>
+        <input readonly    id="total_befor_discount" name="total_befor_discount" class="form-control"  
+        value="0"  >
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>     نوع الخصم   </label>
+        <select class="form-control" name="discount_type" id="discount_type">
+        <option value="">لايوجد خصم</option>
+        <option value="1" >    نسبة مئوية</option>
+        <option value="2" > قيمة يدوي</option>
+        </select>
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>     نسبة  الخصم </label>
+        <input     oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="discount_percent"  id="discount_percent" class="form-control"  value="0"  >
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>  قيمة   الخصم   </label>
+        <input readonly  name="discount_value"   id="discount_value" class="form-control"  value="0"  >
+   </div>
+  </div>
+  <div class="col-md-3">
+   <div class="form-group">
+        <label>     الاجمالي النهائي       </label>
+        <input readonly name="total_cost"    id="total_cost" class="form-control"  value="0"  >
+   </div>
+  </div>
+  </div>
+  
+  <div class="row" id="shiftDiv">
+       <div class="col-md-3">
+            <div class="form-group">
+                 <label>    خزنة التحصيل  </label>
+             <select id="treasuries_id" name="treasuries_id" class="form-control">
+           @if(!@empty($user_shift))
+           <option selected value="{{ $user_shift['treasuries_id']  }}"> {{ $user_shift['name'] }} </option>
+           @else
+           <option value=""> عفوا لاتوجد خزنة لديك الان</option>
+           @endif
+       
+             </select>
+       
+            </div>
+           </div>
+           <div class="col-md-3 > 
+            <div class="form-group">
+              <label>  الرصيد المتاح بالخزنة   </label>
+              <input  readonly name="treasuries_balance" id="treasuries_balance" class="form-control" 
+              @if(!@empty($user_shift))
+               value="{{ $user_shift['balance']*1 }}" 
+               @else
+               value="0" 
+               @endif
+               >
+              </div>
+  </div>
+  <div class="row">
+  
+         <div class="col-md-3">
+            <div class="form-group">
+                 <label>     نوع الفاتورة   </label>
+                 <select class="form-control" name="pill_type" id="pill_type">
+                 <option value="1"  >     كاش</option>
+                 <option value="2" >  اجل</option>
+                 </select>
+            </div>
+           </div>
+           <div class="col-md-3 > 
+            <div class="form-group">
+              <label>    المحصل  الان   </label>
+              <input   name="what_paid" id="what_paid" class="form-control"   value="0"    >
+              </div>
+  
+              <div class="col-md-3 > 
+                 <div class="form-group">
+                   <label>    المتبقي تحصيله    </label>
+                   <input readonly   name="what_remain" id="what_remain" class="form-control"   value="0"    >
+                   </div>
+                   <div class="col-md-12 "> 
+                    <div class="form-group">
+                      <label>      الملاحظات علي الفاتورة   </label>
+                      <input  style="background-color: lightgoldenrodyellow"    name="notes" id="notes" class="form-control"   value=""    >
+                      </div>
+                   <div class="col-md-12 text-center" > 
+                      <hr>
+                      <button type="submit" id="Do_Add_invoice"  class="btn btn-sm btn-danger">    حفظ الفاتورة</button>
+  
+                      </div>
+  </div>
+  
               
               

@@ -12,6 +12,12 @@ use App\Models\Inv_itemCard;
 use App\Models\Inv_itemcard_batches;
 use App\Models\Inv_uom;
 use App\Models\Store;
+use App\Models\Treasuries_transactions;
+use App\Models\Treasuries;
+use App\Models\Admins_Shifts;
+
+
+
 
 class SalesInvoicesController extends Controller
 {
@@ -64,8 +70,9 @@ class SalesInvoicesController extends Controller
     if ($request->ajax()) {
       $item_cards = get_cols_where(new Inv_itemCard(), array("item_code", "name", "item_type"), array("com_code" => $com_code, "active" => 1));
       $stores = get_cols_where(new Store(), array("id", "name"), array("com_code" => $com_code, "active" => 1), 'id', 'ASC');
+      $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
 
-      return view("admin.sales_invoices.loadModalAddInvoice", ['item_cards' => $item_cards, 'stores' => $stores]);
+      return view("admin.sales_invoices.loadModalAddInvoice", ['item_cards' => $item_cards, 'stores' => $stores,'user_shift'=>$user_shift]);
     }
   }
   public function get_item_batches(Request $request)
