@@ -287,7 +287,7 @@
                       </div>
                    <div class="col-md-12 text-center" > 
                       <hr>
-                      <button type="submit" id="Do_Add_invoice"  class="btn btn-sm btn-danger">    حفظ الفاتورة</button>
+                      <button type="submit" id="Do_Add_invoice"  class="btn btn-sm btn-success">     طباعة عرض الاسعار</button>
   
                       </div>
   </div>

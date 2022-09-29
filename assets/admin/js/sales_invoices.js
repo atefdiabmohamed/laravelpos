@@ -133,9 +133,9 @@ $(document).ready(function () {
   });
 
 
-  $(document).on('click', '#LoadModalAddBtn', function (e) {
+  $(document).on('click', '#LoadModalAddBtnMirror', function (e) {
     var token_search = $("#token_search").val();
-    var url = $("#ajax_get_load_modal_add").val();
+    var url = $("#ajax_get_load_modal_addMirror").val();
     jQuery.ajax({
       url: url,
       type: 'post',
@@ -143,20 +143,35 @@ $(document).ready(function () {
       cache: false,
       data: { "_token": token_search },
       success: function (data) {
-
-        $("#AddNewInvoiceModalBody").html(data);
-        $("#AddNewInvoiceModal").modal("show");
-
+        $("#AddNewInvoiceModalMirroBody").html(data);
+        $("#AddNewInvoiceModalMirro").modal("show");
       },
       error: function () {
-
-
         alert("حدث خطاما");
       }
     });
-
-
   });
+
+
+  $(document).on('click', '#LoadModalAddBtnActiveInvoice', function (e) {
+    var token = $("#token_search").val();
+    var url = $("#ajax_get_load_modal_addActiveInvoice").val();
+    jQuery.ajax({
+      url: url,
+      type: 'post',
+      dataType: 'html',
+      cache: false,
+      data: { "_token": token },
+      success: function (data) {
+        $("#AddNewInvoiceModalActiveInvoiceBody").html(data);
+        $("#AddNewInvoiceModalActiveInvoice").modal("show");
+      },
+      error: function () {
+        alert("حدث خطاما");
+      }
+    });
+  });
+
 
   function recalculate_itemTotlaRow() {
     var item_quantity = $("#item_quantity").val();
@@ -443,8 +458,73 @@ $(document).on('input', '#tax_percent', function (e) {
   }
   recalcualte();
 });
+$(document).on('click', '#Do_Add_new_active_invoice', function (e) {
+var invoice_date=$("#invoice_date").val();
+
+if(invoice_date==""){
+  alert("من فضلك ادخل تاريخ الفاتورة");
+  $("#invoice_date").focus();
+  return false;
+}
+var Sales_matrial_types_id=$("#Sales_matrial_types_id").val();
+if(Sales_matrial_types_id==""){
+  alert("من فضلك اختر فئة الفاتورة");
+  $("#Sales_matrial_types_id").focus();
+  return false;
+}
 
 
+var customer_code=$("#customer_code").val();
+
+var is_has_customer=$("#is_has_customer").val();
+if(is_has_customer==1){
+if(customer_code==""){
+  alert("من فضلك  اختر العميل");
+  $("#customer_code").focus();
+  return false;
+
+}
+}
+var delegate_code=$("#delegate_code").val();
+if(delegate_code==""){
+  alert("من فضلك  اختر المندوب ");
+  $("#delegate_code").focus();
+  return false;
+}
+
+  var token = $("#token_search").val();
+    var url = $("#ajax_get_store").val();
+    jQuery.ajax({
+      url: url,
+      type: 'post',
+      dataType: 'json',
+      cache: false,
+      data: {  invoice_date:invoice_date,customer_code:customer_code,
+      is_has_customer:is_has_customer,delegate_code:delegate_code,
+      sales_matrial_types:Sales_matrial_types_id,"_token": token},
+      success: function (data) {
+      alert("تم الاضافة بنجاح");
+      },
+      error: function () {
+        alert("حدث خطاما");
+      }
+    });
+
+});
+
+$(document).on('change', '#is_has_customer', function (e) {
+
+  $("#customer_code").val("");
+if($(this).val()==1){
+
+  $("#customer_codeDiv").show();
+}else{
+  $("#customer_codeDiv").hide();
+  
+
+}
+
+});
 
 
 });

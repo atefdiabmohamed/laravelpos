@@ -15,5 +15,5 @@ class Sales_invoices extends Model
          'discount_value', 'tax_percent', 'total_cost_items', 'tax_value', 'total_befor_discount',
           'total_cost', 'account_number', 'money_for_account', 'pill_type', 'what_paid', 'what_remain',
            'treasuries_transactions_id', 'customer_balance_befor', 'customer_balance_after', 'added_by',
-            'created_at', 'updated_at', 'updated_by', 'approved_by','is_has_customer'      ];
+            'created_at', 'updated_at', 'updated_by', 'approved_by','is_has_customer','delegate_code','date'      ];
 }

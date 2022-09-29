@@ -244,8 +244,14 @@ Route::post('/SalesInvoices/get_item_uoms',[SalesInvoicesController::class,'get_
 Route::post('/SalesInvoices/get_item_batches',[SalesInvoicesController::class,'get_item_batches'])->name('admin.SalesInvoices.get_item_batches');
 Route::post('/SalesInvoices/get_item_unit_price',[SalesInvoicesController::class,'get_item_unit_price'])->name('admin.SalesInvoices.get_item_unit_price');
 Route::post('/SalesInvoices/get_Add_new_item_row',[SalesInvoicesController::class,'get_Add_new_item_row'])->name('admin.SalesInvoices.get_Add_new_item_row');
+Route::post('/SalesInvoices/load_modal_addMirror',[SalesInvoicesController::class,'load_modal_addMirror'])->name('admin.SalesInvoices.load_modal_addMirror');
+Route::post('/SalesInvoices/load_modal_addActiveInvoice',[SalesInvoicesController::class,'load_modal_addActiveInvoice'])->name('admin.SalesInvoices.load_modal_addActiveInvoice');
+Route::post('/SalesInvoices/store',[SalesInvoicesController::class,'store'])->name('admin.SalesInvoices.store');
 
-Route::post('/SalesInvoices/load_modal_add',[SalesInvoicesController::class,'load_modal_add'])->name('admin.SalesInvoices.load_modal_add');
+
+
+
+
 Route::post('/SalesInvoices/add_new_details',[SalesInvoicesController::class,'add_new_details'])->name('admin.SalesInvoices.add_new_details');
 Route::post('/SalesInvoices/reload_itemsdetials',[SalesInvoicesController::class,'reload_itemsdetials'])->name('admin.SalesInvoices.reload_itemsdetials');
 Route::post('/SalesInvoices/reload_parent_pill',[SalesInvoicesController::class,'reload_parent_pill'])->name('admin.SalesInvoices.reload_parent_pill');

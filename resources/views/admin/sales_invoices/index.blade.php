@@ -25,17 +25,18 @@
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
           <input type="hidden" id="ajax_search_url" value="{{ route('admin.SalesInvoices.ajax_search') }}">
           <input type="hidden" id="ajax_get_item_uoms" value="{{ route('admin.SalesInvoices.get_item_uoms') }}">
-          <input type="hidden" id="ajax_get_load_modal_add" value="{{ route('admin.SalesInvoices.load_modal_add') }}">
+          <input type="hidden" id="ajax_get_load_modal_addMirror" value="{{ route('admin.SalesInvoices.load_modal_addMirror') }}">
+          <input type="hidden" id="ajax_get_load_modal_addActiveInvoice" value="{{ route('admin.SalesInvoices.load_modal_addActiveInvoice') }}">
           <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.SalesInvoices.get_item_batches') }}">
           <input type="hidden" id="ajax_get_item_unit_price" value="{{ route('admin.SalesInvoices.get_item_unit_price') }}">
           <input type="hidden" id="ajax_get_Add_new_item_row" value="{{ route('admin.SalesInvoices.get_Add_new_item_row') }}">
+          <input type="hidden" id="ajax_get_store" value="{{ route('admin.SalesInvoices.store') }}">
 
+          <button class="btn btn-sm btn-success" id="LoadModalAddBtnMirror" >  مرآة فاتورة عرض اسعار</button>
+          <button class="btn btn-sm btn-primary" id="LoadModalAddBtnActiveInvoice" >     اضافة فاتورة فعلية</button>
 
-          
       
           
-          
-          <button class="btn btn-sm btn-success" id="LoadModalAddBtn" >اضافة فاتورة جديدة</button>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -112,15 +113,15 @@
       </div>
         </div>
      
-        <div class="modal fade  " id="AddNewInvoiceModal">
+        <div class="modal fade  " id="AddNewInvoiceModalMirro">
           <div class="modal-dialog modal-xl" >
             <div class="modal-content bg-info">
               <div class="modal-header">
-                <h4 class="modal-title text-center">   اضافة فاتورة مبيعات جديدة</h4>
+                <h4 class="modal-title text-center">     مرآة عرض اسعار  لفاتورة مبيعات </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
               </div>
-              <div class="modal-body" id="AddNewInvoiceModalBody" style="background-color: white !important; color:black;">
+              <div class="modal-body" id="AddNewInvoiceModalMirroBody" style="background-color: white !important; color:black;">
              
 
         
@@ -133,6 +134,31 @@
           </div>
           <!-- /.modal-dialog -->
         </div>
+
+        <div class="modal fade  "   id="AddNewInvoiceModalActiveInvoice">
+          <div class="modal-dialog modal-xl" >
+            <div class="modal-content bg-info">
+              <div class="modal-header">
+                <h4 class="modal-title text-center">          اضافة فاتورة مبيعات فعلية </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body" id="AddNewInvoiceModalActiveInvoiceBody" style="background-color: white !important; color:black;">
+             
+
+        
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+
+
+
 
 
 </div>
