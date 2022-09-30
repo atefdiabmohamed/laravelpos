@@ -31,7 +31,13 @@
           <input type="hidden" id="ajax_get_item_unit_price" value="{{ route('admin.SalesInvoices.get_item_unit_price') }}">
           <input type="hidden" id="ajax_get_Add_new_item_row" value="{{ route('admin.SalesInvoices.get_Add_new_item_row') }}">
           <input type="hidden" id="ajax_get_store" value="{{ route('admin.SalesInvoices.store') }}">
+          <input type="hidden" id="ajax_get_load_invoice_update_modal" value="{{ route('admin.SalesInvoices.load_invoice_update_modal') }}">
+          <input type="hidden" id="ajax_get_Add_item_to_invoice" value="{{ route('admin.SalesInvoices.Add_item_to_invoice') }}">
 
+
+          
+
+          
           <button class="btn btn-sm btn-success" id="LoadModalAddBtnMirror" >  مرآة فاتورة عرض اسعار</button>
           <button class="btn btn-sm btn-primary" id="LoadModalAddBtnActiveInvoice" >     اضافة فاتورة فعلية</button>
 
@@ -78,10 +84,9 @@
          <td>
 
           @if($info->is_approved==0)
-        <a href="{{ route('admin.suppliers_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <button data-autoserial="{{ $info->auto_serial }}"  class="btn btn-sm load_invoice_update_modal btn-primary">تعديل</button>   
         <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
         @endif
-        <a href="{{ route('admin.suppliers_orders.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
 
          </td>
            
@@ -158,7 +163,27 @@
         </div>
 
 
+        <div class="modal fade  "   id="updateInvoiceModalActiveInvoice">
+          <div class="modal-dialog modal-xl" >
+            <div class="modal-content bg-info">
+              <div class="modal-header">
+                <h4 class="modal-title text-center">          تحديث فاتورة مبيعات فعلية </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body" id="updateInvoiceModalActiveInvoiceBody" style="background-color: white !important; color:black;">
+             
 
+        
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
 
 
 </div>

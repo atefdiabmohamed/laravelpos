@@ -16,6 +16,7 @@ use App\Models\Treasuries_transactions;
 use App\Models\Treasuries;
 use App\Models\Admins_Shifts;
 use App\Models\Delegate;
+use App\Models\Sales_invoices_details;
 
 class SalesInvoicesController extends Controller
 {
@@ -81,15 +82,12 @@ public function load_modal_addActiveInvoice(Request $request)
   $com_code = auth()->user()->com_code;
 
   if ($request->ajax()) {
-    $item_cards = get_cols_where(new Inv_itemCard(), array("item_code", "name", "item_type"), array("com_code" => $com_code, "active" => 1));
-    $stores = get_cols_where(new Store(), array("id", "name"), array("com_code" => $com_code, "active" => 1), 'id', 'ASC');
-    $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
     $delegates=get_cols_where(new Delegate(),array("delegate_code","name"),array("com_code" => $com_code, "active" => 1));
     $customers=get_cols_where(new Customer(),array("customer_code","name"),array("com_code" => $com_code, "active" => 1));
     $Sales_matrial_types=get_cols_where(new Sales_matrial_types(),array("id","name"),array("com_code" => $com_code, "active" => 1));
     
-    return view("admin.sales_invoices.load_modal_addActiveInvoice", ['item_cards' => $item_cards, 'stores' => $stores, 'user_shift' =>
-     $user_shift,'delegates'=>$delegates,'customers'=>$customers,'Sales_matrial_types'=>$Sales_matrial_types]);
+    return view("admin.sales_invoices.load_modal_addActiveInvoice", [
+     'delegates'=>$delegates,'customers'=>$customers,'Sales_matrial_types'=>$Sales_matrial_types]);
   }
 }
 
@@ -184,7 +182,7 @@ public function load_modal_addActiveInvoice(Request $request)
       $received_data['sales_item_type'] = $request->sales_item_type;
       $received_data['item_code'] = $request->item_code;
       $received_data['uom_id'] = $request->uom_id;
-      $received_data['inv_itemcard_batches_id'] = $request->inv_itemcard_batches_id;
+      $received_data['inv_itemcard_batches_autoserial'] = $request->inv_itemcard_batches_autoserial;
       $received_data['item_quantity'] = $request->item_quantity;
       $received_data['item_price'] = $request->item_price;
       $received_data['is_normal_orOther'] = $request->is_normal_orOther;
@@ -204,7 +202,7 @@ public function load_modal_addActiveInvoice(Request $request)
     if ($request->ajax()) {
       $com_code = auth()->user()->com_code;
    //حنعمل اضافة للفاتورة اول مرة 
-   $com_code = auth()->user()->com_code;
+
    $last_auto_serial_Date = get_cols_where_row_orderby(new Sales_invoices(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
    if (!empty($last_auto_serial_Date)) {
        $data_insert['auto_serial'] = $last_auto_serial_Date['auto_serial'] + 1;
@@ -225,18 +223,85 @@ public function load_modal_addActiveInvoice(Request $request)
    $data_insert['created_at'] = date("Y-m-d H:i:s");
    $data_insert['date'] = date("Y-m-d");
    $data_insert['com_code'] = $com_code;
- $flagData=insert(new Sales_invoices(),$data_insert,true);
-   if(!empty( $flagData)){ 
-   echo json_encode("done");
+ $flag=insert(new Sales_invoices(),$data_insert,false);
+   if($flag){ 
+ 
+    echo  json_encode($data_insert['auto_serial']);
    }
 
     }
 
   }
 
-
-
-
-
+  public function load_invoice_update_modal(Request $request){
+    if ($request->ajax()) {
+      $com_code = auth()->user()->com_code;  
+      $invoice_data=get_cols_where_row(new Sales_invoices(),array("*"),array("com_code"=>$com_code,"auto_serial"=>$request->auto_serial));   
+      $item_cards = get_cols_where(new Inv_itemCard(), array("item_code", "name", "item_type"), array("com_code" => $com_code, "active" => 1));
+      $stores = get_cols_where(new Store(), array("id", "name"), array("com_code" => $com_code, "active" => 1), 'id', 'ASC');
+      $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
+      $delegates=get_cols_where(new Delegate(),array("delegate_code","name"),array("com_code" => $com_code, "active" => 1));
+      $customers=get_cols_where(new Customer(),array("customer_code","name"),array("com_code" => $com_code, "active" => 1));
+      $Sales_matrial_types=get_cols_where(new Sales_matrial_types(),array("id","name"),array("com_code" => $com_code, "active" => 1));
+      
+      return view("admin.sales_invoices.load_invoice_update_modal", ['item_cards' => $item_cards, 'stores' => $stores, 'user_shift' =>
+       $user_shift,'delegates'=>$delegates,'customers'=>$customers,'Sales_matrial_types'=>$Sales_matrial_types,'invoice_data'=>$invoice_data]);
+    }
   
+}
+
+
+public function Add_item_to_invoice(Request $request){
+  if ($request->ajax()) {
+    $com_code = auth()->user()->com_code;  
+    $invoice_data=get_cols_where_row(new Sales_invoices(),array("is_approved","invoice_date"),array("com_code"=>$com_code,"auto_serial"=>$request->invoiceautoserial));   
+  
+    if(!empty($invoice_data)){
+    if($invoice_data['is_approved']==0){
+      $batch_data=get_cols_where_row(new Inv_itemcard_batches(),array("quantity"),array("com_code"=>$com_code,"auto_serial"=>$request->inv_itemcard_batches_autoserial,'store_id'=>$request->store_id,'item_code'=>$request->item_code));   
+   if(!empty($batch_data)){
+   
+    if($batch_data['quantity']>= $request->item_quantity){
+
+      $datainsert_items['sales_invoices_auto_serial'] = $request->invoiceautoserial;
+      $datainsert_items['store_id'] = $request->store_id;
+      $datainsert_items['invoice_date']= $invoice_data['invoice_date'];
+      $datainsert_items['sales_item_type'] = $request->sales_item_type;
+      $datainsert_items['item_code'] = $request->item_code;
+      $datainsert_items['uom_id'] = $request->uom_id;
+      $datainsert_items['batch_auto_serial'] = $request->inv_itemcard_batches_autoserial;
+      $datainsert_items['quantity'] = $request->item_quantity;
+      $datainsert_items['unit_price'] = $request->item_price;
+      $datainsert_items['is_normal_orOther'] = $request->is_normal_orOther;
+      $datainsert_items['total_price'] = $request->item_total;
+      $datainsert_items['isparentuom'] = $request->isparentuom;
+      $datainsert_items['added_by'] = auth()->user()->id;
+      $datainsert_items['created_at'] = date("Y-m-d H:i:s");
+      $datainsert_items['date'] = date("Y-m-d");
+      $datainsert_items['com_code'] = $com_code;
+      $flag=insert(new Sales_invoices_details(),$datainsert_items);
+      if($flag){
+ echo  json_encode("done");
+
+
+      }
+
+    }
+
+   }
+
+
+
+     
+
+    }
+   }
+  
+  }
+
+}
+
+
+
+
 }

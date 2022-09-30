@@ -247,20 +247,13 @@ Route::post('/SalesInvoices/get_Add_new_item_row',[SalesInvoicesController::clas
 Route::post('/SalesInvoices/load_modal_addMirror',[SalesInvoicesController::class,'load_modal_addMirror'])->name('admin.SalesInvoices.load_modal_addMirror');
 Route::post('/SalesInvoices/load_modal_addActiveInvoice',[SalesInvoicesController::class,'load_modal_addActiveInvoice'])->name('admin.SalesInvoices.load_modal_addActiveInvoice');
 Route::post('/SalesInvoices/store',[SalesInvoicesController::class,'store'])->name('admin.SalesInvoices.store');
+Route::post('/SalesInvoices/load_invoice_update_modal',[SalesInvoicesController::class,'load_invoice_update_modal'])->name('admin.SalesInvoices.load_invoice_update_modal');
+Route::post('/SalesInvoices/Add_item_to_invoice',[SalesInvoicesController::class,'Add_item_to_invoice'])->name('admin.SalesInvoices.Add_item_to_invoice');
 
 
 
 
 
-Route::post('/SalesInvoices/add_new_details',[SalesInvoicesController::class,'add_new_details'])->name('admin.SalesInvoices.add_new_details');
-Route::post('/SalesInvoices/reload_itemsdetials',[SalesInvoicesController::class,'reload_itemsdetials'])->name('admin.SalesInvoices.reload_itemsdetials');
-Route::post('/SalesInvoices/reload_parent_pill',[SalesInvoicesController::class,'reload_parent_pill'])->name('admin.SalesInvoices.reload_parent_pill');
-Route::post('/SalesInvoices/load_edit_item_details',[SalesInvoicesController::class,'load_edit_item_details'])->name('admin.SalesInvoices.load_edit_item_details');
-Route::post('/SalesInvoices/edit_item_details',[SalesInvoicesController::class,'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');
-Route::get('/SalesInvoices/delete_details/{id}/{id_parent}',[SalesInvoicesController::class,'delete_details'])->name('admin.SalesInvoices.delete_details');
-Route::post('/SalesInvoices/do_approve/{id}',[SalesInvoicesController::class,'do_approve'])->name('admin.SalesInvoices.do_approve');
-Route::post('/SalesInvoices/load_modal_approve_invoice',[SalesInvoicesController::class,'load_modal_approve_invoice'])->name('admin.SalesInvoices.load_modal_approve_invoice');
-Route::post('/SalesInvoices/load_usershiftDiv',[SalesInvoicesController::class,'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
 
 /*           sales Invoices   المبيعات                   */
 
