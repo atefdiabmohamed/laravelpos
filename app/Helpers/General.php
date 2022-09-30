@@ -128,6 +128,7 @@ if($returnFlag){
 
    }
 
+  }
 function do_update_itemCardQuantity($Inv_itemCard=null,$item_code=null,$Inv_itemcard_batches=null,$does_has_retailunit=null,$retail_uom_quntToParent=null){
 $com_code=auth()->user()->com_code;
 // update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
@@ -158,4 +159,3 @@ update($Inv_itemCard,$DataToUpdateItemCardQuantity,array("com_code"=>$com_code,"
 
 }
 
-}

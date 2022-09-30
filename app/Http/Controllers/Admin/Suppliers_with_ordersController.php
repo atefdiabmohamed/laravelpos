@@ -616,8 +616,6 @@ class Suppliers_with_ordersController extends Controller
                         //get Quantity Befor any Action  حنجيب كيمة الصنف  بمخزن فاتورة المشتريات الحالي قبل الحركة
                         $quantityBeforMoveCurrntStore = get_sum_where(new Inv_itemcard_batches(), "quantity", array("item_code" => $info->item_code, "com_code" => $com_code, 'store_id' => $data['store_id']));
 
-
-
                         $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 
 
@@ -657,8 +655,8 @@ class Suppliers_with_ordersController extends Controller
                             //update current Batch تحديث علي الباتش القديمة
                             $dataUpdateOldBatch['quantity'] = $OldBatchExsists['quantity'] + $quntity;
                             $dataUpdateOldBatch['total_cost_price'] = $OldBatchExsists['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
-                            $dataUpdateOldBatch["created_at"] = date("Y-m-d H:i:s");
-                            $dataUpdateOldBatch["added_by"] = auth()->user()->id;
+                            $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+                            $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
                             update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $OldBatchExsists['id'], "com_code" => $com_code));
                         } else {
                             //insert new Batch ادخال باتش جديده

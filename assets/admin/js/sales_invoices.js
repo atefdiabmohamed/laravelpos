@@ -227,7 +227,8 @@ $(document).ready(function () {
       $("#item_quantity").focus();
       return false;
     }
-    var BatchQuantity=$("#inv_itemcard_batches_autoserial option:selected").data("quantity");
+    var BatchQuantity=$("#inv_itemcard_batches_autoserial option:selected").data("qunatity");
+ 
     if (parseFloat(item_quantity) > parseFloat(BatchQuantity)) {
       alert("عفوا الكمية المطلوبة اكبر من كمية الباتش  الموجوده بالمخزن");
       return false;
@@ -605,7 +606,8 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
     $("#item_quantity").focus();
     return false;
   }
-  var BatchQuantity=$("#inv_itemcard_batches_autoserial option:selected").data("quantity");
+  var BatchQuantity=$("#inv_itemcard_batches_autoserial option:selected").data("qunatity");
+ 
   if (parseFloat(item_quantity) > parseFloat(BatchQuantity)) {
     alert("عفوا الكمية المطلوبة اكبر من كمية الباتش  الموجوده بالمخزن");
     return false;
@@ -652,7 +654,7 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
       invoiceautoserial:invoiceautoserial
     },
     success: function (data) {
-
+    get_inv_itemcard_batches();
     alert("تمت الاضافة ياحبيب");
     },
     error: function () {
