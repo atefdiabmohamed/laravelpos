@@ -85,9 +85,10 @@ $(document).ready(function () {
   }
 
   //جلب كميات الصنف من المخزن بالباتشات وترتيبهم حسب نوع الصنف
-  function get_inv_itemcard_batches() {
+  function get_inv_itemcard_batches(oldBatchId=null) {
     var item_code = $("#item_code").val();
     var uom_id = $("#uom_id").val();
+   
 
     var store_id = $("#store_id").val();
 
@@ -103,6 +104,10 @@ $(document).ready(function () {
         success: function (data) {
           $("#inv_itemcard_batchesDiv").html(data);
           $("#inv_itemcard_batchesDiv").show();
+          if(oldBatchId!=null){
+            $("#inv_itemcard_batches_autoserial").val(oldBatchId);
+
+          }
           get_item_unit_price();
 
         },
@@ -297,9 +302,23 @@ $(document).ready(function () {
   
 });
 
-$(document).on('change', '#notes', function (e) {
+$(document).on('change', '#invoice_date', function (e) {
   recalcualte();
 });
+$(document).on('change', '#Sales_matrial_types_id', function (e) {
+  recalcualte();
+});
+$(document).on('change', '#is_has_customer', function (e) {
+  recalcualte();
+});
+$(document).on('change', '#customer_code', function (e) {
+  recalcualte();
+});
+$(document).on('change', '#delegate_code', function (e) {
+  recalcualte();
+});
+
+
 $(document).on('change', '#pill_type', function (e) {
   var pill_type = $("#pill_type").val();
   var total_cost = $("#total_cost").val();
@@ -508,11 +527,18 @@ $(document).on('click', '.load_invoice_update_modal', function (e) {
   load_invoice_update_modal(auto_serial);
 });
 
-/*
+
 $(document).on('mouseenter', '#AddItemToIvoiceDetailsActive', function (e) {
-get_inv_itemcard_batches();
+  if($("#inv_itemcard_batches_autoserial").length){
+var batchSerial=$("#inv_itemcard_batches_autoserial").val();
+
+  }else{
+    var batchSerial=null;
+  }
+
+get_inv_itemcard_batches(batchSerial);
 });
-*/
+
 
 
 
@@ -583,6 +609,7 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
     return false;
   }
 
+ 
   var isparentuom = $("#uom_id option:selected").data("isparentuom");
   var invoiceautoserial=$("#invoiceautoserial").val();
   var token_search = $("#token_search").val();
@@ -605,7 +632,7 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
     },
     success: function (data) {
    reload_items_in_invoice();
-   recalcualte();
+
 
     },
     error: function () {
@@ -619,6 +646,7 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
 
 
 function reload_items_in_invoice(){
+
   var token = $("#token_search").val();
   var url = $("#ajax_get_reload_items_in_invoice").val();
   var auto_serial = $("#invoiceautoserial").val();
@@ -631,6 +659,7 @@ function reload_items_in_invoice(){
     data: { "_token": token,auto_serial:auto_serial },
     success: function (data) {
       $("#activeItemisInInvoiceDiv").html(data);
+      recalcualte();
    
     },
     error: function () {
@@ -644,10 +673,13 @@ function reload_items_in_invoice(){
 
 
 function recalcualte() {
+
   var total_cost_items = 0;
   $(".item_total_array").each(function(){
     total_cost_items+=parseFloat($(this).val());
   });
+
+
  
   if (total_cost_items == "") { total_cost_items = 0; }
   total_cost_items = parseFloat(total_cost_items);
@@ -709,16 +741,24 @@ function recalcualte() {
    var discount_value=$("#discount_value").val();
    var total_cost=$("#total_cost").val();
    var notes=$("#notes").val();
-
+   var invoice_date = $("#invoice_date").val();
+   var is_has_customer = $("#is_has_customer").val();
+   var customer_code = $("#customer_code").val();
+   var delegate_code = $("#delegate_code").val();
+  var Sales_matrial_types_id=$("#Sales_matrial_types_id").val();
+ 
   jQuery.ajax({
     url: url,
     type: 'post',
     dataType: 'json',
     cache: false,
     data: { "_token": token,auto_serial:auto_serial,
-    total_cost_items:total_cost_items,tax_percent:tax_percent,tax_value:tax_value,total_befor_discount:total_befor_discount,
-    discount_type:discount_type,discount_percent:discount_percent,discount_value:discount_value,total_cost:total_cost,
-    notes:notes
+    total_cost_items:total_cost_items,tax_percent:tax_percent,tax_value:tax_value,
+    total_befor_discount:total_befor_discount,
+    discount_type:discount_type,discount_percent:discount_percent,
+    discount_value:discount_value,total_cost:total_cost,
+    notes:notes,invoice_date:invoice_date,is_has_customer:is_has_customer,
+    customer_code:customer_code,delegate_code:delegate_code,Sales_matrial_types_id:Sales_matrial_types_id
   },
     success: function (data) {
  
@@ -738,8 +778,27 @@ function recalcualte() {
 
 
 }
-
-
-
+$(document).on('click', '.remove_active_row_item', function (e) {
+  
+  var url = $("#ajax_get_remove_active_row_item").val();
+  var auto_serial = $("#invoiceautoserial").val();
+  var token = $("#token_search").val();
+  var id=$(this).data("id");
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'html',
+    cache: false,
+    data: { "_token": token,auto_serial:auto_serial,id:id },
+    success: function (data) {
+      reload_items_in_invoice();
+      recalcualte();
+   
+    },
+    error: function () {
+      alert("حدث خطاما");
+    }
+  });
+});
 
 });

@@ -201,7 +201,7 @@
                       <td>{{ $info->quantity*1 }}</td>
                       <td>{{ $info->total_price*1 }}</td>
                       <td>
-                        <button  class="btn remove_active_row_item btn-sm btn-danger">حذف</button>  
+                        <button  data-id="{{ $info->id }}" class="btn remove_active_row_item are_you_shue btn-sm btn-danger">حذف</button>  
                       </td>
                       
                       </tr>
