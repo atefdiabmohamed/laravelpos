@@ -149,9 +149,7 @@
                            <option value="2">بونص </option>
                            <option value="3">دعاية</option>
                            <option value="4">هالك</option>
-   
                          </select>
-                          
                             </div>
                           </div>
    
@@ -162,37 +160,181 @@
                            </div>
                            <div class="col-md-2  "
                            <div class="form-group">
-                         <button style="margin-top:35px" class="btn btn-sm btn-danger" id="AddItemToIvoiceDetailsActive">أضف الصنف فعليا </button>  
+                         <button style="margin-top:35px" class="btn btn-sm btn-success" id="AddItemToIvoiceDetailsActive">أضف الصنف فعليا </button>  
                              </div>
                      </div> 
                      <div class="clearfix"></div>
-                     <hr style="border:1px solid #3c8dbc;">  
 
-                     <div class="row"  id="invoiceitemsDiv">
-                      <h3 class="card-title card_title_center">       الاصناف المضافة علي الفاتورة  </h3>
-  
-                      <table id="example2" class="table table-bordered table-hover">
-                        <thead class="custom_thead"> 
-                          <th>المخزن</th>
-                          <th>نوع البيع</th>
-                          <th>الصنف</th>
-                          <th>وحدة البيع</th>
-                          <th>سعر الوحدة</th>
-                          <th>الكمية</th>
-                          <th>الاجمالي</th>
-                          <th></th>
-                        </thead>
-                        <tbody id="itemsrowtableContainterBody">
-  
-                        </tbody>
-  
-                      </table>
-  
-                    </div>
-                    <div class="clearfix"></div>
+                     
                     <hr style="border:1px solid #3c8dbc;"> 
+                     <div class="row" id="activeItemisInInvoiceDiv">
+                    <h3 class="card-title card_title_center">       الاصناف المضافة علي الفاتورة  </h3>
 
+                    <table id="example2" class="table table-bordered table-hover">
+                      <thead class="custom_thead"> 
+                        <th>المخزن</th>
+                        <th>نوع البيع</th>
+                        <th>الصنف</th>
+                        <th>وحدة البيع</th>
+                        <th>سعر الوحدة</th>
+                        <th>الكمية</th>
+                        <th>الاجمالي</th>
+                        <th></th>
+                      </thead>
+                      <tbody id="itemsrowtableContainterBody">
+                   @if(!@empty($sales_invoices_details))
+                     @foreach ($sales_invoices_details as $info )
+                       
+                     <tr>
+                      <td>
+                        {{ $info->store_name }}
 
+            <input type="hidden" name="item_total_array[]" class="item_total_array" value="{{$info->total_price}}">
+ 
+                      </td>
+                      <td>
+                      @if($info->sales_item_type==1) قطاعي   @elseif($info->sales_item_type==2) نص جملة @elseif($info->sales_item_type==3) جملة @else  لم يحدد @endif
+                      </td>
+                      <td>{{ $info->item_name }}</td>
+                      <td>{{ $info->uom_name }}</td>
+                      <td>{{ $info->unit_price*1 }}</td>
+                      <td>{{ $info->quantity*1 }}</td>
+                      <td>{{ $info->total_price*1 }}</td>
+                      <td>
+                        <button  class="btn remove_active_row_item btn-sm btn-danger">حذف</button>  
+                      </td>
+                      
+                      </tr>
+                     @endforeach
+
+                     @endif
+                      </tbody>
+
+                    </table>
+
+                  </div>
+                  <div class="clearfix"></div>
+                  <hr style="border:1px solid #3c8dbc;"> 
+
+                  <div class="row">
+                    <div class="col-md-3">
+                    <div class="form-group">
+                          <label>اجمالي الاصناف  </label>
+                          <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="total_cost_items"  id="total_cost_items" 
+                          class="form-control"  value="{{ $invoice_data['total_cost_items']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>    نسبة الضريبة </label>
+                          <input  oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="tax_percent"  id="tax_percent" 
+                          class="form-control"  value="{{ $invoice_data['tax_percent']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>  قيمة الضريبة   </label>
+                          <input readonly    id="tax_value" class="form-control"  name="tax_value" value="{{ $invoice_data['tax_value']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                    <div class="form-group">
+                          <label>     الاجمالي قبل الخصم </label>
+                          <input readonly    id="total_befor_discount" name="total_befor_discount" class="form-control"  
+                          value="{{ $invoice_data['total_befor_discount']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>     نوع الخصم   </label>
+                          <select class="form-control" name="discount_type" id="discount_type">
+                          <option value="">لايوجد خصم</option>
+                          <option @if($invoice_data['discount_type']==1) selected @endif value="1" >    نسبة مئوية</option>
+                          <option @if($invoice_data['discount_type']==2) selected @endif value="2" > قيمة يدوي</option>
+                          </select>
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>     نسبة  الخصم </label>
+                          <input     oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="discount_percent"  id="discount_percent" class="form-control"  value="{{ $invoice_data['discount_percent']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>  قيمة   الخصم   </label>
+                          <input readonly  name="discount_value"   id="discount_value" class="form-control"  value="{{ $invoice_data['discount_value']*1 }}"  >
+                     </div>
+                    </div>
+                    <div class="col-md-3">
+                     <div class="form-group">
+                          <label>     الاجمالي النهائي       </label>
+                          <input readonly name="total_cost"    id="total_cost" class="form-control"  value="{{ $invoice_data['total_cost']*1 }}"  >
+                     </div>
+                    </div>
+                    </div>
+                    
+                    <div class="row" id="shiftDiv">
+                         <div class="col-md-3">
+                              <div class="form-group">
+                                   <label>    خزنة التحصيل  </label>
+                               <select id="treasuries_id" name="treasuries_id" class="form-control">
+                             @if(!@empty($user_shift))
+                             <option selected value="{{ $user_shift['treasuries_id']  }}"> {{ $user_shift['name'] }} </option>
+                             @else
+                             <option value=""> عفوا لاتوجد خزنة لديك الان</option>
+                             @endif
+                         
+                               </select>
+                         
+                              </div>
+                             </div>
+                             <div class="col-md-3 > 
+                              <div class="form-group">
+                                <label>  الرصيد المتاح بالخزنة   </label>
+                                <input  readonly name="treasuries_balance" id="treasuries_balance" class="form-control" 
+                                @if(!@empty($user_shift))
+                                 value="{{ $user_shift['balance']*1 }}" 
+                                 @else
+                                 value="0" 
+                                 @endif
+                                 >
+                                </div>
+                    </div>
+                    <div class="row">
+                    
+                           <div class="col-md-3">
+                              <div class="form-group">
+                                   <label>     نوع الفاتورة   </label>
+                                   <select class="form-control" name="pill_type" id="pill_type">
+                                   <option value="1"  @if($invoice_data['pill_type']==1) selected @endif value="1"  >     كاش</option>
+                                   <option value="2"  @if($invoice_data['pill_type']==2) selected @endif value="2" >  اجل</option>
+                                   </select>
+                              </div>
+                             </div>
+                             <div class="col-md-3 > 
+                              <div class="form-group">
+                                <label>    المحصل  الان   </label>
+                                <input   name="what_paid" id="what_paid" class="form-control"   value="0"    >
+                                </div>
+                    
+                                <div class="col-md-3 > 
+                                   <div class="form-group">
+                                     <label>    المتبقي تحصيله    </label>
+                                     <input readonly   name="what_remain" id="what_remain" class="form-control"   value="0"    >
+                                     </div>
+                                     <div class="col-md-12 "> 
+                                      <div class="form-group">
+                                        <label>      الملاحظات علي الفاتورة   </label>
+                                        <input  style="background-color: lightgoldenrodyellow"    name="notes" id="notes" class="form-control"   value="{{ $invoice_data['notes'] }}"    >
+                                        </div>
+                                     <div class="col-md-12 text-center" > 
+                                        <hr>
+                    
+                                        </div>
+                    </div>
+                  </div>
+                    
             
 
             

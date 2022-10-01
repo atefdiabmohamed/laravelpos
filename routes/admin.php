@@ -249,6 +249,8 @@ Route::post('/SalesInvoices/load_modal_addActiveInvoice',[SalesInvoicesControlle
 Route::post('/SalesInvoices/store',[SalesInvoicesController::class,'store'])->name('admin.SalesInvoices.store');
 Route::post('/SalesInvoices/load_invoice_update_modal',[SalesInvoicesController::class,'load_invoice_update_modal'])->name('admin.SalesInvoices.load_invoice_update_modal');
 Route::post('/SalesInvoices/Add_item_to_invoice',[SalesInvoicesController::class,'Add_item_to_invoice'])->name('admin.SalesInvoices.Add_item_to_invoice');
+Route::post('/SalesInvoices/reload_items_in_invoice',[SalesInvoicesController::class,'reload_items_in_invoice'])->name('admin.SalesInvoices.reload_items_in_invoice');
+Route::post('/SalesInvoices/recalclate_parent_invoice',[SalesInvoicesController::class,'recalclate_parent_invoice'])->name('admin.SalesInvoices.recalclate_parent_invoice');
 
 
 

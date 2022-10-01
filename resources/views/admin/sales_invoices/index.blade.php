@@ -33,8 +33,10 @@
           <input type="hidden" id="ajax_get_store" value="{{ route('admin.SalesInvoices.store') }}">
           <input type="hidden" id="ajax_get_load_invoice_update_modal" value="{{ route('admin.SalesInvoices.load_invoice_update_modal') }}">
           <input type="hidden" id="ajax_get_Add_item_to_invoice" value="{{ route('admin.SalesInvoices.Add_item_to_invoice') }}">
+          <input type="hidden" id="ajax_get_reload_items_in_invoice" value="{{ route('admin.SalesInvoices.reload_items_in_invoice') }}">
+          <input type="hidden" id="ajax_get_recalclate_parent_invoice" value="{{ route('admin.SalesInvoices.recalclate_parent_invoice') }}">
 
-
+          
           
 
           

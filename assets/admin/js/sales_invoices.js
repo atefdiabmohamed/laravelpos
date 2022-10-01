@@ -297,62 +297,9 @@ $(document).ready(function () {
   
 });
 
-function recalcualte() {
-  var total_cost_items = 0;
-  $(".item_total_array").each(function(){
-    total_cost_items+=parseFloat($(this).val());
-  });
- 
-  if (total_cost_items == "") { total_cost_items = 0; }
-  total_cost_items = parseFloat(total_cost_items);
-  $("#total_cost_items").val(total_cost_items);
-  var tax_percent = $("#tax_percent").val();
-  if (tax_percent == "") { tax_percent = 0 };
-  tax_percent = parseFloat(tax_percent);
-
-  var tax_value = total_cost_items * tax_percent / 100;
-  tax_value = parseFloat(tax_value);
-  $("#tax_value").val(tax_value * 1);
-  var total_befor_discount = total_cost_items + tax_value;
-  $("#total_befor_discount").val(total_befor_discount);
-  var discount_type = $("#discount_type").val();
-  if (discount_type != "") {
-    if (discount_type == 1) {
-      var discount_percent = $("#discount_percent").val();
-      if (discount_percent == "") { discount_percent = 0; }
-      discount_percent = parseFloat(discount_percent);
-      var discount_value = total_befor_discount * discount_percent / 100;
-      $("#discount_value").val(discount_value * 1);
-      var total_cost = total_befor_discount - discount_value;
-      $("#total_cost").val(total_cost * 1);
-
-    } else {
-      var discount_percent = $("#discount_percent").val();
-      if (discount_percent == "") { discount_percent = 0; }
-      discount_percent = parseFloat(discount_percent);
-      $("#discount_value").val(discount_percent * 1);
-      var total_cost = total_befor_discount - discount_percent;
-      $("#total_cost").val(total_cost * 1);
-    }
-
-
-
-  } else {
-    $("#discount_value").val(0);
-    var total_cost = total_befor_discount;
-    $("#total_cost").val(total_cost);
-
-  }
-  what_paid = $("#what_paid").val();
-  if (what_paid == "") what_paid = 0;
-  what_paid = parseFloat(what_paid);
-  total_cost = parseFloat(total_cost);
-  $what_remain = total_cost - what_paid;
-  $("#what_remain").val($what_remain * 1);
-
-
-}
-
+$(document).on('change', '#notes', function (e) {
+  recalcualte();
+});
 $(document).on('change', '#pill_type', function (e) {
   var pill_type = $("#pill_type").val();
   var total_cost = $("#total_cost").val();
@@ -561,9 +508,12 @@ $(document).on('click', '.load_invoice_update_modal', function (e) {
   load_invoice_update_modal(auto_serial);
 });
 
+/*
 $(document).on('mouseenter', '#AddItemToIvoiceDetailsActive', function (e) {
 get_inv_itemcard_batches();
 });
+*/
+
 
 
 $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
@@ -654,8 +604,9 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
       invoiceautoserial:invoiceautoserial
     },
     success: function (data) {
-    get_inv_itemcard_batches();
-    alert("تمت الاضافة ياحبيب");
+   reload_items_in_invoice();
+   recalcualte();
+
     },
     error: function () {
 
@@ -667,6 +618,126 @@ $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
 });
 
 
+function reload_items_in_invoice(){
+  var token = $("#token_search").val();
+  var url = $("#ajax_get_reload_items_in_invoice").val();
+  var auto_serial = $("#invoiceautoserial").val();
+
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'html',
+    cache: false,
+    data: { "_token": token,auto_serial:auto_serial },
+    success: function (data) {
+      $("#activeItemisInInvoiceDiv").html(data);
+   
+    },
+    error: function () {
+      alert("حدث خطاما");
+    }
+  });
+
+}
+
+
+
+
+function recalcualte() {
+  var total_cost_items = 0;
+  $(".item_total_array").each(function(){
+    total_cost_items+=parseFloat($(this).val());
+  });
+ 
+  if (total_cost_items == "") { total_cost_items = 0; }
+  total_cost_items = parseFloat(total_cost_items);
+  $("#total_cost_items").val(total_cost_items);
+  var tax_percent = $("#tax_percent").val();
+  if (tax_percent == "") { tax_percent = 0 };
+  tax_percent = parseFloat(tax_percent);
+
+  var tax_value = total_cost_items * tax_percent / 100;
+  tax_value = parseFloat(tax_value);
+  $("#tax_value").val(tax_value * 1);
+  var total_befor_discount = total_cost_items + tax_value;
+  $("#total_befor_discount").val(total_befor_discount);
+  var discount_type = $("#discount_type").val();
+  if (discount_type != "") {
+    if (discount_type == 1) {
+      var discount_percent = $("#discount_percent").val();
+      if (discount_percent == "") { discount_percent = 0; }
+      discount_percent = parseFloat(discount_percent);
+      var discount_value = total_befor_discount * discount_percent / 100;
+      $("#discount_value").val(discount_value * 1);
+      var total_cost = total_befor_discount - discount_value;
+      $("#total_cost").val(total_cost * 1);
+
+    } else {
+      var discount_percent = $("#discount_percent").val();
+      if (discount_percent == "") { discount_percent = 0; }
+      discount_percent = parseFloat(discount_percent);
+      $("#discount_value").val(discount_percent * 1);
+      var total_cost = total_befor_discount - discount_percent;
+      $("#total_cost").val(total_cost * 1);
+    }
+
+
+
+  } else {
+    $("#discount_value").val(0);
+    var total_cost = total_befor_discount;
+    $("#total_cost").val(total_cost);
+
+  }
+  what_paid = $("#what_paid").val();
+  if (what_paid == "") what_paid = 0;
+  what_paid = parseFloat(what_paid);
+  total_cost = parseFloat(total_cost);
+  $what_remain = total_cost - what_paid;
+  $("#what_remain").val($what_remain * 1);
+ 
+
+  var token = $("#token_search").val();
+  var url = $("#ajax_get_recalclate_parent_invoice").val();
+  var auto_serial = $("#invoiceautoserial").val();
+   var total_cost_items=$("#total_cost_items").val();
+   var tax_percent=$("#tax_percent").val();
+   var tax_value=$("#tax_value").val();
+   var total_befor_discount=$("#total_befor_discount").val();
+   var discount_type=$("#discount_type").val();
+   var discount_percent=$("#discount_percent").val();
+   var discount_value=$("#discount_value").val();
+   var total_cost=$("#total_cost").val();
+   var notes=$("#notes").val();
+
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'json',
+    cache: false,
+    data: { "_token": token,auto_serial:auto_serial,
+    total_cost_items:total_cost_items,tax_percent:tax_percent,tax_value:tax_value,total_befor_discount:total_befor_discount,
+    discount_type:discount_type,discount_percent:discount_percent,discount_value:discount_value,total_cost:total_cost,
+    notes:notes
+  },
+    success: function (data) {
+ 
+   
+    },
+    error: function () {
+      alert("حدث خطاما");
+    }
+  });
+
+ 
+
+
+  
+
+
+
+
+}
 
 
 
