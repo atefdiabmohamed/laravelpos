@@ -90,7 +90,7 @@
 
           @if($info->is_approved==0)
         <button data-autoserial="{{ $info->auto_serial }}"  class="btn btn-sm load_invoice_update_modal btn-primary">تعديل</button>   
-        <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+        <a href="#" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
         @endif
 
          </td>
