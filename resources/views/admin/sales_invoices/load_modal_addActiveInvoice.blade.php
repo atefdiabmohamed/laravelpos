@@ -7,13 +7,13 @@
                   <div class="col-md-4">
                    <div class="form-group"> 
                      <label>    تاريخ الفاتورة</label>
-                    <input type="date" name="invoice_date" id="invoice_date" class="form-control" value="@php echo date("Y-m-d"); @endphp">
+                    <input type="date" name="invoice_date" id="invoice_date_activeAdd" class="form-control" value="@php echo date("Y-m-d"); @endphp">
                      </div>
                   </div>
                   <div class="col-md-4" >
                     <div class="form-group"> 
                      <label>    فئات الفواتير</label>
-                     <select name="Sales_matrial_types_id" id="Sales_matrial_types_id" class="form-control select2">
+                     <select name="Sales_matrial_types_id" id="Sales_matrial_types_id_activeAdd" class="form-control select2">
                        <option value="">  اختر فئة الفاتورة</option>
                        @if (@isset($Sales_matrial_types) && !@empty($delegates))
                       @foreach ($Sales_matrial_types as $info )
@@ -28,7 +28,7 @@
                   <div class="col-md-4">
                     <div class="form-group"> 
                       <label>      هل يوجد عميل</label>
-             <select name="is_has_customer" id="is_has_customer" class="form-control" >
+             <select name="is_has_customer" id="is_has_customer_activeAdd" class="form-control" >
              <option value="1" selected> نعم  عميل</option>
              <option value="0" > لايوجد عميل( طياري )</option>
 
@@ -41,7 +41,7 @@
                     <label>   بيانات العملاء
                      (<a title=" اضافة عميل جديد " href="#">جديد <i   class="fa fa-plus-circle  "></i> </a>) 
                     </label>
-                    <select name="customer_code" id="customer_code" class="form-control select2">
+                    <select name="customer_code" id="customer_code_activeAdd" class="form-control select2">
                       <option value=""> لايوجد عميل</option>
                       @if (@isset($customers) && !@empty($customers))
                      @foreach ($customers as $info )
@@ -57,7 +57,7 @@
                   <div class="col-md-4" >
                     <div class="form-group"> 
                      <label>   بيانات المناديب</label>
-                     <select name="delegate_code" id="delegate_code" class="form-control select2">
+                     <select name="delegate_code" id="delegate_code_activeAdd" class="form-control select2">
                        <option value="">  اختر المندوب</option>
                        @if (@isset($delegates) && !@empty($delegates))
                       @foreach ($delegates as $info )
@@ -69,7 +69,15 @@
                      </div>
  
                    </div>
-
+                   <div class="col-md-4">
+                    <div class="form-group">
+                         <label>     نوع الفاتورة   </label>
+                         <select class="form-control" name="pill_type" id="pill_type_activeAdd">
+                         <option value="1"   >     كاش</option>
+                         <option value="2"  >  اجل</option>
+                         </select>
+                    </div>
+                   </div>
                    <div class="col-md-12 text-center" > 
                     <hr>
                     <button type="submit" id="Do_Add_new_active_invoice"  class="btn btn-sm btn-success">      اضف الفاتورة (فتح فاتورة جديدة فعلية) </button>

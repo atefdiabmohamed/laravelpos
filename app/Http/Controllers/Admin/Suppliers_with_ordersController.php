@@ -601,6 +601,8 @@ class Suppliers_with_ordersController extends Controller
                     $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transactions['isal_number'];
                     update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
                 }
+
+                
             }
 
             //store move حركة المخزن

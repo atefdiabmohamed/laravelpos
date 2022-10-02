@@ -425,7 +425,7 @@ $(document).on('input', '#discount_percent', function (e) {
 });
 $(document).on('input', '#tax_percent', function (e) {
   var tax_percent = $(this).val();
-  if (tax_percent == "") { tax_percent = 0; }
+  if (tax_percent == "") { tax_percent = 0; $(this).val(0) }
   if (tax_percent > 100) {
     alert("عفوا لايمكن ان يكون نسبة الضريبة اكبر من 100 % !!!");
     $("#tax_percent").val(0);
@@ -433,38 +433,39 @@ $(document).on('input', '#tax_percent', function (e) {
   recalcualte();
 });
 $(document).on('click', '#Do_Add_new_active_invoice', function (e) {
-var invoice_date=$("#invoice_date").val();
+var invoice_date=$("#invoice_date_activeAdd").val();
 
 if(invoice_date==""){
   alert("من فضلك ادخل تاريخ الفاتورة");
-  $("#invoice_date").focus();
+  $("#invoice_date_activeAdd").focus();
   return false;
 }
-var Sales_matrial_types_id=$("#Sales_matrial_types_id").val();
+var Sales_matrial_types_id=$("#Sales_matrial_types_id_activeAdd").val();
 if(Sales_matrial_types_id==""){
   alert("من فضلك اختر فئة الفاتورة");
-  $("#Sales_matrial_types_id").focus();
+  $("#Sales_matrial_types_id_activeAdd").focus();
   return false;
 }
 
 
-var customer_code=$("#customer_code").val();
+var customer_code=$("#customer_code_activeAdd").val();
 
-var is_has_customer=$("#is_has_customer").val();
+var is_has_customer=$("#is_has_customer_activeAdd").val();
 if(is_has_customer==1){
 if(customer_code==""){
   alert("من فضلك  اختر العميل");
-  $("#customer_code").focus();
+  $("#customer_code_activeAdd").focus();
   return false;
 
 }
 }
-var delegate_code=$("#delegate_code").val();
+var delegate_code=$("#delegate_code_activeAdd").val();
 if(delegate_code==""){
   alert("من فضلك  اختر المندوب ");
-  $("#delegate_code").focus();
+  $("#delegate_code_activeAdd").focus();
   return false;
 }
+var pill_type=$("#pill_type_activeAdd").val();
 
   var token = $("#token_search").val();
     var url = $("#ajax_get_store").val();
@@ -474,7 +475,7 @@ if(delegate_code==""){
       dataType: 'json',
       cache: false,
       data: {  invoice_date:invoice_date,customer_code:customer_code,
-      is_has_customer:is_has_customer,delegate_code:delegate_code,
+      is_has_customer:is_has_customer,delegate_code:delegate_code,pill_type:pill_type,
       sales_matrial_types:Sales_matrial_types_id,"_token": token},
       success: function (auto_serial) {
         load_invoice_update_modal(auto_serial);
@@ -500,6 +501,22 @@ if($(this).val()==1){
 }
 
 });
+
+$(document).on('change', '#is_has_customer_activeAdd', function (e) {
+
+  $("#customer_code_activeAdd").val("");
+if($(this).val()==1){
+
+  $("#customer_codeDiv").show();
+}else{
+  $("#customer_codeDiv").hide();
+  
+
+}
+
+});
+
+
 
 function load_invoice_update_modal(auto_serial){
   var token = $("#token_search").val();
@@ -543,6 +560,31 @@ get_inv_itemcard_batches(batchSerial);
 
 
 $(document).on('click', '#AddItemToIvoiceDetailsActive', function (e) {
+
+  var Sales_matrial_types_id = $("#Sales_matrial_types_id").val();
+  if (Sales_matrial_types_id == "") {
+    alert("من فضلك اختر الفئة  ");
+    $("#Sales_matrial_types_id").focus();
+    return false;
+  }
+
+  var is_has_customer = $("#is_has_customer").val();
+  if(is_has_customer==1){
+    var customer_code = $("#customer_code").val();
+
+    if (customer_code == "") {
+      alert("من فضلك اختر العميل  ");
+      $("#customer_code").focus();
+      return false;
+    }
+  }
+  
+  var delegate_code = $("#delegate_code").val();
+  if (delegate_code == "") {
+    alert("من فضلك اختر المندوب ");
+    $("#delegate_code").focus();
+    return false;
+  }
   var store_id = $("#store_id").val();
   if (store_id == "") {
     alert("من فضلك اختر المخزن ");
@@ -725,9 +767,14 @@ function recalcualte() {
   if (what_paid == "") what_paid = 0;
   what_paid = parseFloat(what_paid);
   total_cost = parseFloat(total_cost);
-  $what_remain = total_cost - what_paid;
-  $("#what_remain").val($what_remain * 1);
- 
+  what_remain = total_cost - what_paid;
+  $("#what_remain").val(what_remain * 1);
+  var pill_type = $("#pill_type").val();
+  if(pill_type==1){
+    $("#what_paid").val(total_cost);
+    $("#what_remain").val(0);
+
+  }
 
   var token = $("#token_search").val();
   var url = $("#ajax_get_recalclate_parent_invoice").val();
@@ -757,7 +804,7 @@ function recalcualte() {
     total_befor_discount:total_befor_discount,
     discount_type:discount_type,discount_percent:discount_percent,
     discount_value:discount_value,total_cost:total_cost,
-    notes:notes,invoice_date:invoice_date,is_has_customer:is_has_customer,
+    notes:notes,invoice_date:invoice_date,is_has_customer:is_has_customer,pill_type:pill_type,
     customer_code:customer_code,delegate_code:delegate_code,Sales_matrial_types_id:Sales_matrial_types_id
   },
     success: function (data) {
@@ -800,5 +847,227 @@ $(document).on('click', '.remove_active_row_item', function (e) {
     }
   });
 });
+
+
+
+
+
+
+
+$(document).on('click', '#DoApproveInvoiceFinally', function (e) {
+
+  var Sales_matrial_types_id = $("#Sales_matrial_types_id").val();
+  if (Sales_matrial_types_id == "") {
+    alert("من فضلك اختر الفئة  ");
+    $("#Sales_matrial_types_id").focus();
+    return false;
+  }
+
+  var is_has_customer = $("#is_has_customer").val();
+  if(is_has_customer==1){
+    var customer_code = $("#customer_code").val();
+
+    if (customer_code == "") {
+      alert("من فضلك اختر العميل  ");
+      $("#customer_code").focus();
+      return false;
+    }
+  }
+  
+  var delegate_code = $("#delegate_code").val();
+  if (delegate_code == "") {
+    alert("من فضلك اختر المندوب ");
+    $("#delegate_code").focus();
+    return false;
+  }
+
+  if(!$(".item_total_array").length){
+    alert("عفوا يجب علي الاقل اضافة صنف علي الفاتورة !");
+    return false;
+  }
+
+
+
+  var total_cost_items = $("#total_cost_items").val();
+  if (total_cost_items == "") {
+    alert("من فضلك ادخل اجمالي الاصناف");
+    return false;
+  }
+  var tax_percent = $("#tax_percent").val();
+ 
+  if (tax_percent == "") {
+    alert("من فضلك ادخل نسبة ضريبة القيمة المضافة ");
+    $("#tax_percent").val();
+    return false;
+  }
+
+  var tax_value = $("#tax_value").val();
+  if (tax_value == "") {
+    alert("من فضلك ادخل قيمة ضريبة القيمة المضافة ");
+
+    return false;
+  }
+
+  var total_befor_discount = $("#total_befor_discount").val();
+  if (total_befor_discount == "") {
+    alert("من فضلك ادخل قيمة الاجمالي قبل الخصم   ");
+    return false;
+  }
+
+
+  var discount_type = $("#discount_type").val();
+  if (discount_type == 1) {
+    var discount_percent = $("#discount_percent").val();
+    if (discount_percent > 100) {
+      alert("عفوا لايمكن ان يكون نسبة الخصم المئوية اكبر من 100 % !!!");
+      $("#discount_percent").focus();
+      return false;
+    }
+    
+  }
+  else if (discount_type == 2) {
+    var discount_value = $("#discount_value").val();
+    if (discount_value > total_befor_discount) {
+      alert("عفوا لايمكن ان يكون قيمة الخصم اكبر من اجمالي الفاتورة قبل الخصم   !!!");
+      $("#discount_value").focus();
+      return false;
+    }
+
+
+  } else {
+    var discount_value = $("#discount_value").val();
+    if (discount_value > 0) {
+      alert(" عفوا لايمكن ان يوجد خصم مع اختيارك لنوع الخصم لايوجد  !!!");
+      $("#discount_value").focus();
+      return false;
+    }
+
+  }
+
+  var discount_value = $("#discount_value").val();
+  if (discount_value == "") {
+    alert("من فضلك ادخل قيمة الخصم     ");
+    return false;
+  }
+
+  var total_cost = $("#total_cost").val();
+  if (total_cost == "") {
+    alert("من فضلك ادخل قيمة اجمالي الفاتورة النهائي     ");
+    return false;
+  }
+
+  var pill_type = $("#pill_type").val();
+  if (pill_type == "") {
+    alert("من فضلك اختر نوع الفاتورة      ");
+    return false;
+  }
+  var what_paid = $("#what_paid").val();
+  var what_remain = $("#what_remain").val();
+
+  var what_paid = $("#what_paid").val();
+  if (what_paid == "") {
+    alert("من فضلك ادخل المبلغ المدفوع        ");
+    return false;
+  }
+  if (what_paid > total_cost) {
+    alert("عفوا لايمكن ان يكون المبلغ المصروف اكبر من اجمالي الفاتورة         ");
+    return false;
+  }
+
+
+  if (pill_type == 1) {
+    if (parseFloat(what_paid) < parseFloat(total_cost)) {
+      alert("عفوا يجب ان يكون كل المبلغ مدفوع في حالة ان الفاتورة كاش       ");
+      return false;
+    }
+
+
+  } else {
+    if (parseFloat(what_paid) == parseFloat(total_cost)) {
+      alert("عفوا لايمكن ان يكون المبلغ المدفوع يساوي اجمالي الفاتورة في حالة ان الفاتورة اجل      ");
+      return false;
+    }
+  }
+
+  var what_remain = $("#what_remain").val();
+  if (what_remain == "") {
+    alert("من فضلك ادخل المبلغ المتبقي        ");
+    return false;
+  }
+
+  if (pill_type == 1) {
+    if (what_remain > 0) {
+      alert("عفوا لايمكن ان يكون المبلغ المتبقي اكبر من الصفر في حالة ان الفاتورة كاش      ");
+      return false;
+
+    }
+  }
+
+  if (what_paid > 0) {
+    var treasuries_id = $("#treasuries_id").val();
+    if (treasuries_id == "") {
+      alert("من فضلك اختر خزنة التحصيل         ");
+      return false;
+    }
+   
+
+
+
+  }
+
+  var token = $("#token_search").val();
+  var url = $("#ajax_DoApproveInvoiceFinally").val();
+  var auto_serial = $("#invoiceautoserial").val();
+  var treasuries_id = $("#treasuries_id").val();
+
+
+  
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'json',
+    cache: false,
+    data: { "_token": token,auto_serial:auto_serial,treasuries_id:treasuries_id,what_paid:what_paid,what_remain:what_remain },
+    success: function (data) {
+     location.reload();
+   
+    },
+    error: function () {
+      alert("حدث خطاما");
+    }
+  });
+
+
+
+});
+
+
+
+$(document).on('mouseenter', '#DoApproveInvoiceFinally', function (e) {
+ 
+  var token_search = $("#token_search").val();
+  var ajax_search_url = $("#ajax_load_usershiftDiv").val();
+
+  jQuery.ajax({
+    url: ajax_search_url,
+    type: 'post',
+    dataType: 'html',
+    cache: false,
+    data: { "_token": token_search },
+    success: function (data) {
+      $("#shiftDiv").html(data);
+
+
+    },
+    error: function () {
+
+    }
+  });
+
+});
+
+
+
+
 
 });

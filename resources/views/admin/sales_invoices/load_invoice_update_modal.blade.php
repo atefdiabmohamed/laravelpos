@@ -81,8 +81,10 @@
                        <select name="store_id" id="store_id" class="form-control ">
                          <option value=""> اختر المخزن  </option>
                          @if (@isset($stores) && !@empty($stores))
+                         @php $i=1;  @endphp
                         @foreach ($stores as $info )
-                          <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                          <option @if($i==1) selected @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                          @php $i++;  @endphp
                         @endforeach
                          @endif
                        </select>
@@ -103,7 +105,7 @@
                       </div>
                       <div class="col-md-3">
                        <div class="form-group"> 
-                         <label>   بيانات الاصناف</label>
+                        <input class="form-control" type="text" placeholder="باركود - كود -اسم" >
                          <select  id="item_code" class="form-control select2" style="width: 100%;">
                            <option value="">اختر الصنف</option>
                            @if (@isset($item_cards) && !@empty($item_cards))
@@ -257,7 +259,7 @@
                     <div class="col-md-3">
                      <div class="form-group">
                           <label>     نسبة  الخصم </label>
-                          <input     oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="discount_percent"  id="discount_percent" class="form-control"  value="{{ $invoice_data['discount_percent']*1 }}"  >
+                          <input @if($invoice_data['discount_type']=="" || $invoice_data['discount_type']==null) readonly @endif    oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="discount_percent"  id="discount_percent" class="form-control"  value="{{ $invoice_data['discount_percent']*1 }}"  >
                      </div>
                     </div>
                     <div class="col-md-3">
@@ -315,24 +317,26 @@
                              <div class="col-md-3 > 
                               <div class="form-group">
                                 <label>    المحصل  الان   </label>
-                                <input   name="what_paid" id="what_paid" class="form-control"   value="0"    >
+                                <input   name="what_paid" id="what_paid" class="form-control"  @if($invoice_data['pill_type']==1)  readonly  @endif"  value="@if($invoice_data['pill_type']==1) {{$invoice_data['total_cost']*1  }} @else 0 @endif"    >
                                 </div>
                     
                                 <div class="col-md-3 > 
                                    <div class="form-group">
                                      <label>    المتبقي تحصيله    </label>
-                                     <input readonly   name="what_remain" id="what_remain" class="form-control"   value="0"    >
+                                     <input readonly   name="what_remain" id="what_remain" class="form-control"   value="@if($invoice_data['pill_type']==1) 0 @else {{$invoice_data['what_remain']*1  }}  @endif"     >
                                      </div>
-                                     <div class="col-md-12 "> 
+                                     <div class="col-md-6 "> 
                                       <div class="form-group">
                                         <label>      الملاحظات علي الفاتورة   </label>
                                         <input  style="background-color: lightgoldenrodyellow"    name="notes" id="notes" class="form-control"   value="{{ $invoice_data['notes'] }}"    >
                                         </div>
-                                     <div class="col-md-12 text-center" > 
-                                        <hr>
-                    
-                                        </div>
+                                     
                     </div>
+                    <div class="col-md-6 text-left"> 
+                     <button class="btn btn-sm btn-primary" id="DoApproveInvoiceFinally" style="margin-top:31px;">اعتماد وترحيل الفاتورة</button>
+                       </div>
+
+
                   </div>
                     
             

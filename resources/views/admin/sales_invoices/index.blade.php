@@ -36,6 +36,8 @@
           <input type="hidden" id="ajax_get_reload_items_in_invoice" value="{{ route('admin.SalesInvoices.reload_items_in_invoice') }}">
           <input type="hidden" id="ajax_get_recalclate_parent_invoice" value="{{ route('admin.SalesInvoices.recalclate_parent_invoice') }}">
           <input type="hidden" id="ajax_get_remove_active_row_item" value="{{ route('admin.SalesInvoices.remove_active_row_item') }}">
+          <input type="hidden" id="ajax_DoApproveInvoiceFinally" value="{{ route('admin.SalesInvoices.DoApproveInvoiceFinally') }}">
+          <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.SalesInvoices.load_usershiftDiv') }}">
 
           
           
