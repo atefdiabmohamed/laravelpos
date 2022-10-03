@@ -18,7 +18,9 @@ use App\Models\Admins_Shifts;
 use App\Models\Delegate;
 use App\Models\Sales_invoices_details;
 use App\Models\Inv_itemcard_movements;
-
+use App\Models\Account;
+use App\Models\Supplier;
+use App\Models\Suppliers_with_orders;
 
 class SalesInvoicesController extends Controller
 {
@@ -223,7 +225,7 @@ class SalesInvoicesController extends Controller
       $data_insert['sales_matrial_types'] = $request->sales_matrial_types;
       $data_insert['pill_type'] = $request->pill_type;
 
-      
+
       $data_insert['added_by'] = auth()->user()->id;
       $data_insert['created_at'] = date("Y-m-d H:i:s");
       $data_insert['date'] = date("Y-m-d");
@@ -579,14 +581,14 @@ class SalesInvoicesController extends Controller
 
   public function load_usershiftDiv(Request $request)
   {
-      if ($request->ajax()) {
+    if ($request->ajax()) {
 
-          $com_code = auth()->user()->com_code;
-          //current user shift
-          $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
-      }
+      $com_code = auth()->user()->com_code;
+      //current user shift
+      $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
+    }
 
-      return view("admin.sales_invoices.load_usershiftDiv", ['user_shift' => $user_shift]);
+    return view("admin.sales_invoices.load_usershiftDiv", ['user_shift' => $user_shift]);
   }
 
 
@@ -595,77 +597,71 @@ class SalesInvoicesController extends Controller
 
     if ($request->ajax()) {
       $com_code = auth()->user()->com_code;
-      $invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved","pill_type","total_cost","customer_code","is_has_customer"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+      $invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "pill_type", "total_cost", "customer_code", "is_has_customer"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
       if (!empty($invoice_data)) {
         if ($invoice_data['is_approved'] == 0) {
-          $dataUpdateParent['money_for_account'] = $invoice_data['total_cost'] ;
+          $dataUpdateParent['money_for_account'] = $invoice_data['total_cost'];
           $dataUpdateParent['is_approved'] = 1;
           $dataUpdateParent['approved_by'] = auth()->user()->com_code;
           $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
           $dataUpdateParent['updated_by'] = auth()->user()->com_code;
           $dataUpdateParent['what_paid'] = $request->what_paid;
           $dataUpdateParent['what_remain'] = $request->what_remain;
-          if($invoice_data['is_has_customer']==1){
-            $customerData=get_cols_where_row(new Customer(),"account_number",array("com_code"=>$com_code,"customer_code"=>$invoice_data['customer_code']));
+          if ($invoice_data['is_has_customer'] == 1) {
+            $customerData = get_cols_where_row(new Customer(), "account_number", array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
             $dataUpdateParent['account_number'] = $customerData['account_number'];
-
           }
 
-          $flag=update(new Sales_invoices(),$dataUpdateParent,array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
-    if($flag){
-      if ($request->what_paid > 0) {
-        $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
-      $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
-  
-
-  $last_record_treasuries_transactions_record = get_cols_where_row_orderby(new Treasuries_transactions(), array("auto_serial"), array("com_code" => $com_code), "auto_serial", "DESC");
-  if (!empty($last_record_treasuries_transactions_record)) {
-      $dataInsert_treasuries_transactions['auto_serial'] = $last_record_treasuries_transactions_record['auto_serial'] + 1;
-  } else {
-      $dataInsert_treasuries_transactions['auto_serial'] = 1;
-  }
-
-  $dataInsert_treasuries_transactions['isal_number'] = $treasury_date['last_isal_collect'] + 1;
-  $dataInsert_treasuries_transactions['shift_code'] = $user_shift['shift_code'];
-  //Credit دائن
-  $dataInsert_treasuries_transactions['money'] = $request->what_paid ;
-  $dataInsert_treasuries_transactions['treasuries_id'] = $user_shift['treasuries_id'];
-  $dataInsert_treasuries_transactions['mov_type'] = 5;
-  $dataInsert_treasuries_transactions['move_date'] = date("Y-m-d");
-  if($invoice_data['is_has_customer']==1){
-  $dataInsert_treasuries_transactions['account_number'] = $customerData["account_number"];
-  $dataInsert_treasuries_transactions['is_account'] = 1;
-
-  }
-  $dataInsert_treasuries_transactions['is_approved'] = 1;
-  $dataInsert_treasuries_transactions['the_foregin_key'] =$request->auto_serial;
-  //debit دائن
-  $dataInsert_treasuries_transactions['money_for_account'] = $request->what_paid*(-1);
-  $dataInsert_treasuries_transactions['byan'] = "تحصيل نظير فاتورة مبيعات  رقم" . $request->auto_serial;
-  $dataInsert_treasuries_transactions['created_at'] = date("Y-m-Y H:i:s");
-  $dataInsert_treasuries_transactions['added_by'] = auth()->user()->id;
-  $dataInsert_treasuries_transactions['com_code'] = $com_code;
-  $flag = insert(new Treasuries_transactions(), $dataInsert_treasuries_transactions);
-  if ($flag) {
-      //update Treasuries last_isal_collect
-      $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transactions['isal_number'];
-      update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
-  echo json_encode("done");
-  
-    }
-
-  
+          $flag = update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+          if ($flag) {
+            if ($request->what_paid > 0) {
+              $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
+              $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
 
 
+              $last_record_treasuries_transactions_record = get_cols_where_row_orderby(new Treasuries_transactions(), array("auto_serial"), array("com_code" => $com_code), "auto_serial", "DESC");
+              if (!empty($last_record_treasuries_transactions_record)) {
+                $dataInsert_treasuries_transactions['auto_serial'] = $last_record_treasuries_transactions_record['auto_serial'] + 1;
+              } else {
+                $dataInsert_treasuries_transactions['auto_serial'] = 1;
+              }
 
-      }
-    }
+              $dataInsert_treasuries_transactions['isal_number'] = $treasury_date['last_isal_collect'] + 1;
+              $dataInsert_treasuries_transactions['shift_code'] = $user_shift['shift_code'];
+              //Credit دائن
+              $dataInsert_treasuries_transactions['money'] = $request->what_paid;
+              $dataInsert_treasuries_transactions['treasuries_id'] = $user_shift['treasuries_id'];
+              $dataInsert_treasuries_transactions['mov_type'] = 5;
+              $dataInsert_treasuries_transactions['move_date'] = date("Y-m-d");
+              if ($invoice_data['is_has_customer'] == 1) {
+                $dataInsert_treasuries_transactions['account_number'] = $customerData["account_number"];
+                $dataInsert_treasuries_transactions['is_account'] = 1;
+              }
+              $dataInsert_treasuries_transactions['is_approved'] = 1;
+              $dataInsert_treasuries_transactions['the_foregin_key'] = $request->auto_serial;
+              //debit دائن
+              $dataInsert_treasuries_transactions['money_for_account'] = $request->what_paid * (-1);
+              $dataInsert_treasuries_transactions['byan'] = "تحصيل نظير فاتورة مبيعات  رقم" . $request->auto_serial;
+              $dataInsert_treasuries_transactions['created_at'] = date("Y-m-Y H:i:s");
+              $dataInsert_treasuries_transactions['added_by'] = auth()->user()->id;
+              $dataInsert_treasuries_transactions['com_code'] = $com_code;
+              $flag = insert(new Treasuries_transactions(), $dataInsert_treasuries_transactions);
+              if ($flag) {
+                //update Treasuries last_isal_collect
+                $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transactions['isal_number'];
+                update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
+              }
+            }
 
+            if ($invoice_data['is_has_customer'] == 1) {
+
+              //Affect on Customer Finanical Account Balance
+              refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(), false);
+            }
+            echo json_encode("done");
+          }
         }
       }
     }
   }
-
-
-
 }

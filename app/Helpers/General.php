@@ -100,8 +100,8 @@ function get_user_shift($Admins_Shifts,$Treasuries=null,$Treasuries_transactions
   }
   return $data;
 }
-//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي حسب النوع
-function refresh_account_blance($account_number=null,$AccountModel=null,$SupplierModel=null,$treasuries_transactionsModel=null,$suppliers_with_ordersModel=null,$returnFlag=false){
+//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي للمورد  
+function refresh_account_blance_supplier($account_number=null,$AccountModel=null,$SupplierModel=null,$treasuries_transactionsModel=null,$suppliers_with_ordersModel=null,$returnFlag=false){
   $com_code=auth()->user()->com_code;
  //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
   $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
@@ -129,6 +129,45 @@ if($returnFlag){
    }
 
   }
+
+
+//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي للعميل  
+function refresh_account_blance_customer($account_number=null,$AccountModel=null,$customerModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$returnFlag=false){
+  $com_code=auth()->user()->com_code;
+ //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
+  $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+   //لو عميل
+   if($AccountData['account_type']==3){
+
+    //صافي مجموع المبيعات والمرتجعات للمورد   
+$the_net_sales_invoicesForCustomer=$SalesinvoiceModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+    //لسه مستقبلا حنجيب من جدول مرتجع المبيعات بس لما نعمله
+
+$the_net_sales_invoicesReturnForCustomer=0;
+
+//صافي حركة النقديه بالخزن علي حساب العميل
+$the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+
+//الرصيد النهائي للعميل
+//حساب اول المده +صافي المبيعات والمرتجعات +صافي حركة النقدية بالخزن للحساب المالي للعميل الحالي
+$the_final_Balance=$AccountData['start_balance']+$the_net_sales_invoicesForCustomer+$the_net_sales_invoicesReturnForCustomer+$the_net_in_treasuries_transactions;
+$dataToUpdateAccount['current_balance']=$the_final_Balance;
+//update in Accounts حندث جدول الحسابات المالية بحقل العميل
+
+$AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
+$dataToUpdateSupplier['current_balance']=$the_final_Balance;
+//update in Accounts حندث جدول العملاء  بحقل العميل
+$customerModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateSupplier);
+if($returnFlag){
+  return $the_final_Balance;
+}
+
+   }
+
+  }
+
+
+
 function do_update_itemCardQuantity($Inv_itemCard=null,$item_code=null,$Inv_itemcard_batches=null,$does_has_retailunit=null,$retail_uom_quntToParent=null){
 $com_code=auth()->user()->com_code;
 // update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف

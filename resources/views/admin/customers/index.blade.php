@@ -71,7 +71,7 @@
              <td>{{ $info->account_number }}</td>  
              <td></td>  
 
-             <td>@if($info->is_archived==1) مفعل @else معطل @endif</td> 
+             <td>@if($info->active==1) مفعل @else معطل @endif</td> 
       
          <td>
 

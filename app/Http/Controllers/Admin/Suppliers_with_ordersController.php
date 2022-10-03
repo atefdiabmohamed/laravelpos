@@ -559,7 +559,6 @@ class Suppliers_with_ordersController extends Controller
             //Affect on Supplier Balance  حنأثر في رصيد المورد
             //حنجيب  سجل المورد من الشجره المحاسبية برقم الحساب المالب
 
-            refresh_account_blance($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
 
             //حركات  مختلفه
             //first make treasuries_transactions  action if what paid >0
@@ -601,9 +600,9 @@ class Suppliers_with_ordersController extends Controller
                     $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transactions['isal_number'];
                     update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
                 }
-
-                
             }
+
+            refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
 
             //store move حركة المخزن
             //first Get item card data جنجيب الاصناف اللي علي الفاتورة
@@ -781,7 +780,7 @@ class Suppliers_with_ordersController extends Controller
 
 
             if ($store_id == 'all') {
-                   //دائما  true
+                //دائما  true
                 $field2 = "id";
                 $operator2 = ">";
                 $value2 = 0;
@@ -794,25 +793,25 @@ class Suppliers_with_ordersController extends Controller
 
             if ($order_date_form == '') {
                 //دائما  true
-             $field3 = "id";
-             $operator3 = ">";
-             $value3 = 0;
-         } else {
-             $field3 = "order_date";
-             $operator3 = ">=";
-             $value3 = $order_date_form;
-         }
+                $field3 = "id";
+                $operator3 = ">";
+                $value3 = 0;
+            } else {
+                $field3 = "order_date";
+                $operator3 = ">=";
+                $value3 = $order_date_form;
+            }
 
-         if ($order_date_to == '') {
-            //دائما  true
-         $field4 = "id";
-         $operator4 = ">";
-         $value4 = 0;
-     } else {
-         $field4 = "order_date";
-         $operator4 = "<=";
-         $value4 = $order_date_to;
-     }
+            if ($order_date_to == '') {
+                //دائما  true
+                $field4 = "id";
+                $operator4 = ">";
+                $value4 = 0;
+            } else {
+                $field4 = "order_date";
+                $operator4 = "<=";
+                $value4 = $order_date_to;
+            }
 
             if ($search_by_text != '') {
 
@@ -845,7 +844,7 @@ class Suppliers_with_ordersController extends Controller
                     }
                 }
             }
-    
+
             return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
         }
     }

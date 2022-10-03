@@ -251,7 +251,7 @@ class CustomerController extends Controller
 
 
 
-      $data = Customer::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+      $data = Customer::where($field1, $operator1, $value1)->where(['com_code' => $com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
       if (!empty($data)) {
         foreach ($data as $info) {
           $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
@@ -264,6 +264,4 @@ class CustomerController extends Controller
       return view('admin.customers.ajax_search', ['data' => $data]);
     }
   }
-
-  
 }
