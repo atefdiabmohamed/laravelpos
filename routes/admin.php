@@ -238,7 +238,6 @@ Route::post('/SalesInvoices/store',[SalesInvoicesController::class,'store'])->na
 Route::get('/SalesInvoices/edit/{id}',[SalesInvoicesController::class,'edit'])->name('admin.SalesInvoices.edit');
 Route::post('/SalesInvoices/update/{id}',[SalesInvoicesController::class,'update'])->name('admin.SalesInvoices.update');
 Route::get('/SalesInvoices/delete/{id}',[SalesInvoicesController::class,'delete'])->name('admin.SalesInvoices.delete');
-Route::post('/SalesInvoices/ajax_search',[SalesInvoicesController::class,'ajax_search'])->name('admin.SalesInvoices.ajax_search');
 Route::get('/SalesInvoices/show/{id}',[SalesInvoicesController::class,'show'])->name('admin.SalesInvoices.show');
 Route::post('/SalesInvoices/get_item_uoms',[SalesInvoicesController::class,'get_item_uoms'])->name('admin.SalesInvoices.get_item_uoms');
 Route::post('/SalesInvoices/get_item_batches',[SalesInvoicesController::class,'get_item_batches'])->name('admin.SalesInvoices.get_item_batches');
@@ -254,6 +253,8 @@ Route::post('/SalesInvoices/recalclate_parent_invoice',[SalesInvoicesController:
 Route::post('/SalesInvoices/remove_active_row_item',[SalesInvoicesController::class,'remove_active_row_item'])->name('admin.SalesInvoices.remove_active_row_item');
 Route::post('/SalesInvoices/DoApproveInvoiceFinally',[SalesInvoicesController::class,'DoApproveInvoiceFinally'])->name('admin.SalesInvoices.DoApproveInvoiceFinally');
 Route::post('/SalesInvoices/load_usershiftDiv',[SalesInvoicesController::class,'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
+Route::post('/SalesInvoices/load_invoice_details_modal',[SalesInvoicesController::class,'load_invoice_details_modal'])->name('admin.SalesInvoices.load_invoice_details_modal');
+Route::post('/SalesInvoices/ajax_search',[SalesInvoicesController::class,'ajax_search'])->name('admin.SalesInvoices.ajax_search');
 
 
 

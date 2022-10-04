@@ -3,52 +3,54 @@
           @php
            $i=1;   
           @endphp
-          <table id="example2" class="table table-bordered table-hover">
-            <thead class="custom_thead">
-           <th>كود</th>
-           <th> المورد</th>
-           <th> تاريخ الفاتورة</th>
-           <th>  نوع الفاتورة</th>
-           <th>   المخزن المستلم</th>
-           <th>    اجمالي الفاتورة</th>
-           <th>حالة الفاتورة</th>
+        <table id="example2" class="table table-bordered table-hover">
+         <thead class="custom_thead">
+        <th>كود</th>
+        <th> تاريخ الفاتورة</th>
+        <th> العميل</th>
+        <th>  فئة الفاتورة</th>
+        <th>  نوع الفاتورة</th>
 
-           <th></th>
+        <th>    اجمالي الفاتورة</th>
+        <th>حالة الفاتورة</th>
 
-            </thead>
-            <tbody>
-         @foreach ($data as $info )
-            <tr>
-              <td>{{ $info->auto_serial }}</td>  
-              <td>{{ $info->supplier_name }}</td>  
-              <td>{{ $info->order_date }}</td>  
-             <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td> 
-             <td>{{ $info->store_name }}</td>  
-             <td>{{ $info->total_cost*(1) }}</td>  
+        <th></th>
 
-             <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td> 
+         </thead>
+         <tbody>
+      @foreach ($data as $info )
+         <tr>
+           <td>{{ $info->auto_serial }}</td>  
+           <td>{{ $info->invoice_date }}</td>  
+           <td>{{ $info->customer_name }}</td>  
+           <td>{{ $info->Sales_matrial_types_name }}</td>  
 
-         <td>
+          <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td> 
+          <td>{{ $info->total_cost*1 }}</td>  
+          <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td> 
 
-          @if($info->is_approved==0)
-        <a href="{{ route('admin.suppliers_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-        @endif
-        <a href="{{ route('admin.suppliers_orders.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
+      <td>
 
-         </td>
-           
-   
-           </tr> 
-      @php
-         $i++; 
-      @endphp
-         @endforeach
-   
-   
-   
-            </tbody>
-             </table>
+       @if($info->is_approved==0)
+     <button data-autoserial="{{ $info->auto_serial }}"  class="btn btn-sm load_invoice_update_modal btn-primary">تعديل</button>   
+     <a href="{{ route("admin.SalesInvoices.delete",$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+     @endif
+     <button data-autoserial="{{ $info->auto_serial }}"  class="btn btn-sm load_invoice_details_modal btn-info">عرض</button>   
+
+      </td>
+        
+
+        </tr> 
+   @php
+      $i++; 
+   @endphp
+      @endforeach
+
+
+
+         </tbody>
+          </table>
+          
       <br>
  <div class="col-md-12" id="ajax_pagination_in_search">
     {{ $data->links() }}

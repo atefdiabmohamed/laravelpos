@@ -41,10 +41,16 @@ class SalesInvoicesController extends Controller
         }
       }
 
-
-
-      return view("admin.sales_invoices.index", ['data' => $data]);
+    
     }
+    $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1));
+    $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "active" => 1));
+    $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "active" => 1));
+
+
+    return view("admin.sales_invoices.index", ['data' => $data, 'delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types]);
+ 
+
   }
 
   public function get_item_uoms(Request $request)
@@ -662,6 +668,231 @@ class SalesInvoicesController extends Controller
           }
         }
       }
+    }
+  }
+
+  public function delete($id)
+  {
+    try {
+      $com_code = auth()->user()->com_code;
+      $SalesInvoiceData = get_cols_where_row(new Sales_invoices(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code));
+
+      if (!empty($SalesInvoiceData)) {
+        $flag = delete(new Sales_invoices(), array("id" => $id, "com_code" => $com_code));
+        if ($flag) {
+          delete(new Sales_invoices_details(), array("sales_invoices_auto_serial" => $SalesInvoiceData['auto_serial'], "com_code" => $com_code));
+
+
+          return redirect()->back()
+            ->with(['success' => '   تم حذف البيانات بنجاح']);
+        } else {
+          return redirect()->back()
+            ->with(['error' => 'عفوا حدث خطأ ما']);
+        }
+      } else {
+        return redirect()->back()
+          ->with(['error' => 'عفوا غير قادر الي الوصول للبيانات المطلوبة']);
+      }
+    } catch (\Exception $ex) {
+
+      return redirect()->back()
+        ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+  }
+  public function load_invoice_details_modal(Request $request)
+  {
+    if ($request->ajax()) {
+      $com_code = auth()->user()->com_code;
+      $invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+      $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
+      if ($invoice_data['is_has_customer'] == 1) {
+        $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
+      }
+
+      $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "id" => $invoice_data['sales_matrial_types']));
+      $sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
+      if (!empty($sales_invoices_details)) {
+        foreach ($sales_invoices_details  as $info) {
+          $info->store_name = get_field_value(new Store(), "name", array("com_code" => $com_code, "id" => $info->store_id));
+          $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" => $com_code, "item_code" => $info->item_code));
+          $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
+        }
+      }
+      return view("admin.sales_invoices.load_invoice_details_modal", ['delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types, 'invoice_data' => $invoice_data, 'sales_invoices_details' => $sales_invoices_details]);
+    }
+  }
+
+  public function ajax_search(Request $request)
+  {
+    if ($request->ajax()) {
+      $com_code=auth()->user()->com_code;
+      $customer_code = $request->customer_code;
+      $delegates_code = $request->delegates_code;
+      $Sales_matrial_types = $request->Sales_matrial_types;
+      $pill_type = $request->pill_type;
+      $discount_type = $request->discount_type;
+      $is_approved = $request->is_approved;
+      $invoice_date_from = $request->invoice_date_from;
+      $invoice_date_to = $request->invoice_date_to;
+      $searchbyradio = $request->searchbyradio;
+      $search_by_text = $request->search_by_text;
+      if ($customer_code == 'all') {
+        //دائما  true
+        $field1 = "id";
+        $operator1 = ">";
+        $value1 = 0;
+      } elseif ($customer_code == "without") {
+        $field1 = "customer_code";
+        $operator1 = "=";
+        $value1 = null;
+      } else {
+        $field1 = "customer_code";
+        $operator1 = "=";
+        $value1 = $customer_code;
+      }
+
+      if ($discount_type == 'all') {
+        //دائما  true
+        $field2 = "id";
+        $operator2 = ">";
+        $value2 = 0;
+      } elseif ($discount_type == "without") {
+        $field2 = "discount_type";
+        $operator2 = "=";
+        $value2 = null;
+      } else {
+        $field2 = "discount_type";
+        $operator2 = "=";
+        $value2 = $discount_type;
+      }
+
+
+      if ($delegates_code == 'all') {
+        //دائما  true
+        $field3 = "id";
+        $operator3 = ">";
+        $value3 = 0;
+      }  else {
+        $field3 = "delegate_code";
+        $operator3 = "=";
+        $value3 = $delegates_code;
+      }
+
+
+
+      if ($Sales_matrial_types == 'all') {
+        //دائما  true
+        $field4 = "id";
+        $operator4 = ">";
+        $value4 = 0;
+      }  else {
+        $field4 = "Sales_matrial_types";
+        $operator4 = "=";
+        $value4 = $Sales_matrial_types;
+      }
+
+
+      if ($pill_type == 'all') {
+        //دائما  true
+        $field5 = "id";
+        $operator5 = ">";
+        $value5 = 0;
+      }  else {
+        $field5 = "pill_type";
+        $operator5 = "=";
+        $value5 = $pill_type;
+      }
+
+      if ($is_approved == 'all') {
+        //دائما  true
+        $field6 = "id";
+        $operator6 = ">";
+        $value6 = 0;
+      }  else {
+        $field6 = "is_approved";
+        $operator6 = "=";
+        $value6 = $is_approved;
+      }
+
+
+      if ($invoice_date_from == '') {
+        //دائما  true
+        $field7 = "id";
+        $operator7 = ">";
+        $value7 = 0;
+      } else {
+        $field7 = "invoice_date";
+        $operator7 = ">=";
+        $value7 = $invoice_date_from;
+      }
+
+      if ($invoice_date_to == '') {
+        //دائما  true
+        $field8 = "id";
+        $operator8 = ">";
+        $value8 = 0;
+      } else {
+        $field8 = "invoice_date";
+        $operator8 = "<=";
+        $value8 = $invoice_date_to;
+      }
+
+
+      if ($search_by_text != '') {
+
+        if ($searchbyradio == 'auto_serial') {
+
+          $field9 = "auto_serial";
+          $operator9 = "=";
+          $value9 = $search_by_text;
+        } elseif ($searchbyradio == 'customer_code') {
+
+          $field9 = "customer_code";
+          $operator9 = "=";
+          $value9 = $search_by_text;
+        }
+        
+        else {
+          $field9 = "account_number";
+          $operator9 = "=";
+          $value9 = $search_by_text;
+        }
+      } else {
+        //true 
+        $field9 = "id";
+        $operator9 = ">";
+        $value9 = 0;
+      }
+
+
+      $data = Sales_invoices::where($field1, $operator1, $value1)->
+      where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where
+      ($field4, $operator4, $value4)->
+      where($field5, $operator5, $value5)->
+      
+      where($field6, $operator6, $value6)
+      ->
+      where($field7, $operator7, $value7)
+      ->
+      where($field8, $operator8, $value8)->
+      
+      where($field9, $operator9, $value9)->
+      orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+     if (!empty($data)) {
+      foreach ($data as $info) {
+        $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+        $info->Sales_matrial_types_name = get_field_value(new Sales_matrial_types(), "name", array("com_code" => $com_code, "id" => $info->sales_matrial_types));
+        if ($info->is_has_customer == 1) {
+          $info->customer_name = get_field_value(new Customer(), "name", array("com_code" => $com_code, "customer_code" => $info->customer_code));
+        } else {
+          $info->customer_name = "بدون عميل";
+        }
+      }
+
+    
+    }
+
+      return view('admin.sales_invoices.ajax_search', ['data' => $data]);
     }
   }
 }

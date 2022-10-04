@@ -848,4 +848,5 @@ class Suppliers_with_ordersController extends Controller
             return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
         }
     }
+    
 }
