@@ -92,8 +92,9 @@ class CustomerController extends Controller
         $data_insert['start_balance_status'] = 3;
         $data_insert['start_balance'] = 0;
       }
+      $data_insert['phones'] = $request->phones;
 
-
+      $data_insert['current_balance'] = $data_insert['start_balance'];
       $data_insert['notes'] = $request->notes;
       $data_insert['active'] = $request->active;
       $data_insert['added_by'] = auth()->user()->id;
@@ -121,6 +122,7 @@ class CustomerController extends Controller
           $data_insert_account['start_balance_status'] = 3;
           $data_insert_account['start_balance'] = 0;
         }
+        $data_insert_account['current_balance'] = $data_insert_account['start_balance'];
 
         $customer_parent_account_number = get_field_value(new Admin_panel_setting(), "customer_parent_account_number", array('com_code' => $com_code));
         $data_insert_account['notes'] = $request->notes;
@@ -128,7 +130,7 @@ class CustomerController extends Controller
         $data_insert_account['is_parent'] = 0;
         $data_insert_account['account_number'] = $data_insert['account_number'];
         $data_insert_account['account_type'] = 3;
-        $data_insert_account['is_archived'] = $request->active;
+        $data_insert_account['active'] = $request->active;
         $data_insert_account['added_by'] = auth()->user()->id;
         $data_insert_account['created_at'] = date("Y-m-d H:i:s");
         $data_insert_account['date'] = date("Y-m-d");
@@ -168,6 +170,8 @@ class CustomerController extends Controller
 
 
       $data_to_update['name'] = $request->name;
+      $data_to_update['phones'] = $request->phones;
+
       $data_to_update['address'] = $request->address;
       $data_to_update['notes'] = $request->notes;
       $data_to_update['active'] = $request->active;
@@ -178,6 +182,7 @@ class CustomerController extends Controller
         $data_to_update_account['name'] = $request->name;
         $data_to_update_account['updated_by'] = auth()->user()->id;
         $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");
+        $data_to_update_account['active']=$request->active;
         $flag = update(new Account(), $data_to_update_account, array('account_number' => $data['account_number'], 'other_table_FK' => $data['customer_code'], 'com_code' => $com_code, 'account_type' => 3));
       }
       return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);

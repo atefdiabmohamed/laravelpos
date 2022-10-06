@@ -4,7 +4,7 @@
 @endsection
 
 @section('contentheader')
-الحسابات
+الضبط
 @endsection
 
 @section('contentheaderlink')
@@ -95,7 +95,6 @@
 
 
         <a href="{{ route('admin.suppliers_categories.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.suppliers_categories.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
    
          </td>
            

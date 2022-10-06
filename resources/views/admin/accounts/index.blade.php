@@ -67,11 +67,11 @@
 
                           <div class="col-md-3">
                             <div class="form-group"> 
-                              <label>   حالة الارشفة  </label>
-                              <select name="is_archived_search" id="is_archived_search" class="form-control">
+                              <label>   حالة التفعيل  </label>
+                              <select name="active_search" id="active_search" class="form-control">
                                <option value="all"> بحث بالكل</option>
-                              <option  value="1"> معطل ومؤرشف</option>
-                               <option     value="0"> مفعل وغير مؤرشف</option>
+                               <option     value="1"> مفعل  </option>
+                               <option  value="0"> معطل ومؤرشف</option>
                               </select>
                              
                               </div>
@@ -122,14 +122,14 @@
           @endif
             </td>  
 
-             <td>@if($info->is_archived==0) مفعل @else معطل @endif</td> 
+            <td @if($info->active==1) class="bg-success" @else class="bg-danger" @endif  >@if($info->active==1) مفعل @else معطل @endif</td> 
       
          <td>
-
+      @if( $info->relatediternalaccounts==0)
         <a href="{{ route('admin.accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-        <a href="{{ route('admin.accounts.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>   
-
+      @else
+       يعدل من شاشته
+      @endif
          </td>
            
    
@@ -141,6 +141,7 @@
    
             </tbody>
              </table>
+             
       <br>
            {{ $data->links() }}
        

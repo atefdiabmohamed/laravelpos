@@ -30,7 +30,7 @@ class AccountsRequest extends FormRequest
             'parent_account_number' => 'required_if:is_parent,0',
             'start_balance_status' => 'required',
             'start_balance' => 'required|min:0',
-            'is_archived' => 'required',
+            'active' => 'required',
 
         ];
     }

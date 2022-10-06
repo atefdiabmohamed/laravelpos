@@ -28,7 +28,7 @@ class AccountsRequestUpdate extends FormRequest
             'is_parent' => 'required',
             'account_type' => 'required',
             'parent_account_number' => 'required_if:is_parent,0',
-            'is_archived' => 'required',
+            'active' => 'required',
 
         ];
     }

@@ -75,7 +75,15 @@
               @enderror
             </div>
             </div>
-            
+            <div class="col-md-6">   
+              <div class="form-group">
+                <label>   الهاتف</label>
+                <input name="phones" id="phones" class="form-control" value="{{ old('phones') }}"    >
+                @error('phones')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+              </div>
+              </div>
           <div class="col-md-6">   
             <div class="form-group">
               <label>   ملاحظات</label>
@@ -85,7 +93,7 @@
               @enderror
             </div>
             </div>
-
+         
 <div class="col-md-6">
       <div class="form-group"> 
         <label>  حالة التفعيل</label>

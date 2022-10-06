@@ -11,7 +11,7 @@ class Customer extends Model
     protected $table="customers";
     protected $fillable=[
         'name','account_number',
-        'start_balance','current_balance','notes','customer_code','city_id','address'
+        'start_balance','current_balance','notes','customer_code','phones','address'
         ,'created_at','updated_at','added_by','updated_by','com_code','date','active','start_balance_status'
         ];
 }

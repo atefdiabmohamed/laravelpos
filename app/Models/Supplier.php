@@ -11,7 +11,7 @@ class Supplier extends Model
     protected $table="suupliers";
     protected $fillable=[
         'name','account_number',
-        'start_balance','current_balance','notes','suuplier_code','city_id','address','suppliers_categories_id'
+        'start_balance','current_balance','notes','suuplier_code','phones','address','suppliers_categories_id'
         ,'created_at','updated_at','added_by','updated_by','com_code','date','active','start_balance_status'
         ];
 }

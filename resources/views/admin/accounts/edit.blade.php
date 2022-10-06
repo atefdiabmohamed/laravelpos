@@ -102,12 +102,12 @@
 <div class="col-md-6">
       <div class="form-group"> 
         <label>  حالة التفعيل</label>
-        <select name="is_archived" id="is_archived" class="form-control">
+        <select name="active" id="active" class="form-control">
          <option value="">اختر الحالة</option>
-        <option {{  old('is_archived',$data['is_archived'])==0 ? 'selected' : ''}}  value="0"> نعم</option>
-         <option {{  old('is_archived',$data['is_archived'])==1 ? 'selected' : ''}}   value="1"> لا</option>
+        <option {{  old('active',$data['active'])==1 ? 'selected' : ''}}  value="1"> نعم</option>
+         <option {{  old('active',$data['active'])==0 ? 'selected' : ''}}   value="0"> لا</option>
         </select>
-        @error('is_archived')
+        @error('active')
         <span class="text-danger">{{ $message }}</span>
         @enderror
         </div>
