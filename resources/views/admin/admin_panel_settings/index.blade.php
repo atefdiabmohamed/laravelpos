@@ -65,7 +65,19 @@
             </tr>
 
 
+            <tr>
+                <td class="width30">  اسم الحساب المالي للمناديب الاب</td> 
+                <td > {{ $data['delegates_parent_account_name'] }} رقم حساب مالي ( {{ $data["delegate_parent_account_number"] }} )</td>
+            </tr>
+
             
+            <tr>
+                <td class="width30">  اسم الحساب المالي للموظفين الاب</td> 
+                <td > {{ $data['employees_parent_account_name'] }} رقم حساب مالي ( {{ $data["employees_parent_account_number"] }} )</td>
+            </tr>
+
+
+
             <tr>
                 <td class="width30">  رسالة التنبية اعلي الشاشة للشركة</td> 
                 <td > {{ $data['general_alert'] }}</td>

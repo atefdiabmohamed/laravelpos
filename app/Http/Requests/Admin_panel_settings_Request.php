@@ -24,16 +24,15 @@ class Admin_panel_settings_Request extends FormRequest
     public function rules()
     {
         return [
-         'system_name'=>'required',
-         'address'=>'required',
-         'phone'=>'required',
-         'customer_parent_account_number'=>'required',
-         'suppliers_parent_account_number'=>'required',
+            'system_name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'customer_parent_account_number' => 'required',
+            'suppliers_parent_account_number' => 'required',
+            'delegate_parent_account_number' => 'required',
+            'employees_parent_account_number' => 'required',
 
-         
 
-
-         
 
         ];
     }
@@ -41,12 +40,14 @@ class Admin_panel_settings_Request extends FormRequest
     public function messages()
     {
         return [
-        'system_name.required'=>'اسم الشركة مطلوب',
-        'address.required'=>'عنوان الشركة مطلوب'  ,
-        'phone.required'=>'هاتف الشركة مطلوب'  , 
-        'customer_parent_account_number.required'=>' رقم الحساب المالي للعملاء الاب مطلوب'   ,
-        'suppliers_parent_account_number.required'=>' رقم الحساب المالي للموردين الاب مطلوب'    
-  
+            'system_name.required' => 'اسم الشركة مطلوب',
+            'address.required' => 'عنوان الشركة مطلوب',
+            'phone.required' => 'هاتف الشركة مطلوب',
+            'customer_parent_account_number.required' => ' رقم الحساب المالي للعملاء الاب مطلوب',
+            'suppliers_parent_account_number.required' => ' رقم الحساب المالي للموردين الاب مطلوب',
+            'delegate_parent_account_number.required' => ' رقم الحساب المالي للمناديب الاب مطلوب',
+            'employees_parent_account_number.required' => ' رقم الحساب المالي للموظفين الاب مطلوب'
+
         ];
     }
 }

@@ -38,7 +38,7 @@
        
         <div id="ajax_responce_serarchDiv">
           
-          @if (@isset($data) && !@empty($data))
+          @if (@isset($data) && !@empty($data) && count($data) >0 )
           @php
            $i=1;   
           @endphp

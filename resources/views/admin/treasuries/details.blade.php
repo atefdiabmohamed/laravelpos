@@ -104,6 +104,7 @@
        @endif
 
 <a href="{{ route('admin.treasuries.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+<a href="{{ route('admin.treasuries.index') }}" class="btn btn-sm btn-info">عودة</a>
 
 
                 </td>
@@ -121,7 +122,7 @@
     </div>
      <div id="ajax_responce_serarchDiv">
           
-        @if (@isset($treasuries_delivery) && !@empty($treasuries_delivery))
+        @if (@isset($treasuries_delivery) && !@empty($treasuries_delivery) && count($treasuries_delivery) >0)
         @php
          $i=1;   
         @endphp
