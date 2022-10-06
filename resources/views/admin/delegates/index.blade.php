@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-العملاء
+المناديب
 @endsection
 
 @section('contentheader')
@@ -8,14 +8,12 @@
 @endsection
 
 @section('contentheaderlink')
-<a href="{{ route('admin.accounts.index') }}">    العملاء </a>
+<a href="{{ route('admin.accounts.index') }}">    المناديب </a>
 @endsection
 
 @section('contentheaderactive')
 عرض
 @endsection
-
-
 
 @section('content')
 
@@ -23,22 +21,22 @@
   
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center">بيانات   العملاء  </h3>
+          <h3 class="card-title card_title_center">بيانات   المناديب  </h3>
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
-          <input type="hidden" id="ajax_search_url" value="{{ route('admin.customer.ajax_search') }}">
+          <input type="hidden" id="ajax_search_url" value="{{ route('admin.delegates.ajax_search') }}">
         
-          <a href="{{ route('admin.customer.create') }}" class="btn btn-sm btn-success" >اضافة جديد</a>
+          <a href="{{ route('admin.delegates.create') }}" class="btn btn-sm btn-success" >اضافة جديد</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
           <div class="row">
           <div class="col-md-4">
-            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code"> برقم العميل
+            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code"> برقم المندوب
             <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
 
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
 
-            <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود العميل" class="form-control"> <br>
+            <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود المندوب" class="form-control"> <br>
             
                       </div>
                      
@@ -70,9 +68,7 @@
             <tr>
            
              <td>{{ $info->name }}</td>  
-             <td>{{ $info->customer_code }}</td>  
-
-             
+             <td>{{ $info->delegate_code }}</td>  
              <td>{{ $info->account_number }}</td>  
              <td> 
            
@@ -86,16 +82,13 @@
           @endif
           
             </td> 
-            
             <td>{{ $info->address }}</td>  
             <td>{{ $info->phones }}</td>  
 
             <td>{{ $info->notes }}</td>  
 
              <td>@if($info->active==1) مفعل @else معطل @endif</td> 
-      
          <td>
-
         <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
 
          </td>

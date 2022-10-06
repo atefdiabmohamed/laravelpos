@@ -4,8 +4,7 @@
 @endsection
 
 @section('contentheader')
-الحسابات
-
+ضبط المخازن 
 @endsection
 
 @section('contentheaderlink')

@@ -8,12 +8,8 @@ use App\Models\Customer;
 use App\Models\Admin;
 use App\Models\Account;
 use App\Models\Admin_panel_setting;
-
-
 use App\Http\Requests\CustomerRequest;
 use App\Http\Requests\CustomerEditRequest;
-
-
 
 class CustomerController extends Controller
 {
@@ -269,4 +265,6 @@ class CustomerController extends Controller
       return view('admin.customers.ajax_search', ['data' => $data]);
     }
   }
+
+  
 }
