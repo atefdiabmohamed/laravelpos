@@ -50,7 +50,7 @@
              <td>{{ $info->name }}</td>  
 
              <td>@if($info->active==1) مفعل @else معطل @endif</td> 
-             <td>@if($info->relatediternalaccounts==1) نعم ويضاف من شاشته @else لا ويضاف من شاشه الحسابات @endif</td> 
+             <td>@if($info->relatediternalaccounts==1) نعم ويضاف من شاشته الداخلية ويسمع بشاشة الحسابات الرئيسية @else لا ويضاف من شاشه الحسابات الرئيسية @endif</td> 
 
        
    

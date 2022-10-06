@@ -10,7 +10,7 @@ class Account_types_controller extends Controller
 {
     public function index()
     {
-        $data=get_cols(new Account_types(),array("*"),'id','ASC');
+        $data=get_cols(new Account_types(),array("*"),'relatediternalaccounts','ASC');
         return view('admin.account_types.index', ['data' => $data]);
     }
 

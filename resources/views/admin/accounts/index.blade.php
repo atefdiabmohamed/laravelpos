@@ -23,7 +23,7 @@
   
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center">بيانات   الحسابات المالية </h3>
+          <h3 class="card-title card_title_center">بيانات الشجرة المحاسبية ( الحسابات المالية )      </h3>
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
           <input type="hidden" id="ajax_search_url" value="{{ route('admin.accounts.ajax_search') }}">
         
@@ -32,14 +32,14 @@
         <!-- /.card-header -->
         <div class="card-body">
           <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
 
             <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب" class="form-control"> <br>
             
                       </div>
-                      <div class="col-md-4"> 
+                      <div class="col-md-3"> 
                         <div class="form-group"> 
                           <label>  بحث بنوع الحساب</label>
                           <select name="account_type_search" id="account_type_search" class="form-control ">
@@ -53,7 +53,7 @@
                        
                           </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                           <div class="form-group"> 
                             <label>   هل الحساب أب</label>
                             <select name="is_parent_search" id="is_parent_search" class="form-control">
@@ -64,6 +64,19 @@
                            
                             </div>
                           </div>
+
+                          <div class="col-md-3">
+                            <div class="form-group"> 
+                              <label>   حالة الارشفة  </label>
+                              <select name="is_archived_search" id="is_archived_search" class="form-control">
+                               <option value="all"> بحث بالكل</option>
+                              <option  value="1"> معطل ومؤرشف</option>
+                               <option     value="0"> مفعل وغير مؤرشف</option>
+                              </select>
+                             
+                              </div>
+                            </div>
+
                           </div>
                <div class="clearfix"></div>
 
@@ -80,7 +93,7 @@
            <th>  هل أب </th>
            <th>  الحساب الاب </th>
            <th>  الرصيد </th>
-           <th>حالة التفعيل</th>
+           <th> التفعيل</th>
           <th></th>
 
             </thead>
@@ -93,7 +106,21 @@
              <td>{{ $info->account_types_name }}</td>  
              <td>@if($info->is_parent==1) نعم  @else  لا @endif</td>  
              <td>{{ $info->parent_account_name }}</td>  
-             <td></td>  
+             <td> 
+              @if($info->is_parent==0)
+            @if($info->current_balance >0)
+            مدين ب ({{ $info->current_balance*1 }}) جنيه  
+            @elseif ($info->current_balance <0)
+            دائن ب ({{ $info->current_balance*1*(-1) }})   جنيه
+
+          @else
+      متزن
+           
+          @endif
+          @else
+          من ميزان المراجعه
+          @endif
+            </td>  
 
              <td>@if($info->is_archived==0) مفعل @else معطل @endif</td> 
       

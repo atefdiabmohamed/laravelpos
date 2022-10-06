@@ -68,7 +68,7 @@
                     <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ (request()->is('admin/accounts*') )?'active':'' }}">
                  
                       <p>
-          كل الحسابات المالية         
+            الشجرة ( الحسابات المالية )         
                       </p>
                     </a>
                   </li>
