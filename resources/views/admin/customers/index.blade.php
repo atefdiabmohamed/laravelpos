@@ -131,8 +131,7 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('assets/admin/js/accounts.js') }}"></script>
-
+<script src="{{ asset('assets/admin/js/customers.js') }}"></script>
 @endsection
 
 

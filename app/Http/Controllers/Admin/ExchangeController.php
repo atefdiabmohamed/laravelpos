@@ -33,6 +33,13 @@ class ExchangeController extends Controller
         $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
         $info->treasuries_name = Treasuries::where('id', $info->treasuries_id)->value('name');
         $info->mov_type_name = Mov_type::where('id', $info->mov_type)->value('name');
+        if($info->is_account==1){
+          $info->account_type = Account::where(["account_number" => $info->account_number, "com_code" => $com_code])->value("account_type");
+          $info->account_type_name = Account_types::where(["id" => $info->account_type])->value("name");
+          $info->account_name = Account::where(["account_number" => $info->account_number, "com_code" => $com_code])->value("name");
+
+        }
+   
       }
     }
     $checkExistsOpenShift = get_cols_where_row(new Admins_Shifts(), array("treasuries_id", "shift_code"), array("com_code" => $com_code, "admin_id" => auth()->user()->id, "is_finished" => 0));
@@ -42,7 +49,7 @@ class ExchangeController extends Controller
       $checkExistsOpenShift['treasuries_balance_now'] = get_sum_where(new Treasuries_transactions(), "money", array("com_code" => $com_code, "shift_code" => $checkExistsOpenShift['shift_code']));
     }
     $mov_type = get_cols_where(new Mov_type(), array("id", "name"), array("active" => 1, 'in_screen' => 1, 'is_private_internal' => 0), 'id', 'ASC');
-    $accounts = get_cols_where(new Account(), array("name", "account_number", "account_type"), array("com_code" => $com_code, "is_archived" => 0, "is_parent" => 0), 'id', 'DESC');
+    $accounts = get_cols_where(new Account(), array("name", "account_number", "account_type"), array("com_code" => $com_code, "active" => 1, "is_parent" => 0), 'id', 'DESC');
     if (!empty($accounts)) {
       foreach ($accounts as $info) {
         $info->account_type_name = Account_types::where(["id" => $info->account_type])->value("name");
@@ -119,4 +126,32 @@ class ExchangeController extends Controller
       return redirect()->back()->with(['error' => "عفوا حدث خطأما" . " " . $ex->getMessage()])->withInput();
     }
   }
+  public function  get_account_blance(Request $request){
+    if($request->ajax()){
+      $com_code=auth()->user()->com_code;
+     $account_number=$request->account_number;
+     $AccountData=  Account::select("account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+    if(!empty($AccountData)){
+      if($AccountData['account_type']==2){
+        $the_final_Balance=refresh_account_blance_supplier($account_number,new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+     return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
+      }elseif($AccountData['account_type']==3){
+        $the_final_Balance=refresh_account_blance_customer($account_number,new Account(),new Customer(),new Treasuries_transactions(),new Sales_invoices(),true);
+     return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
+     
+    }else{
+        
+        $the_final_Balance=refresh_account_blance_General($account_number,new Account(),new Treasuries_transactions(),true);
+        return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
+        
+      }
+    
+    }
+    
+    
+    
+    }
+    }
+
+
 }

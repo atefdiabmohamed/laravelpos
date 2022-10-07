@@ -9,10 +9,7 @@
            <th>  الكود </th>
            <th> رقم الحساب </th>
            <th>  الرصيد </th>
-           <th>  العنوان </th>
            <th>  الهاتف </th>
-
-           <th>  ملاحظات </th>
 
            <th> التفعيل</th>
           <th></th>
@@ -23,9 +20,7 @@
             <tr>
            
              <td>{{ $info->name }}</td>  
-             <td>{{ $info->customer_code }}</td>  
-
-             
+             <td>{{ $info->delegate_code }}</td>  
              <td>{{ $info->account_number }}</td>  
              <td> 
            
@@ -36,21 +31,16 @@
 
           @else
       متزن
-           
           @endif
           
             </td> 
-            
-            <td>{{ $info->address }}</td>  
             <td>{{ $info->phones }}</td>  
 
-            <td>{{ $info->notes }}</td>  
 
-             <td>@if($info->active==1) مفعل @else معطل @endif</td> 
-      
+             <td @if($info->active==1) class="bg-success" @else class="bg-danger" @endif>@if($info->active==1) مفعل @else معطل @endif</td> 
          <td>
-
-        <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.delegates.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <button data-id="{{ $info->id }}" class="btn btn-sm show_more_details  btn-info">المزيد</button>   
 
          </td>
            
@@ -62,8 +52,7 @@
    
    
             </tbody>
-             </table>
-             </table>
+          </table>
       <br>
       <div class="col-md-12" id="ajax_pagination_in_search">
          {{ $data->links() }}

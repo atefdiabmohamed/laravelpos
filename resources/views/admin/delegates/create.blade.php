@@ -64,9 +64,10 @@
             @enderror
           </div>
           </div>
+          
           <div class="col-md-6">
             <div class="form-group"> 
-              <label>   نوع عمولة  المندوب بالفواتير</label>
+              <label>   نوع عمولة  المندوب </label>
               <select name="percent_type" id="percent_type" class="form-control">
                <option value="">اختر الحالة</option>
               <option   @if(old('percent_type')==1  ) selected="selected"  @endif value="1"> اجر ثابت</option>

@@ -29,7 +29,8 @@
         <div class="card-header">
           <h3 class="card-title card_title_center">  بيانات حركة صرف النقدية بالنظام</h3>
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
-        
+          <input type="hidden" id="ajax_url_get_account_blance" value="{{route('admin.exchange_transaction.get_account_blance')}}">
+
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -64,7 +65,10 @@
                     @enderror
                     </div>
                   </div>
+                  <div class="col-md-4" id="get_account_blancesDiv" style="display: none;" > 
 
+
+                  </div>
                 <div class="col-md-4"> 
                   <div class="form-group"> 
                     <label>    نوع الحركة</label>
@@ -158,6 +162,8 @@
            <th> الخزنة</th>
            <th>  المبلغ</th>
            <th>  الحركة</th>
+           <th>  الحساب المالي</th>
+
            <th>  البيان</th>
            <th> المستخدم</th>
            <th></th>
@@ -171,6 +177,11 @@
              <td>{{ $info->treasuries_name }}</td>  
              <td>{{ $info->money*(1)*(-1) }}</td>  
              <td>{{ $info->mov_type_name }}</td>  
+             <td>{{ $info->account_name }} <br>
+              ({{ $info->account_type_name }})
+            
+            
+            </td>  
             
              <td>{{ $info->byan }}</td> 
              <td > 

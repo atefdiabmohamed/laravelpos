@@ -166,7 +166,26 @@ if($returnFlag){
 
   }
 
+//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي العام  
+function refresh_account_blance_General($account_number=null,$AccountModel=null,$treasuries_transactionsModel=null,$returnFlag=false){
+  $com_code=auth()->user()->com_code;
+ //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
+  $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+   //لو عميل
+ if($AccountData['account_type']!=2 and $AccountData['account_type']!=3 and $AccountData['account_type']!=4 and $AccountData['account_type']!=5 and $AccountData['account_type']!=8){
 
+//صافي حركة النقديه بالخزن علي حساب العميل
+$the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+$the_final_Balance=$AccountData['start_balance']+$the_net_in_treasuries_transactions;
+$dataToUpdateAccount['current_balance']=$the_final_Balance;
+$AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
+if($returnFlag){
+  return $the_final_Balance;
+}
+
+   }
+
+  }
 
 function do_update_itemCardQuantity($Inv_itemCard=null,$item_code=null,$Inv_itemcard_batches=null,$does_has_retailunit=null,$retail_uom_quntToParent=null){
 $com_code=auth()->user()->com_code;
