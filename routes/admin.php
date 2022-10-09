@@ -223,6 +223,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/collect_transaction/create', [CollectController::class, 'create'])->name('admin.collect_transaction.create');
     Route::post('/collect_transaction/store', [CollectController::class, 'store'])->name('admin.collect_transaction.store');
     Route::post('/collect_transaction/get_account_blance', [CollectController::class, 'get_account_blance'])->name('admin.collect_transaction.get_account_blance');
+    Route::post('/collect_transaction/ajax_search', [CollectController::class, 'ajax_search'])->name('admin.collect_transaction.ajax_search');
 
 
     /*           end  collect_transaction                  */
@@ -232,7 +233,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/exchange_transaction/create', [ExchangeController::class, 'create'])->name('admin.exchange_transaction.create');
     Route::post('/exchange_transaction/store', [ExchangeController::class, 'store'])->name('admin.exchange_transaction.store');
     Route::post('/exchange_transaction/get_account_blance', [ExchangeController::class, 'get_account_blance'])->name('admin.exchange_transaction.get_account_blance');
-
+    Route::post('/exchange_transaction/ajax_search', [ExchangeController::class, 'ajax_search'])->name('admin.exchange_transaction.ajax_search');
     /*           end  exchange_transaction                  */
 
 

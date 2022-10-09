@@ -23,13 +23,13 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col-12">
+
       <div class="card">
         <div class="card-header">
           <h3 class="card-title card_title_center">  بيانات حركة تحصيل النقدية بالنظام</h3>
           <input type="hidden" id="token_search" value="{{csrf_token() }}">
           <input type="hidden" id="ajax_url_get_account_blance" value="{{route('admin.collect_transaction.get_account_blance')}}">
+          <input type="hidden" id="ajax_url_ajax_search" value="{{route('admin.collect_transaction.ajax_search')}}">
 
 
           
@@ -122,7 +122,7 @@
             <span class="text-danger">{{ $message }}</span>
             @enderror
             </div>
-          </div>
+      
               <div class="col-md-8">   
                 <div class="form-group">
                   <label>   البيان</label>
@@ -142,7 +142,8 @@
           </div>
         </div>
         
-      </div>  
+      </div> 
+    </div> 
                 </form>  
 
       @else          
@@ -150,6 +151,96 @@
     تنبيه لايوجد شفت مفتوح لك لكي تتمكن من التحصيل
       </div>    
       @endif
+      
+ <div class="clearfix"></div>
+ <div class="row" style="padding: 15px;">
+
+
+  <div class="col-md-4">
+    <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود 
+    <input  type="radio" name="searchbyradio" id="searchbyradio" value="isal_number"> الايصال    
+    <input  type="radio" name="searchbyradio" id="searchbyradio" value="account_number"> رقم الحساب   
+    <input  type="radio" name="searchbyradio" id="searchbyradio" value="shift_code">  شفت   
+
+    <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
+    
+              </div>
+              <div class="col-md-4"> 
+                <div class="form-group"> 
+                  <label>  بحث  بالحسابات المالية</label>
+                  <select name="account_number_search" id="account_number_search" class="form-control select2 ">
+                    <option value="all"> بحث بالكل</option>
+                    @if (@isset($accounts_search) && !@empty($accounts_search))
+                   @foreach ($accounts as $info )
+                     <option data-type="{{ $info->account_type }}"    @if(old('account_number')==$info->account_number) selected="selected" @endif value="{{ $info->account_number }}"> {{ $info->name }}  ({{ $info->account_type_name }}) {{ $info->account_number }} </option>
+                   @endforeach
+                    @endif
+                  </select>
+                  </div>
+                </div>
+
+                <div class="col-md-4"> 
+                  <div class="form-group"> 
+                    <label>  بحث  بالحركات المالية</label>
+                    <select name="mov_type_search" id="mov_type_search" class="form-control  ">
+                      <option value="all">  بحث بالكل</option>
+                      @if (@isset($mov_type) && !@empty($mov_type))
+                     @foreach ($mov_type as $info )
+                       <option @if(old('mov_type')==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                     @endforeach
+                      @endif
+                    </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4"> 
+                    <div class="form-group"> 
+                      <label>  بحث   بالخزن</label>
+                      <select name="treasuries_search" id="treasuries_search" class="form-control select2">
+                        <option value="all">بحث بكل الخزن</option>
+                        @if (@isset($treasuries) && !@empty($treasuries))
+                        @foreach ($treasuries as $info )
+                          <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                        @endforeach
+                         @endif
+                      </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4"> 
+                      <div class="form-group"> 
+                        <label>  بحث   بالمستخدمين</label>
+                        <select name="admins_search" id="admins_search" class="form-control select2">
+                          <option value="all">بحث بكل الخزن</option>
+                          @if (@isset($admins) && !@empty($admins))
+                          @foreach ($admins as $info )
+                            <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                          @endforeach
+                           @endif
+                        </select>
+                        </div>
+                      </div>
+                      <div class="col-md-4"> </div>
+ <div class="clearfix"></div>
+
+                <div class="col-md-4"> 
+                  <div class="form-group">
+                    <label>      من تاريخ حركة</label>
+                    <input name="from_date_search" id="from_date_search" class="form-control" type="date" value=""    >
+                  </div>
+                </div>
+
+                <div class="col-md-4"> 
+                  <div class="form-group">
+                    <label>     الي تاريخ حركة </label>
+                    <input name="to_date_search" id="to_date_search" class="form-control" type="date" value=""    >
+                  </div>
+                </div>
+
+
+     <div class="clearfix"></div>
+
+ </div>
 
 
        
@@ -177,7 +268,9 @@
             <tr>
              <td>{{ $info->auto_serial }}</td>  
              <td>{{ $info->isal_number }}</td>  
-             <td>{{ $info->treasuries_name }}</td>  
+             <td>{{ $info->treasuries_name }} <br>
+          شفت ({{ $info->shift_code }})
+            </td>  
              <td>{{ $info->money*(1) }}</td>  
              <td>{{ $info->mov_type_name }}</td>  
              <td>{{ $info->account_name }} <br>
@@ -235,9 +328,8 @@
 
 
         </div>
-      </div>
-    </div>
-</div>
+     
+
 
 
 

@@ -150,5 +150,104 @@ return false;
            });
            
 
+           function make_search() {
+
+            var token = $("#token_search").val();
+            var account_number = $("#account_number_search").val();
+            var mov_type = $("#mov_type_search").val();
+            var treasuries = $("#treasuries_search").val();
+            var admins = $("#admins_search").val();
+            var from_date = $("#from_date_search").val();
+            var to_date = $("#to_date_search").val();
+            var search_by_text = $("#search_by_text").val();
+            var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
+            var url = $("#ajax_url_ajax_search").val();
+            jQuery.ajax({
+              url: url,
+              type: 'post',
+              dataType: 'html',
+              cache: false,
+              data: {
+                "_token": token, account_number: account_number, mov_type: mov_type,
+                treasuries: treasuries, admins: admins, from_date: from_date,
+                to_date: to_date, searchbyradio: searchbyradio, search_by_text: search_by_text
+        
+              },
+              success: function (data) {
+        
+                $("#ajax_responce_serarchDiv").html(data);
+              },
+              error: function () {
+                alert("حدث خطاما");
+              }
+            });
+        
+        
+          }
+        
+          $(document).on('click','#ajax_pagination_in_search a ',function(e){
+            e.preventDefault();
+            var token = $("#token_search").val();
+            var account_number = $("#account_number_search").val();
+            var mov_type = $("#mov_type_search").val();
+            var treasuries = $("#treasuries_search").val();
+            var admins = $("#admins_search").val();
+            var from_date = $("#from_date_search").val();
+            var to_date = $("#to_date_search").val();
+            var search_by_text = $("#search_by_text").val();
+            var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
+            var url=$(this).attr("href");
+        
+            jQuery.ajax({
+              url:url,
+              type:'post',
+              dataType:'html',
+              cache:false,
+              data: {
+                "_token": token, account_number: account_number, mov_type: mov_type,
+                treasuries: treasuries, admins: admins, from_date: from_date,
+                to_date: to_date, searchbyradio: searchbyradio, search_by_text: search_by_text
+        
+              },
+              success:function(data){
+             
+               $("#ajax_responce_serarchDiv").html(data);
+              },
+              error:function(){
+            
+              }
+            });
+            
+            
+            
+            });
+        
+        
+        
+          $('input[type=radio][name=searchbyradio]').change(function () {
+            make_search();
+          });
+          $(document).on('input', '#search_by_text', function (e) {
+            make_search();
+          });
+          $(document).on('change', '#account_number_search', function (e) {
+            make_search();
+          });
+        
+          $(document).on('change', '#mov_type_search', function (e) {
+            make_search();
+          });
+          $(document).on('change', '#treasuries_search', function (e) {
+            make_search();
+          });
+          $(document).on('change', '#from_date_search', function (e) {
+            make_search();
+          });
+          $(document).on('change', '#to_date_search', function (e) {
+            make_search();
+          });
+          $(document).on('change', '#admins_search', function (e) {
+            make_search();
+          });
 
 });

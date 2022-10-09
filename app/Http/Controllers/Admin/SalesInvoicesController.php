@@ -722,6 +722,7 @@ class SalesInvoicesController extends Controller
     }
   }
 
+
   public function ajax_search(Request $request)
   {
     if ($request->ajax()) {
@@ -895,4 +896,6 @@ class SalesInvoicesController extends Controller
       return view('admin.sales_invoices.ajax_search', ['data' => $data]);
     }
   }
+
+  
 }
