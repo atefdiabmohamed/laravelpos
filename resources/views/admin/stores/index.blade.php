@@ -102,7 +102,6 @@
 
 
         <a href="{{ route('admin.stores.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.stores.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
    
          </td>
            

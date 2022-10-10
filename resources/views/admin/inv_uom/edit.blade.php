@@ -34,9 +34,10 @@
         @enderror
         </div>
      
+
         <div class="form-group"> 
           <label>  نوع الوحدة </label>
-          <select name="is_master" id="is_master" class="form-control">
+          <select @if($total_counter_used>0) disabled  @endif name="is_master" id="is_master" class="form-control">
            <option value="">اختر النوع</option>
           <option   @if(old('is_master')==1) selected="selected"  @endif value="1"> وحدة اب</option>
            <option   @if(old('is_master')==0) selected="selected"  @endif value="0"> وحدة تجزئة</option>

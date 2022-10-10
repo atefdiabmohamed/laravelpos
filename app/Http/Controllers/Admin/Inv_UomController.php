@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Inv_uom;
 use App\Models\Admin;
 use App\Http\Requests\InvUomRequest;
+use App\Http\Requests\InvUomUpdateRequest;
+use App\Models\Sales_invoices_details;
+use App\Models\Suppliers_with_orders_details;
+
 class Inv_UomController extends Controller
 {
     public function index()
@@ -63,13 +67,21 @@ class Inv_UomController extends Controller
 
     public function edit($id)
     {
+        $com_code = auth()->user()->com_code;
         $data = Inv_uom::select()->find($id);
-        return view('admin.inv_uom.edit', ['data' => $data]);
+     //check if this uom used befor  نتحقق من الوحده هل تم استخدامها بالفعل ام ليس بعد
+     //check in suppliers_with_orders_details نتحقق من المشتريات
+     $suppliers_with_orders_detailsCount=get_count_where(new Suppliers_with_orders_details(),array('com_code'=>$com_code,'uom_id'=>$data['id']));
+         //check in Sales_invoices_details نتحقق من المبيعات
+     $sales_invoices_detailsCount=get_count_where(new Sales_invoices_details(),array('com_code'=>$com_code,'uom_id'=>$data['id']));
+    $total_counter_used=$suppliers_with_orders_detailsCount+$sales_invoices_detailsCount;
+
+        return view('admin.inv_uom.edit', ['data' => $data,'total_counter_used'=>$total_counter_used]);
     }
 
 
 
-    public function update($id, InvUomRequest $request)
+    public function update($id, InvUomUpdateRequest $request)
     {
         try {
             $com_code = auth()->user()->com_code;
@@ -84,9 +96,29 @@ class Inv_UomController extends Controller
                     ->with(['error' => 'عفوا اسم الوحدة مسجل من قبل'])
                     ->withInput();
             }
+ 
 
+  if($request->has('is_master')){ 
+if($request->is_master==""){
+    return redirect()->back()
+    ->with(['error' => '  عفوا من فضلك اختر نوع الوحدة '])
+    ->withInput();
+}
+
+           //check if this uom used befor  نتحقق من الوحده هل تم استخدامها بالفعل ام ليس بعد
+     //check in suppliers_with_orders_details نتحقق من المشتريات
+     $suppliers_with_orders_detailsCount=get_count_where(new Suppliers_with_orders_details(),array('com_code'=>$com_code,'uom_id'=>$data['id']));
+     //check in Sales_invoices_details نتحقق من المبيعات
+ $sales_invoices_detailsCount=get_count_where(new Sales_invoices_details(),array('com_code'=>$com_code,'uom_id'=>$data['id']));
+$total_counter_used=$suppliers_with_orders_detailsCount+$sales_invoices_detailsCount;
+if($total_counter_used==0){
+    $data_to_update['is_master'] = $request->is_master;
+
+}
+
+  }
+  
             $data_to_update['name'] = $request->name;
-            $data_to_update['is_master'] = $request->is_master;
             $data_to_update['active'] = $request->active;
             $data_to_update['updated_by'] = auth()->user()->id;
             $data_to_update['updated_at'] = date("Y-m-d H:i:s");

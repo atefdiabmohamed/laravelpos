@@ -217,3 +217,11 @@ update($Inv_itemCard,$DataToUpdateItemCardQuantity,array("com_code"=>$com_code,"
 
 }
 
+/*get counter where from  table */
+function get_count_where($model=null,  $where = array())
+{
+  $counter = $model::where($where)->count();
+  return $counter;
+}
+
+
