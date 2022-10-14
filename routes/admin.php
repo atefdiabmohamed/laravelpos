@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\CollectController;
 use App\Http\Controllers\Admin\ExchangeController;
 use App\Http\Controllers\Admin\SalesInvoicesController;
 use App\Http\Controllers\Admin\DelegatesController;
+use App\Http\Controllers\Admin\Suppliers_with_ordersGeneralRetuen;
 
 
 
@@ -37,7 +38,7 @@ use App\Http\Controllers\Admin\DelegatesController;
 |
 */
 
-define('PAGINATION_COUNT', 3);
+define('PAGINATION_COUNT', 5);
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -171,7 +172,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     /*           end suppliers                */
 
 
-    /*         start  Item Card   المشتريات             */
+    /*         start  suppliers_orders   المشتريات             */
     Route::get('/suppliers_orders/index', [Suppliers_with_ordersController::class, 'index'])->name('admin.suppliers_orders.index');
     Route::get('/suppliers_orders/create', [Suppliers_with_ordersController::class, 'create'])->name('admin.suppliers_orders.create');
     Route::post('/suppliers_orders/store', [Suppliers_with_ordersController::class, 'store'])->name('admin.suppliers_orders.store');
@@ -193,9 +194,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersController::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 
 
-
-
-    /*           end Item Card                */
+    /*           end suppliers_orders               */
 
     /*         start treasuries                */
     Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
@@ -279,8 +278,39 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('/delegates/ajax_search', [DelegatesController::class, 'ajax_search'])->name('admin.delegates.ajax_search');
     Route::post('/delegates/show', [DelegatesController::class, 'show'])->name('admin.delegates.show');
 
-
     /*           end delegates                */
+
+
+
+    /*         start  suppliers_orders Gernal Return   مرتجع المشتريات العام             */
+    Route::get('/suppliers_orders_general_return/index', [Suppliers_with_ordersGeneralRetuen::class, 'index'])->name('admin.suppliers_orders_general_return.index');
+    Route::get('/suppliers_orders_general_return/create', [Suppliers_with_ordersGeneralRetuen::class, 'create'])->name('admin.suppliers_orders_general_return.create');
+    Route::post('/suppliers_orders_general_return/store', [Suppliers_with_ordersGeneralRetuen::class, 'store'])->name('admin.suppliers_orders_general_return.store');
+    Route::get('/suppliers_orders_general_return/edit/{id}', [Suppliers_with_ordersGeneralRetuen::class, 'edit'])->name('admin.suppliers_orders_general_return.edit');
+    Route::post('/suppliers_orders_general_return/update/{id}', [Suppliers_with_ordersGeneralRetuen::class, 'update'])->name('admin.suppliers_orders_general_return.update');
+    Route::get('/suppliers_orders_general_return/delete/{id}', [Suppliers_with_ordersGeneralRetuen::class, 'delete'])->name('admin.suppliers_orders_general_return.delete');
+    Route::post('/suppliers_orders_general_return/ajax_search', [Suppliers_with_ordersGeneralRetuen::class, 'ajax_search'])->name('admin.suppliers_orders_general_return.ajax_search');
+    Route::get('/suppliers_orders_general_return/show/{id}', [Suppliers_with_ordersGeneralRetuen::class, 'show'])->name('admin.suppliers_orders_general_return.show');
+    Route::post('/suppliers_orders_general_return/get_item_uoms', [Suppliers_with_ordersGeneralRetuen::class, 'get_item_uoms'])->name('admin.suppliers_orders_general_return.get_item_uoms');
+    Route::post('/suppliers_orders_general_return/load_modal_add_details', [Suppliers_with_ordersGeneralRetuen::class, 'load_modal_add_details'])->name('admin.suppliers_orders_general_return.load_modal_add_details');
+    Route::post('/suppliers_orders_general_return/add_new_details', [Suppliers_with_ordersGeneralRetuen::class, 'add_new_details'])->name('admin.suppliers_orders_general_return.add_new_details');
+    Route::post('/suppliers_orders_general_return/reload_itemsdetials', [Suppliers_with_ordersGeneralRetuen::class, 'reload_itemsdetials'])->name('admin.suppliers_orders_general_return.reload_itemsdetials');
+    Route::post('/suppliers_orders_general_return/reload_parent_pill', [Suppliers_with_ordersGeneralRetuen::class, 'reload_parent_pill'])->name('admin.suppliers_orders_general_return.reload_parent_pill');
+    Route::post('/suppliers_orders_general_return/load_edit_item_details', [Suppliers_with_ordersGeneralRetuen::class, 'load_edit_item_details'])->name('admin.suppliers_orders_general_return.load_edit_item_details');
+    Route::post('/suppliers_orders_general_return/edit_item_details', [Suppliers_with_ordersGeneralRetuen::class, 'edit_item_details'])->name('admin.suppliers_orders_general_return.edit_item_details');
+    Route::get('/suppliers_orders_general_return/delete_details/{id}/{id_parent}', [Suppliers_with_ordersGeneralRetuen::class, 'delete_details'])->name('admin.suppliers_orders_general_return.delete_details');
+    Route::post('/suppliers_orders_general_return/do_approve/{id}', [Suppliers_with_ordersGeneralRetuen::class, 'do_approve'])->name('admin.suppliers_orders_general_return.do_approve');
+    Route::post('/suppliers_orders_general_return/load_modal_approve_invoice', [Suppliers_with_ordersGeneralRetuen::class, 'load_modal_approve_invoice'])->name('admin.suppliers_orders_general_return.load_modal_approve_invoice');
+    Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_with_ordersGeneralRetuen::class, 'load_usershiftDiv'])->name('admin.suppliers_orders_general_return.load_usershiftDiv');
+
+
+    /*           end  suppliers_orders Gernal Return                */
+
+
+
+
+
+
 });
 
 

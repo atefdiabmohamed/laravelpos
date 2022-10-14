@@ -26,7 +26,7 @@ class Suppliers_with_ordersController extends Controller
     public function index()
     {
         $com_code = auth()->user()->com_code;
-        $data = get_cols_where_p(new Suppliers_with_orders(), array("*"), array("com_code" => $com_code), 'id', 'DESC', PAGINATION_COUNT);
+        $data = get_cols_where_p(new Suppliers_with_orders(), array("*"), array("com_code" => $com_code,'order_type'=>1), 'id', 'DESC', PAGINATION_COUNT);
         if (!empty($data)) {
             foreach ($data as $info) {
                 $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
@@ -67,7 +67,7 @@ class Suppliers_with_ordersController extends Controller
             }
 
 
-            $row = get_cols_where_row_orderby(new Suppliers_with_orders(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
+            $row = get_cols_where_row_orderby(new Suppliers_with_orders(), array("auto_serial"), array("com_code" => $com_code,'order_type'=>1), 'id', 'DESC');
             if (!empty($row)) {
                 $data_insert['auto_serial'] = $row['auto_serial'] + 1;
             } else {
@@ -841,7 +841,7 @@ class Suppliers_with_ordersController extends Controller
             }
 
 
-            $data = Suppliers_with_orders::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+            $data = Suppliers_with_orders::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->where('order_type','=',1)->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
             if (!empty($data)) {
                 foreach ($data as $info) {
                     $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
