@@ -98,7 +98,6 @@
 
         <a href="{{ route('inv_itemcard_categories.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
       
-        <a href="{{ route('inv_itemcard_categories.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
    
          </td>
            

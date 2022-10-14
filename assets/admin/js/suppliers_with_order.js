@@ -601,13 +601,11 @@ $(document).ready(function () {
         $("#discount_percent").focus();
         return false;
       }
-      alert("من فضلك اختر نسبة ضريبة القيمة المضافة ");
-      $("#discount_type").val();
-      return false;
+     
     }
     else if (discount_type == 2) {
       var discount_value = $("#discount_value").val();
-      if (discount_value > total_befor_discount) {
+      if (parseFloat(discount_value) > parseFloat(total_befor_discount)) {
         alert("عفوا لايمكن ان يكون قيمة الخصم اكبر من اجمالي الفاتورة قبل الخصم   !!!");
         $("#discount_value").focus();
         return false;
@@ -649,7 +647,7 @@ $(document).ready(function () {
       alert("من فضلك ادخل المبلغ المدفوع        ");
       return false;
     }
-    if (what_paid > total_cost) {
+    if (parseFloat(what_paid) > parseFloat(total_cost)) {
       alert("عفوا لايمكن ان يكون المبلغ المصروف اكبر من اجمالي الفاتورة         ");
       return false;
     }
@@ -663,7 +661,7 @@ $(document).ready(function () {
 
 
     } else {
-      if (what_paid == total_cost) {
+      if (parseFloat(what_paid)  == parseFloat(total_cost)) {
         alert("عفوا لايمكن ان يكون المبلغ المدفوع يساوي اجمالي الفاتورة في حالة ان الفاتورة اجل      ");
         return false;
       }

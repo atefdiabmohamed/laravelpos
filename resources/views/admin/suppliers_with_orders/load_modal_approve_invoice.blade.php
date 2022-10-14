@@ -1,5 +1,7 @@
 @if (@isset($data) && !@empty($data))
 @if($data['is_approved']==0)
+@if($counterDetails>0)
+
 
 <form action="{{ route("admin.suppliers_orders.do_approve",$data['auto_serial']) }}" method="post">
      @csrf
@@ -119,6 +121,11 @@
 </div>
 
 </form>
+@else
+<div class="alert alert-danger">
+عفوا لايمكن اعتماد الفاتورة قبل  اضافة الأصناف عليها !!!
+</div>
+      @endif
 
 
 @else

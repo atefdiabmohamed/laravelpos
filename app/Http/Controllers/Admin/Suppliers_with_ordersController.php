@@ -203,7 +203,7 @@ class Suppliers_with_ordersController extends Controller
         if ($request->ajax()) {
             $com_code = auth()->user()->com_code;
             $auto_serial = $request->autoserailparent;
-            $data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved"), array("auto_serial" => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
+            $data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved","id"), array("auto_serial" => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
             if (!empty($data)) {
                 $details = get_cols_where(new Suppliers_with_orders_details(), array("*"), array('suppliers_with_orders_auto_serial' => $auto_serial, 'order_type' => 1, 'com_code' => $com_code), 'id', 'DESC');
                 if (!empty($details)) {
@@ -474,9 +474,11 @@ class Suppliers_with_ordersController extends Controller
             $data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
             //current user shift
             $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
+           $counterDetails=get_count_where(new Suppliers_with_orders_details(),array("suppliers_with_orders_auto_serial"=>$request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
+            return view("admin.suppliers_with_orders.load_modal_approve_invoice", ['data' => $data, 'user_shift' => $user_shift,'counterDetails'=>$counterDetails]);
+
         }
 
-        return view("admin.suppliers_with_orders.load_modal_approve_invoice", ['data' => $data, 'user_shift' => $user_shift]);
     }
 
     public function load_usershiftDiv(Request $request)
@@ -506,6 +508,12 @@ class Suppliers_with_ordersController extends Controller
         if ($data['is_approved'] == 1) {
             return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
         }
+
+        $counterDetails=get_count_where(new Suppliers_with_orders_details(),array("suppliers_with_orders_auto_serial"=>$auto_serial, "com_code" => $com_code, 'order_type' => 1));
+        if ($counterDetails== 0) {
+            return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => "عفوا لايمكن اعتماد الفاتورة قبل اضافة الأصناف عليها !!!            "]);
+        }
+
         $dataUpdateParent['tax_percent'] = $request['tax_percent'];
         $dataUpdateParent['tax_value'] = $request['tax_value'];
         $dataUpdateParent['total_befor_discount'] = $request['total_befor_discount'];
@@ -848,5 +856,4 @@ class Suppliers_with_ordersController extends Controller
             return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
         }
     }
-    
 }

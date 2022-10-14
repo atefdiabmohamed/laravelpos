@@ -413,4 +413,102 @@ if(cost_price_retail==""){
     
     
     });
+
+
+
+
+
+    function make_search_movements(){
+      var store_id=$("#store_id_move_search").val();
+      var movements_categories=$("#movements_categoriesMoveSearch").val();
+      var movements_types=$("#movements_typesMoveSearch").val();
+      var from_date=$("#from_date_moveSearch").val();
+      var to_date=$("#to_date_moveSearch").val();
+      var moveDateorderType=$("#moveDateorderType").val();
+      var token_search=$("#token_search").val();
+      var ajax_search_url=$("#ajax_search_movements").val();
+    
+      jQuery.ajax({
+        url:ajax_search_url,
+        type:'post',
+        dataType:'html',
+        cache:false,
+        data:{store_id:store_id,movements_categories:movements_categories,movements_types:movements_types,
+          from_date:from_date,to_date:to_date
+          ,"_token":token_search,moveDateorderType:moveDateorderType},
+        success:function(data){
+       
+         $("#ajaxSearchMovementsDiv").html(data);
+        },
+        error:function(){
+      
+        }
+      });
+      
+    }
+
+    $(document).on('click','#ajax_pagination_in_searchMovements a ',function(e){
+      e.preventDefault();
+      var store_id=$("#store_id_move_search").val();
+      var movements_categories=$("#movements_categoriesMoveSearch").val();
+      var movements_types=$("#movements_typesMoveSearch").val();
+      var from_date=$("#from_date_moveSearch").val();
+      var to_date=$("#to_date_moveSearch").val();
+      var moveDateorderType=$("#moveDateorderType").val();
+      var token_search=$("#token_search").val();
+      var ajax_search_url=$("#ajax_search_movements").val();
+    
+      var token_search=$("#token_search").val();
+      
+      var url=$(this).attr("href");
+      
+      jQuery.ajax({
+        url:url,
+        type:'post',
+        dataType:'html',
+        cache:false,
+        data:{store_id:store_id,movements_categories:movements_categories,movements_types:movements_types,
+          from_date:from_date,to_date:to_date
+          ,"_token":token_search,moveDateorderType:moveDateorderType},
+        success:function(data){
+       
+         $("#ajaxSearchMovementsDiv").html(data);
+        },
+        error:function(){
+      
+        }
+      });
+      
+      
+      
+      });
+  
+      
+      $(document).on('click','#ShowMovementsBtn',function(e){
+        make_search_movements();
+      });
+    $(document).on('change','#store_id_move_search',function(e){
+      make_search_movements();
+    });
+    $(document).on('change','#movements_categoriesMoveSearch',function(e){
+      make_search_movements();
+    });
+  
+    $(document).on('change','#movements_typesMoveSearch',function(e){
+      make_search_movements();
+    });
+  
+    $(document).on('change','#from_date_moveSearch',function(e){
+      make_search_movements();
+    });
+  
+    $(document).on('change','#to_date_moveSearch',function(e){
+      make_search_movements();
+    });
+    $(document).on('change','#moveDateorderType',function(e){
+      make_search_movements();
+    });
+  
+
+
 });

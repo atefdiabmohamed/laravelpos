@@ -203,9 +203,6 @@
         <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
         <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">
 
-        
-        
-        
      
         <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
 
@@ -219,6 +216,7 @@
         @php
          $i=1;   
         @endphp
+        
         <table id="example2" class="table table-bordered table-hover">
           <thead class="custom_thead">
          <th>مسلسل</th>
@@ -254,7 +252,7 @@
        @if($data['is_approved']==0)
 
        <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-       <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+       <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
      
 
 
