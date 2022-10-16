@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-المشتريات
+مرتجع المشتريات العام
 @endsection
 @section("css")
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
@@ -11,7 +11,7 @@
 حركات مخزنية
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.suppliers_orders.index') }}">  فواتير المشتريات </a>
+<a href="{{ route('admin.suppliers_orders_general_return.index') }}">  فواتير مرتجع المشتريات العام </a>
 @endsection
 @section('contentheaderactive')
 تعديل
@@ -19,11 +19,12 @@
 @section('content')
 
 
+
 <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center"> تعديل  فاتورة مشتريات من مورد </h3>
+          <h3 class="card-title card_title_center"> تعديل  فاتورة مترجع مشتريات عام الي مورد </h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -31,7 +32,7 @@
 
     @if($data['is_approved']==0)
 
-    <form action="{{ route('admin.suppliers_orders.update',$data['id']) }}" method="post" >
+    <form action="{{ route('admin.suppliers_orders_general_return.update',$data['id']) }}" method="post" >
       @csrf
       <div class="form-group">
         <label>  تاريخ الفاتورة</label>
@@ -40,13 +41,7 @@
         <span class="text-danger">{{ $message }}</span>
         @enderror
       </div>
-      <div class="form-group">
-        <label>   رقم الفاتورة المسجل بأصل فاتورة المشتريات</label>
-        <input name="DOC_NO" id="DOC_NO" type="text"  class="form-control" value="{{ old('DOC_NO',$data['DOC_NO']) }}"    >
-        @error('DOC_NO')
-        <span class="text-danger">{{ $message }}</span>
-        @enderror
-      </div>
+     
         <div class="form-group"> 
           <label>   بيانات الموردين</label>
           <select name="suuplier_code" id="suuplier_code" class="form-control select2">
@@ -74,9 +69,9 @@
 @enderror
 </div>
 <div class="form-group"> 
-  <label>    بيانات المخازن</label>
-  <select name="store_id" id="store_id" class="form-control select2">
-    <option value=""> اختر المخزن المستلم للفاتورة</option>
+  <label>     مخزن صرف المرتجع</label>
+  <select  @if($added_counter_details>0)  disabled @endif   name="store_id" id="store_id" class="form-control select2">
+    <option value=""> اختر المخزن  </option>
     @if (@isset($stores) && !@empty($stores))
    @foreach ($stores as $info )
      <option @if(old('store_id',$data['store_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
@@ -98,7 +93,7 @@
   
     <div class="form-group text-center">
       <button type="submit" class="btn btn-primary btn-sm"> تعديل</button>
-      <a href="{{ route('admin.suppliers_orders.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
+      <a href="{{ route('admin.suppliers_orders_general_return.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
     
     </div>
       
