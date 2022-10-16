@@ -1,8 +1,26 @@
   <div class="row">
+    <div class="col-md-4" >
+      <div class="form-group"> 
+        <label>    بيانات المخازن</label>
+        <select name="store_id" id="store_id" class="form-control ">
+          @if (@isset($stores) && !@empty($stores))
+          @php $i=1;  @endphp
+         @foreach ($stores as $info )
+           <option @if($i==1) selected @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+           @php $i++;  @endphp
+         @endforeach
+         @else
+         <option value=""> اختر المخزن  </option>
+          @endif
+        </select>
+     
+        </div>
+      </div>
+
    <div class="col-md-4">
     <div class="form-group"> 
       <label>   بيانات الاصناف</label>
-      <select  id="item_code_add" class="form-control select2" style="width: 100%;">
+      <select  id="item_code" name="item_code" class="form-control select2" style="width: 100%;">
         <option value="">اختر الصنف</option>
         @if (@isset($item_cards) && !@empty($item_cards))
        @foreach ($item_cards as $info )
@@ -16,12 +34,17 @@
       </div>
    </div>
 
-   <div class="col-md-4  relatied_to_itemCard" style="display: none;" id="UomDivAdd">
+   <div class="col-md-4  " style="display: none;" id="UomDiv">
     
    </div>
+    <!--   باتشات الكميات بالمخازن-->
+    <div class="col-md-8  " style="display: none;" id="inv_itemcard_batchesDiv">
+       
+    </div>
+    
    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
    <div class="form-group">
-    <label> الكمية المستلمة</label>
+    <label> الكمية المرتجعة</label>
     <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="quantity_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
     </div>
   </div>
@@ -32,19 +55,6 @@
      </div>
    </div>
 
-   <div class="col-md-4 relatied_to_date" style="display: none;">
-    <div class="form-group">
-     <label>   تاريخ الانتاج</label>
-     <input type="date"    id="production_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
-
-   <div class="col-md-4 relatied_to_date" style="display: none;">
-    <div class="form-group">
-     <label>   تاريخ انتهاء الصلاحية</label>
-     <input type="date"    id="expire_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
     <div class="form-group">
      <label>   الاجمالي</label>
@@ -52,11 +62,14 @@
      </div>
    </div>
 
-   <div class="col-md-12">
+   <div class="col-md-2">
     <div class="form-group text-center">
-    <button type="button" class="btn btn-sm btn-danger" id="AddToBill">اضف للفاتورة</button>
+    <button type="button" style="margin-top: 31px;" class="btn btn-sm btn-danger" id="AddToBill">اضف للفاتورة</button>
   </div>
    </div>
+
+   </div>
+   
 
       </div>
 

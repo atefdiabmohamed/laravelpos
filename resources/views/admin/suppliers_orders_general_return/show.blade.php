@@ -1,8 +1,7 @@
 @extends('layouts.admin')
 @section('title')
-المشتريات
+مرتجع المشتريات العام
 @endsection
-
 @section("css")
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
@@ -12,22 +11,19 @@
 حركات مخزنية
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.suppliers_orders.index') }}">  فواتير المشتريات </a>
+<a href="{{ route('admin.suppliers_orders_general_return.index') }}">  فواتير مرتجع المشتريات العام </a>
 @endsection
 @section('contentheaderactive')
-عرض التفاصيل
+عرض
 @endsection
 @section('content')
 
-
-
-@section('content')
 
 <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center">تفاصيل فاتورة المشتريات  </h3>
+          <h3 class="card-title card_title_center">تفاصيل فاتورة مرتجع مشتريات عام  </h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -40,10 +36,7 @@
                 <td class="width30"> كود الفاتورة الالي</td> 
                 <td > {{ $data['auto_serial'] }}</td>
             </tr>
-            <tr>
-                <td class="width30">   كود الفاتورة بأصل فاتورة المشتريات </td> 
-                <td > {{ $data['DOC_NO'] }}</td>
-            </tr>
+      
             <tr>
               <td class="width30">   تاريخ الفاتورة </td> 
               <td > {{ $data['order_date'] }}</td>
@@ -57,15 +50,12 @@
                 <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
             </tr>
             <tr>
-              <td class="width30">   المخزن المستلم للفاتورة </td> 
+              <td class="width30">     مخزن صرف المرتجع </td> 
               <td > {{ $data['store_name'] }}</td>
           </tr>
 
             
-            <tr>
-              <td class="width30">  اسم المورد </td> 
-              <td > {{ $data['supplier_name'] }}</td>
-          </tr>
+           
           <tr>
             <td class="width30">   اجمالي الفاتورة </td> 
             <td > {{ $data['total_befor_discount']*(1) }}</td> 
@@ -166,8 +156,8 @@
 لايوجد تحديث
        @endif
        @if($data['is_approved']==0)
-<a href="{{ route('admin.suppliers_orders.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-<a href="{{ route('admin.suppliers_orders.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+<a href="{{ route('admin.suppliers_orders_general_return.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+<a href="{{ route('admin.suppliers_orders_general_return.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
 <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
 
 @endif
@@ -193,19 +183,20 @@
        @endif
         </h3>
         <input type="hidden" id="token_search" value="{{csrf_token() }}">
-        <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.suppliers_orders.get_item_uoms') }}">
-        <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.suppliers_orders.add_new_details') }}">
-        <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders.reload_itemsdetials') }}">
-        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders.reload_parent_pill') }}">
-        <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
-        <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
-        <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
-        <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
-        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">
-
-     
+        <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.suppliers_orders_general_return.get_item_uoms') }}">
+        <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.suppliers_orders_general_return.add_new_details') }}">
+        <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders_general_return.reload_itemsdetials') }}">
+        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders_general_return.reload_parent_pill') }}">
+        <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders_general_return.load_edit_item_details') }}">
+        <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders_general_return.load_modal_add_details') }}">
+        <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders_general_return.edit_item_details') }}">
+        <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders_general_return.load_modal_approve_invoice') }}">
+        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders_general_return.load_usershiftDiv') }}">
+        <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.suppliers_orders_general_return.get_item_batches') }}">
+ 
         <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
 
+        
 
 
 
@@ -383,7 +374,7 @@
     });
     </script>
 
-<script  src="{{ asset('assets/admin/js/suppliers_with_order.js') }}"> </script>
+<script  src="{{ asset('assets/admin/js/suppliers_orders_general_return.js') }}"> </script>
 
 
 @endsection

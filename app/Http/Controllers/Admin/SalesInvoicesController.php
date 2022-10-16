@@ -142,6 +142,7 @@ class SalesInvoicesController extends Controller
       }
     }
   }
+  
 
   public function get_item_unit_price(Request $request)
   {

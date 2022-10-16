@@ -136,6 +136,61 @@ class Suppliers_with_ordersController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $com_code = auth()->user()->com_code;
+        $data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+        if (empty($data)) {
+            return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+        }
+
+        if ($data['is_approved'] == 1) {
+            return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا لايمكن التحديث علي فاتورة معتمدة ومؤرشفة']);
+        }
+        $suupliers = get_cols_where(new Supplier(), array('suuplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+        $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+
+        return view('admin.suppliers_with_orders.edit', ['data' => $data, 'suupliers' => $suupliers, 'stores' => $stores]);
+    }
+
+
+
+    public function update($id, Suppliers_with_ordersRequest $request)
+    {
+        try {
+            $com_code = auth()->user()->com_code;
+            $data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+            if (empty($data)) {
+                return redirect()->route('admin.suppliers_with_orders.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+            }
+            $supplierData = get_cols_where_row(new Supplier(), array("account_number"), array("suuplier_code" => $request->suuplier_code, "com_code" => $com_code));
+            if (empty($supplierData)) {
+                return redirect()->back()
+                    ->with(['error' => 'عفوا   غير قادر علي الوصول الي بيانات المورد المحدد'])
+                    ->withInput();
+            }
+            $data_to_update['order_date'] = $request->order_date;
+            $data_to_update['order_type'] = 1;
+            $data_to_update['DOC_NO'] = $request->DOC_NO;
+            $data_to_update['suuplier_code'] = $request->suuplier_code;
+            $data_to_update['pill_type'] = $request->pill_type;
+            $data_to_update['store_id'] = $request->store_id;
+            $data_to_update['account_number'] = $supplierData['account_number'];
+            $data_to_update['updated_by'] = auth()->user()->id;
+            $data_to_update['updated_at'] = date("Y-m-d H:i:s");
+            update(new Suppliers_with_orders(), $data_to_update, array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+
+            return redirect()->route('admin.suppliers_orders.show', $id)->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
+        } catch (\Exception $ex) {
+
+            return redirect()->back()
+                ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
+                ->withInput();
+        }
+    }
+
+
+    
     public function get_item_uoms(Request $request)
     {
         if ($request->ajax()) {
@@ -244,58 +299,7 @@ class Suppliers_with_ordersController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        $com_code = auth()->user()->com_code;
-        $data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
-        if (empty($data)) {
-            return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
-        }
-
-        if ($data['is_approved'] == 1) {
-            return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا لايمكن التحديث علي فاتورة معتمدة ومؤرشفة']);
-        }
-        $suupliers = get_cols_where(new Supplier(), array('suuplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-        $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-
-        return view('admin.suppliers_with_orders.edit', ['data' => $data, 'suupliers' => $suupliers, 'stores' => $stores]);
-    }
-
-
-
-    public function update($id, Suppliers_with_ordersRequest $request)
-    {
-        try {
-            $com_code = auth()->user()->com_code;
-            $data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
-            if (empty($data)) {
-                return redirect()->route('admin.suppliers_with_orders.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
-            }
-            $supplierData = get_cols_where_row(new Supplier(), array("account_number"), array("suuplier_code" => $request->suuplier_code, "com_code" => $com_code));
-            if (empty($supplierData)) {
-                return redirect()->back()
-                    ->with(['error' => 'عفوا   غير قادر علي الوصول الي بيانات المورد المحدد'])
-                    ->withInput();
-            }
-            $data_to_update['order_date'] = $request->order_date;
-            $data_to_update['order_type'] = 1;
-            $data_to_update['DOC_NO'] = $request->DOC_NO;
-            $data_to_update['suuplier_code'] = $request->suuplier_code;
-            $data_to_update['pill_type'] = $request->pill_type;
-            $data_to_update['store_id'] = $request->store_id;
-            $data_to_update['account_number'] = $supplierData['account_number'];
-            $data_to_update['updated_by'] = auth()->user()->id;
-            $data_to_update['updated_at'] = date("Y-m-d H:i:s");
-            update(new Suppliers_with_orders(), $data_to_update, array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
-
-            return redirect()->route('admin.suppliers_orders.show', $id)->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
-        } catch (\Exception $ex) {
-
-            return redirect()->back()
-                ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
-                ->withInput();
-        }
-    }
+ 
 
 
     public function load_edit_item_details(Request $request)
