@@ -248,49 +248,6 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
 
     
 
-    public function add_new_details(Request $request)
-    {
-        if ($request->ajax()) {
-            $com_code = auth()->user()->com_code;
-            $item_code = $request->item_code;
-            $suppliers_with_ordersData = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "order_date", "tax_value", "discount_value"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 3));
-            if (!empty($suppliers_with_ordersData)) {
-                if ($suppliers_with_ordersData['is_approved'] == 0) {
-
-                    $data_insert['suppliers_with_orders_auto_serial'] = $request->autoserailparent;
-                    $data_insert['order_type'] = 1;
-                    $data_insert['item_code'] = $request->item_code_add;
-                    $data_insert['deliverd_quantity'] = $request->quantity_add;
-                    $data_insert['unit_price'] = $request->price_add;
-                    $data_insert['uom_id'] = $request->uom_id_Add;
-                    $data_insert['isparentuom'] = $request->isparentuom;
-                    if ($request->type == 2) {
-                        $data_insert['production_date'] = $request->production_date;
-                        $data_insert['expire_date'] = $request->expire_date;
-                    }
-                    $data_insert['item_card_type'] = $request->type;
-                    $data_insert['total_price'] = $request->total_add;
-                    $data_insert['order_date'] = $suppliers_with_ordersData['order_date'];
-                    $data_insert['added_by'] = auth()->user()->id;
-                    $data_insert['created_at'] = date("Y-m-d H:i:s");
-                    $data_insert['com_code'] = $com_code;
-                    $flag = insert(new Suppliers_with_orders_details(), $data_insert);
-                    if ($flag) {
-
-                        /** update parent pill */
-                        $total_detials_sum = get_sum_where(new Suppliers_with_orders_details(), 'total_price', array("suppliers_with_orders_auto_serial" => $request->autoserailparent, 'order_type' => 3, 'com_code' => $com_code));
-                        $dataUpdateParent['total_cost_items'] = $total_detials_sum;
-                        $dataUpdateParent['total_befor_discount'] = $total_detials_sum + $suppliers_with_ordersData['tax_value'];
-                        $dataUpdateParent['total_cost'] = $dataUpdateParent['total_befor_discount'] - $suppliers_with_ordersData['discount_value'];
-                        $dataUpdateParent['updated_by'] = auth()->user()->id;
-                        $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
-                        update(new Suppliers_with_orders(), $dataUpdateParent, array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 3));
-                        echo json_encode("done");
-                    }
-                }
-            }
-        }
-    }
 
     public function reload_itemsdetials(Request $request)
     {
@@ -934,4 +891,146 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
     }
   }
   
+
+  public function Add_item_to_invoice(Request $request)
+  { 
+    try {
+      if ($request->ajax()) { 
+        $com_code = auth()->user()->com_code;
+        $invoice_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "order_date", "suuplier_code"), array("com_code" => $com_code, "auto_serial" => $request->autoserailparent,'order_type'=>3));
+       
+        if (!empty($invoice_data)) {  
+          if ($invoice_data['is_approved'] == 0) {
+            $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
+            if (!empty($batch_data)) {
+
+              if ($batch_data['quantity'] >= $request->item_quantity) {
+                $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit","item_type"), array("com_code" => $com_code, "item_code" => $request->item_code));
+                if (!empty($itemCard_Data)) {
+                  $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
+                  $datainsert_items['suppliers_with_orders_auto_serial'] = $request->autoserailparent;
+                  $datainsert_items['order_type'] = 3;
+                  $datainsert_items['order_date'] = $invoice_data['order_date'];
+                  $datainsert_items['item_code'] = $request->item_code;
+                  $datainsert_items['uom_id'] = $request->uom_id;
+                  $datainsert_items['batch_auto_serial'] = $request->inv_itemcard_batches_autoserial;
+                  $datainsert_items['deliverd_quantity'] = $request->item_quantity;
+                  $datainsert_items['unit_price'] = $request->item_price;
+                  $datainsert_items['total_price'] = $request->item_total;
+                  $datainsert_items['isparentuom'] = $request->isparentuom;
+                  $datainsert_items['item_card_type'] = $itemCard_Data['item_type'];
+                  $datainsert_items['added_by'] = auth()->user()->id;
+                  $datainsert_items['created_at'] = date("Y-m-d H:i:s");
+                  $datainsert_items['com_code'] = $com_code;
+                  $flag_datainsert_items = insert(new Suppliers_with_orders_details(), $datainsert_items, true);
+                  if (!empty($flag_datainsert_items)) {
+
+                    //خصم الكمية من الباتش 
+                    //كمية الصنف بكل المخازن قبل الحركة
+                    $quantityBeforMove = get_sum_where(
+                      new Inv_itemcard_batches(),
+                      "quantity",
+                      array(
+                        "item_code" => $request->item_code,
+                        "com_code" => $com_code
+                      )
+                    );
+
+                    //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+                    $quantityBeforMoveCurrntStore = get_sum_where(
+                      new Inv_itemcard_batches(),
+                      "quantity",
+                      array(
+                        "item_code" => $request->item_code, "com_code" => $com_code,
+                        'store_id' => $request->store_id
+                      )
+                    );
+
+                    //هنا حخصم الكمية لحظيا من باتش الصنف
+                    //update current Batch تحديث علي الباتش القديمة
+              if($request->isparentuom==1){
+                //حخصم بشكل مباشر لانه بنفس وحده الباتش الاب
+                $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] - $request->item_quantity;
+
+              }else{
+                //مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل الخصم انتبه !!
+         $item_quantityByParentUom=$request->item_quantity/$itemCard_Data['retail_uom_quntToParent'];
+         $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] - $item_quantityByParentUom;
+              }
+
+                    $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+                    $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+                    $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
+                    $flag = update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $batch_data['id'], "com_code" => $com_code));
+
+                    if ($flag) {
+                      $quantityAfterMove = get_sum_where(
+                        new Inv_itemcard_batches(),
+                        "quantity",
+                        array(
+                          "item_code" => $request->item_code,
+                          "com_code" => $com_code
+                        )
+                      );
+
+                      //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي بعد الحركة
+                      $quantityAfterMoveCurrentStore = get_sum_where(
+                        new Inv_itemcard_batches(),
+                        "quantity",
+                        array("item_code" => $request->item_code, "com_code" => $com_code, 'store_id' => $request->store_id)
+                      );
+                      //التاثير في حركة كارت الصنف
+
+                      $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 1;
+                      $dataInsert_inv_itemcard_movements['items_movements_types'] = 3;
+                      $dataInsert_inv_itemcard_movements['item_code'] = $request->item_code;
+                      //كود الفاتورة الاب
+                      $dataInsert_inv_itemcard_movements['FK_table'] = $request->autoserailparent;
+                      //كود صف الابن بتفاصيل الفاتورة
+                      $dataInsert_inv_itemcard_movements['FK_table_details'] = $flag_datainsert_items['id'];
+                        $SupplierName = get_field_value(new Supplier(), "name", array("com_code" => $com_code, "suuplier_code" => $invoice_data['suuplier_code']));
+
+                      $dataInsert_inv_itemcard_movements['byan'] = " نظير مرتجع مشتريات عام الي المورد" . " " . $SupplierName . " فاتورة رقم" . " " . $request->autoserailparent;
+                      //كمية الصنف بكل المخازن قبل الحركة
+                      $dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+                      // كمية الصنف بكل المخازن بعد  الحركة
+                      $dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+
+                      //كمية الصنف  المخزن الحالي قبل الحركة
+                      $dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+                      // كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+                      $dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+                      $dataInsert_inv_itemcard_movements["store_id"] = $request->store_id;
+
+                      $dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+                      $dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+                      $dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+                      $dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+                      $flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+                      if ($flag) {
+                        //update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+                        do_update_itemCardQuantity(
+                          new Inv_itemCard(),
+                          $request->item_code,
+                          new Inv_itemcard_batches(),
+                          $itemCard_Data['does_has_retailunit'],
+                          $itemCard_Data['retail_uom_quntToParent']
+                        );
+
+                        echo  json_encode("done");
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (\Exception $ex) {
+      echo "there is error " . $ex->getMessage();
+    }
+  }
+
+
 }

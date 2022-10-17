@@ -184,7 +184,7 @@
         </h3>
         <input type="hidden" id="token_search" value="{{csrf_token() }}">
         <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.suppliers_orders_general_return.get_item_uoms') }}">
-        <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.suppliers_orders_general_return.add_new_details') }}">
+        <input type="hidden" id="ajax_Add_item_to_invoice" value="{{ route('admin.suppliers_orders_general_return.Add_item_to_invoice') }}">
         <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders_general_return.reload_itemsdetials') }}">
         <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders_general_return.reload_parent_pill') }}">
         <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders_general_return.load_edit_item_details') }}">

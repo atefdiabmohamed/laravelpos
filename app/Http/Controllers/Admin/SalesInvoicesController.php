@@ -329,9 +329,17 @@ class SalesInvoicesController extends Controller
                       )
                     );
 
-                    //هنا حخصم الكمية لحظيا من باتش الصنف
+                       //هنا حخصم الكمية لحظيا من باتش الصنف
                     //update current Batch تحديث علي الباتش القديمة
-                    $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] - $request->item_quantity;
+              if($request->isparentuom==1){
+                //حخصم بشكل مباشر لانه بنفس وحده الباتش الاب
+                $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] - $request->item_quantity;
+
+              }else{
+                //مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل الخصم انتبه !!
+         $item_quantityByParentUom=$request->item_quantity/$itemCard_Data['retail_uom_quntToParent'];
+         $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] - $item_quantityByParentUom;
+              }
                     $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
                     $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
                     $dataUpdateOldBatch["updated_by"] = auth()->user()->id;

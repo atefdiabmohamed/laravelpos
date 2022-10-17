@@ -692,6 +692,7 @@ $(document).ready(function () {
 
   });
 
+  
 
   function reload_items_in_invoice() {
 

@@ -41,30 +41,30 @@
     <div class="col-md-8  " style="display: none;" id="inv_itemcard_batchesDiv">
        
     </div>
-    
+    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
+      <div class="form-group">
+       <label>  سعر الوحدة</label>
+       <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="item_price" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+       </div>
+     </div>
    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
    <div class="form-group">
     <label> الكمية المرتجعة</label>
-    <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="quantity_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+    <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="item_quantity" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
     </div>
   </div>
-  <div class="col-md-4 relatied_to_itemCard" style="display: none;">
-    <div class="form-group">
-     <label>  سعر الوحدة</label>
-     <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="price_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-     </div>
-   </div>
+
 
    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
     <div class="form-group">
      <label>   الاجمالي</label>
-     <input   readonly  id="total_add" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+     <input   readonly  id="item_total" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
      </div>
    </div>
 
    <div class="col-md-2">
     <div class="form-group text-center">
-    <button type="button" style="margin-top: 31px;" class="btn btn-sm btn-danger" id="AddToBill">اضف للفاتورة</button>
+    <button type="button" style="margin-top: 31px;" class="btn btn-sm btn-danger" id="AddItemToIvoiceDetailsActive">اضف للفاتورة</button>
   </div>
    </div>
 
