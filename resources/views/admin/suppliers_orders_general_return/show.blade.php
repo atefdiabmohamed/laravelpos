@@ -57,7 +57,7 @@
             
            
           <tr>
-            <td class="width30">   اجمالي الفاتورة </td> 
+            <td class="width30">   اجمالي الاصناف علي الفاتورة </td> 
             <td > {{ $data['total_befor_discount']*(1) }}</td> 
         </tr>
 
@@ -102,6 +102,10 @@
             
             </td> 
         </tr>
+        <tr>
+          <td class="width30">   اجمالي الفاتورة </td> 
+          <td > {{ $data['total_cost']*(1) }}</td> 
+      </tr>
         <tr>
           <td class="width30">       حالة الفاتورة </td> 
           <td > @if($data['is_approved']==1)  مغلق ومؤرشف @else مفتوحة  @endif</td>
@@ -229,6 +233,7 @@
         تاريخ انتاج  {{ $info->production_date }} <br>
 
         تاريخ انتهاء  {{ $info->expire_date }} <br>
+      باتش رقم {{ $info->batch_auto_serial }}
 
         @endif
         

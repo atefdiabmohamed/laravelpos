@@ -678,7 +678,7 @@ class Suppliers_with_ordersController extends Controller
                             $dataInsertBatch["created_at"] = date("Y-m-d H:i:s");
                             $dataInsertBatch["added_by"] = auth()->user()->id;
                             $dataInsertBatch["com_code"] = $com_code;
-                            $row = get_cols_where_row_orderby(new Suppliers_with_orders(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
+                            $row = get_cols_where_row_orderby(new Inv_itemcard_batches(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
                             if (!empty($row)) {
                                 $dataInsertBatch['auto_serial'] = $row['auto_serial'] + 1;
                             } else {

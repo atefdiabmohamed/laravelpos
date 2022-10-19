@@ -901,7 +901,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
        
         if (!empty($invoice_data)) {  
           if ($invoice_data['is_approved'] == 0) {
-            $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
+            $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id","production_date","expired_date"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
             if (!empty($batch_data)) {
 
               if ($batch_data['quantity'] >= $request->item_quantity) {
@@ -919,12 +919,14 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                   $datainsert_items['total_price'] = $request->item_total;
                   $datainsert_items['isparentuom'] = $request->isparentuom;
                   $datainsert_items['item_card_type'] = $itemCard_Data['item_type'];
+                  $datainsert_items['production_date'] = $batch_data['production_date'];
+                  $datainsert_items['expire_date'] = $batch_data['expired_date'];
                   $datainsert_items['added_by'] = auth()->user()->id;
                   $datainsert_items['created_at'] = date("Y-m-d H:i:s");
                   $datainsert_items['com_code'] = $com_code;
                   $flag_datainsert_items = insert(new Suppliers_with_orders_details(), $datainsert_items, true);
                   if (!empty($flag_datainsert_items)) {
-
+                   $this->recalclate_parent_invoice($request->autoserailparent);
                     //خصم الكمية من الباتش 
                     //كمية الصنف بكل المخازن قبل الحركة
                     $quantityBeforMove = get_sum_where(
@@ -1033,4 +1035,26 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
   }
 
 
-}
+  function recalclate_parent_invoice($auto_serial)
+  {
+
+    
+      $com_code = auth()->user()->com_code;
+      $invoice_data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("com_code" => $com_code, "auto_serial" => $auto_serial,'order_type'=>3));
+      if (!empty($invoice_data)) {
+       //first get sum of details
+       $dataUpdateParent['total_cost_items'] =get_sum_where(new Suppliers_with_orders_details(),"total_price",array("com_code" => $com_code, "suppliers_with_orders_auto_serial" => $auto_serial,'order_type'=>3));
+      $dataUpdateParent['total_cost'] =$dataUpdateParent['total_cost_items'];
+      $dataUpdateParent['total_befor_discount'] =$dataUpdateParent['total_cost_items'];
+      $dataUpdateParent['money_for_account'] =$dataUpdateParent['total_cost_items'];
+    $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
+     $dataUpdateParent['updated_by'] = auth()->user()->com_code;
+     update(new Suppliers_with_orders(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $auto_serial,'order_type'=>3));
+       
+        }
+      }
+
+    }
+  
+
+

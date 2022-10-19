@@ -43,7 +43,7 @@ $(document).ready(function () {
     } else {
       var batchSerial = null;
     }
-    get_inv_itemcard_batches();
+    get_inv_itemcard_batches(batchSerial);
 
   });
 
@@ -136,7 +136,11 @@ $(document).ready(function () {
       },
       success: function (data) {
      alert("تمت الاضافة");
-     get_inv_itemcard_batches();
+     get_inv_itemcard_batches(inv_itemcard_batches_autoserial);
+     reload_parent_pill();
+     reload_itemsdetials();
+
+
 
       },
       error: function () {
@@ -214,6 +218,7 @@ $(document).ready(function () {
 
 
           if (oldBatchId != null) {
+         
             $("#inv_itemcard_batches_autoserial").val(oldBatchId);
 
           }
