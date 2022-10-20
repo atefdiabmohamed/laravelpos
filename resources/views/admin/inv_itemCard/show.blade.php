@@ -150,7 +150,7 @@
   {{ $data['cost_price_retail']*1 }} 
                 </td>
                 <td colspan="2">
-                    كمية الصنف الحالية (  {{ $data['All_QUENTITY']*1  }} {{ $data['retail_uom_name']  }})
+                    كمية الصنف الحالية (  {{ $data['All_QUENTITY']*1  }} {{ $data['Uom_name']  }})
                 
                                 </td>
             </tr>

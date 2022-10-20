@@ -392,13 +392,13 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
 
 
     public function delete_details($id, $parent_id)
-    {
+    { 
         try {
             $com_code = auth()->user()->com_code;
-            $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "auto_serial"), array("id" => $parent_id, "com_code" => $com_code, 'order_type' => 3));
+            $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "auto_serial","store_id","suuplier_code"), array("id" => $parent_id, "com_code" => $com_code, 'order_type' => 3));
             if (empty($parent_pill_data)) {
                 return redirect()->back()
-                    ->with(['error' => 'عفوا حدث خطأ ما']);
+                    ->with(['error' => '1 عفوا حدث خطأ ما'  ]);
             }
 
             if ($parent_pill_data['is_approved'] == 1) {
@@ -412,21 +412,131 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                 $flag = $item_row->delete();
                 if ($flag) {
                     /** update parent pill */
-                    $total_detials_sum = get_sum_where(new Suppliers_with_orders_details(), 'total_price', array("suppliers_with_orders_auto_serial" => $parent_pill_data['auto_serial'], 'order_type' => 3, 'com_code' => $com_code));
-                    $dataUpdateParent['total_cost_items'] = $total_detials_sum;
-                    $dataUpdateParent['total_befor_discount'] = $total_detials_sum + $parent_pill_data['tax_value'];
-                    $dataUpdateParent['total_cost'] = $dataUpdateParent['total_befor_discount'] - $parent_pill_data['discount_value'];
-                    $dataUpdateParent['updated_by'] = auth()->user()->id;
-                    $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
-                    update(new Suppliers_with_orders(), $dataUpdateParent, array("id" => $parent_id, "com_code" => $com_code, 'order_type' => 3));
+                    $this->recalclate_parent_invoice($parent_pill_data['auto_serial']);
+                    $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit","item_type"), array("com_code" => $com_code, "item_code" => $item_row['item_code']));
+                    $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id","production_date","expired_date"), array("com_code" => $com_code, "auto_serial" => $item_row['batch_auto_serial'], 'store_id' => $parent_pill_data['store_id'], 'item_code' => $item_row['item_code']));
 
+                    if (!empty($itemCard_Data) and !empty($batch_data)) {
+                         //خصم الكمية من الباتش 
+                         //كمية الصنف بكل المخازن قبل الحركة
+                         $quantityBeforMove = get_sum_where(
+                           new Inv_itemcard_batches(),
+                           "quantity",
+                           array(
+                             "item_code" => $item_row['item_code'],
+                             "com_code" => $com_code
+                           )
+                         );
+     
+                         //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+                         $quantityBeforMoveCurrntStore = get_sum_where(
+                           new Inv_itemcard_batches(),
+                           "quantity",
+                           array(
+                             "item_code" => $item_row['item_code'], "com_code" => $com_code,
+                             'store_id' => $parent_pill_data['store_id']
+                           )
+                         );
+    
+                         //هنا حخصم الكمية لحظيا من باتش الصنف
+                         //update current Batch تحديث علي الباتش القديمة
+                   if($item_row['isparentuom']==1){
+                     //حخصم بشكل مباشر لانه بنفس وحده الباتش الاب
+                     $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_row['deliverd_quantity'];
+     
+                   }else{
+                     //مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل الخصم انتبه !!
+              $item_quantityByParentUom=$item_row['deliverd_quantity']/$itemCard_Data['retail_uom_quntToParent'];
+              $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_quantityByParentUom;
+                   }
+                         $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+                         $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+                         $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
+                         $flag = update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $batch_data['id'], "com_code" => $com_code));
+     
+                         if ($flag) {
+                           $quantityAfterMove = get_sum_where(
+                             new Inv_itemcard_batches(),
+                             "quantity",
+                             array(
+                               "item_code" => $item_row['item_code'],
+                               "com_code" => $com_code
+                             )
+                           );
+     
+                           //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي بعد الحركة
+                           $quantityAfterMoveCurrentStore = get_sum_where(
+                             new Inv_itemcard_batches(),
+                             "quantity",
+                             array("item_code" => $item_row['item_code'], "com_code" => $com_code, 'store_id' => $parent_pill_data['store_id'])
+                           );
+                           //التاثير في حركة كارت الصنف
+     
+                           $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 1;
+                           $dataInsert_inv_itemcard_movements['items_movements_types'] = 3;
+                           $dataInsert_inv_itemcard_movements['item_code'] = $item_row['item_code'];
+                           //كود الفاتورة الاب
+                           $dataInsert_inv_itemcard_movements['FK_table'] = $parent_pill_data['auto_serial'];
+                           //كود صف الابن بتفاصيل الفاتورة
+                           $dataInsert_inv_itemcard_movements['FK_table_details'] = $item_row['id'];
+                             $SupplierName = get_field_value(new Supplier(), "name", array("com_code" => $com_code, "suuplier_code" => $parent_pill_data['suuplier_code']));
+     
+                           $dataInsert_inv_itemcard_movements['byan'] = " نظير حذف سطر الصنف من فاتورة مرتجع مشتريات عام   الي المورد" . " " . $SupplierName . " فاتورة رقم" . " " . $parent_pill_data['auto_serial'];
+                           $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 
+                          
+                           //كمية الصنف بكل المخازن قبل الحركة
+                           $dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+                           // كمية الصنف بكل المخازن بعد  الحركة
+                           $dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+    
+                           //كمية الصنف  المخزن الحالي قبل الحركة
+                           $dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+                           // كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+                           $dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+                           $dataInsert_inv_itemcard_movements["store_id"] = $parent_pill_data['store_id'];
 
+                           $dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+                           $dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+                           $dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+                           $dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+                           $flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+                           if ($flag) {
+                             //update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+                             do_update_itemCardQuantity(
+                               new Inv_itemCard(),
+                               $item_row['item_code'],
+                               new Inv_itemcard_batches(),
+                               $itemCard_Data['does_has_retailunit'],
+                               $itemCard_Data['retail_uom_quntToParent']
+                             );
+     
+                            
                     return redirect()->back()
-                        ->with(['success' => '   تم حذف البيانات بنجاح']);
+                    ->with(['success' => '   تم حذف البيانات بنجاح']);
+
+
+                           }
+                         }else{
+                            return redirect()->back()
+                            ->with(['error' => '2عفوا حدث خطأ ما']);
+                         }
+     
+     
+                       }else{
+                        return redirect()->back()
+                        ->with(['error' => '3عفوا حدث خطأ ما']);
+                       }
+     
+
+
+
+                    
+
+
                 } else {
                     return redirect()->back()
-                        ->with(['error' => 'عفوا حدث خطأ ما']);
+                        ->with(['error' => '4عفوا حدث خطأ ما']);
                 }
             } else {
                 return redirect()->back()
@@ -435,7 +545,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
         } catch (\Exception $ex) {
 
             return redirect()->back()
-                ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+                ->with(['error' => '5عفوا حدث خطأ ما' . $ex->getMessage()]);
         }
     }
 
@@ -1034,6 +1144,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
     }
   }
 
+ 
 
   function recalclate_parent_invoice($auto_serial)
   {
