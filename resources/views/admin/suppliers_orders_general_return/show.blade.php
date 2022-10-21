@@ -197,7 +197,6 @@
         <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders_general_return.load_modal_approve_invoice') }}">
         <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders_general_return.load_usershiftDiv') }}">
         <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.suppliers_orders_general_return.get_item_batches') }}">
- 
         <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
 
         
@@ -247,7 +246,6 @@
          <td>
        @if($data['is_approved']==0)
 
-       <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
        <a href="{{ route('admin.suppliers_orders_general_return.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
      
 
@@ -349,7 +347,7 @@
   <div class="modal-dialog modal-xl" >
     <div class="modal-content bg-info">
       <div class="modal-header">
-        <h4 class="modal-title" style="text-align: center">  اعتماد وترحيل فاتورة المشتريات</h4>
+        <h4 class="modal-title" style="text-align: center">  اعتماد وترحيل فاتورة مرتجع مشتريات عام</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
       </div>

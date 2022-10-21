@@ -173,7 +173,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
     {
         try {
             $com_code = auth()->user()->com_code;
-            $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code, 'order_type' => 3));
+            $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "auto_serial","store_id","suuplier_code"), array("id" => $id, "com_code" => $com_code, 'order_type' => 3));
             if (empty($parent_pill_data)) {
                 return redirect()->back()
                     ->with(['error' => 'عفوا حدث خطأ ما']);
@@ -185,19 +185,136 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                         ->with(['error' => 'عفوا  لايمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
                 }
             }
-            $added_counter_details=get_count_where(new Suppliers_with_orders_details(),array("com_code"=>$com_code,"order_type"=>3,"suppliers_with_orders_auto_serial"=>$parent_pill_data['auto_serial']));
-            if ($added_counter_details >0) {
-               
-                    return redirect()->back()
-                        ->with(['error' => 'عفوا  لايمكن الحذف لان الفاتورة بالفعل مضاف عليها اصناف  ويرجي حذف الاصناف اولا ثم حذف الفاتورة    ']);
-                
-            }
-
-
+            //حنجيب الاصناف المضافة علي الفاتورة
+            $items_details=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"order_type"=>3,"suppliers_with_orders_auto_serial"=>$parent_pill_data['auto_serial']));
+          //حنحذف الفاتورة الاب
             $flag = delete(new Suppliers_with_orders(), array("id" => $id, "com_code" => $com_code, 'order_type' => 3));
             if ($flag) {
-                delete(new Suppliers_with_orders_details(), array("suppliers_with_orders_auto_serial" => $parent_pill_data['auto_serial'], "com_code" => $com_code, 'order_type' => 3));
-                return redirect()->route('admin.suppliers_orders_general_return.index')->with(['success' => 'لقد تم حذف  البيانات بنجاح']);
+//حنلف علي الاصناف المضافه علي الفاتورة ونطبق عليهم نفس اللي عملناها في حذف تفاصيل عنصر علي الفاتورة
+if(!empty($items_details)){
+foreach($items_details as $info){
+$flagDelete=delete(new Suppliers_with_orders_details(),array("com_code"=>$com_code,"order_type"=>3,"suppliers_with_orders_auto_serial"=>$parent_pill_data['auto_serial'],'id'=>$info->id));
+if($flagDelete){
+    $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit","item_type"), array("com_code" => $com_code, "item_code" => $info->item_code));
+    $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id","production_date","expired_date"), array("com_code" => $com_code, "auto_serial" => $info->batch_auto_serial, 'store_id' => $parent_pill_data['store_id'], 'item_code' => $info->item_code));
+
+    if (!empty($itemCard_Data) and !empty($batch_data)) {
+         //خصم الكمية من الباتش 
+         //كمية الصنف بكل المخازن قبل الحركة
+         $quantityBeforMove = get_sum_where(
+           new Inv_itemcard_batches(),
+           "quantity",
+           array(
+             "item_code" => $info->item_code,
+             "com_code" => $com_code
+           )
+         );
+
+         //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+         $quantityBeforMoveCurrntStore = get_sum_where(
+           new Inv_itemcard_batches(),
+           "quantity",
+           array(
+             "item_code" => $info->item_code, "com_code" => $com_code,
+             'store_id' => $parent_pill_data['store_id']
+           )
+         );
+
+         //هنا حنرجع الكمية لحظيا من باتش الصنف
+         //update current Batch تحديث علي الباتش القديمة
+   if($info->isparentuom==1){
+     //حخصم بشكل مباشر لانه بنفس وحده الباتش الاب
+     $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $info->deliverd_quantity;
+
+   }else{
+     //مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل الخصم انتبه !!
+$item_quantityByParentUom=$info->deliverd_quantity/$itemCard_Data['retail_uom_quntToParent'];
+$dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_quantityByParentUom;
+   }
+         $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+         $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+         $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
+         $flag = update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $batch_data['id'], "com_code" => $com_code));
+
+         if ($flag) {
+           $quantityAfterMove = get_sum_where(
+             new Inv_itemcard_batches(),
+             "quantity",
+             array(
+               "item_code" => $info->item_code,
+               "com_code" => $com_code
+             )
+           );
+
+           //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي بعد الحركة
+           $quantityAfterMoveCurrentStore = get_sum_where(
+             new Inv_itemcard_batches(),
+             "quantity",
+             array("item_code" => $info->item_code, "com_code" => $com_code, 'store_id' => $parent_pill_data['store_id'])
+           );
+           //التاثير في حركة كارت الصنف
+
+           $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 1;
+           $dataInsert_inv_itemcard_movements['items_movements_types'] = 3;
+           $dataInsert_inv_itemcard_movements['item_code'] = $info->item_code;
+           //كود الفاتورة الاب
+           $dataInsert_inv_itemcard_movements['FK_table'] = $parent_pill_data['auto_serial'];
+           //كود صف الابن بتفاصيل الفاتورة
+           $dataInsert_inv_itemcard_movements['FK_table_details'] = $info->id;
+             $SupplierName = get_field_value(new Supplier(), "name", array("com_code" => $com_code, "suuplier_code" => $parent_pill_data['suuplier_code']));
+
+           $dataInsert_inv_itemcard_movements['byan'] = " نظير حذف سطر الصنف من فاتورة مرتجع مشتريات عام   الي المورد" . " " . $SupplierName . " فاتورة رقم" . " " . $parent_pill_data['auto_serial'];
+           $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
+
+          
+           //كمية الصنف بكل المخازن قبل الحركة
+           $dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+           // كمية الصنف بكل المخازن بعد  الحركة
+           $dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+
+           //كمية الصنف  المخزن الحالي قبل الحركة
+           $dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+           // كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+           $dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+           $dataInsert_inv_itemcard_movements["store_id"] = $parent_pill_data['store_id'];
+
+           $dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+           $dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+           $dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+           $dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+           $flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+           if ($flag) {
+             //update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+             do_update_itemCardQuantity(
+               new Inv_itemCard(),
+               $info->item_code,
+               new Inv_itemcard_batches(),
+               $itemCard_Data['does_has_retailunit'],
+               $itemCard_Data['retail_uom_quntToParent']
+             );
+
+    
+
+           }
+         }
+
+
+       }
+
+
+
+
+
+}
+
+
+}
+
+}
+
+
+
+           return redirect()->route('admin.suppliers_orders_general_return.index')->with(['success' => 'لقد تم حذف  البيانات بنجاح']);
             }
         } catch (\Exception $ex) {
 
@@ -438,10 +555,10 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                            )
                          );
     
-                         //هنا حخصم الكمية لحظيا من باتش الصنف
+                         //حنرجع  الكمية لحظيا من باتش الصنف
                          //update current Batch تحديث علي الباتش القديمة
                    if($item_row['isparentuom']==1){
-                     //حخصم بشكل مباشر لانه بنفس وحده الباتش الاب
+                     //حنرجع بشكل مباشر لانه بنفس وحده الباتش الاب
                      $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_row['deliverd_quantity'];
      
                    }else{
@@ -588,11 +705,11 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
         if (empty($data)) {
             return redirect()->route("admin.suppliers_orders.index")->with(['error' => "عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
         }
-        $SupplierName = get_field_value(new Supplier(), "name", array("com_code" => $com_code, "suuplier_code" => $data['suuplier_code']));
 
         if ($data['is_approved'] == 1) {
             return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
         }
+        $SupplierName = get_field_value(new Supplier(), "name", array("com_code" => $com_code, "suuplier_code" => $data['suuplier_code']));
 
         $counterDetails=get_count_where(new Suppliers_with_orders_details(),array("suppliers_with_orders_auto_serial"=>$auto_serial, "com_code" => $com_code, 'order_type' => 3));
         if ($counterDetails== 0) {
@@ -607,7 +724,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
         $dataUpdateParent['discount_value'] = $request['discount_value'];
         $dataUpdateParent['total_cost'] = $request['total_cost'];
         $dataUpdateParent['pill_type'] = $request['pill_type'];
-        $dataUpdateParent['money_for_account'] = $request['total_cost'] * (-1);
+        $dataUpdateParent['money_for_account'] = $request['total_cost'] ;
         $dataUpdateParent['is_approved'] = 1;
         $dataUpdateParent['approved_by'] = auth()->user()->com_code;
         $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
@@ -641,10 +758,7 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                 return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => " عفوا لاتملتك الان شفت خزنة مفتوح لكي تتمكن من اتمام عمليه الصرف"]);
             }
 
-            //check for blance
-            if ($user_shift['balance'] < $request['what_paid']) {
-                return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => " عفوا لاتملتك الان رصيد كافي بخزنة الصرف  لكي تتمكن من اتمام عمليه الصرف"]);
-            }
+          
         }
 
         $flag = update(new Suppliers_with_orders(), $dataUpdateParent, array("auto_serial" => $auto_serial, "com_code" => $com_code, 'order_type' => 3));
@@ -652,13 +766,12 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
             //Affect on Supplier Balance  حنأثر في رصيد المورد
             //حنجيب  سجل المورد من الشجره المحاسبية برقم الحساب المالب
 
-
             //حركات  مختلفه
             //first make treasuries_transactions  action if what paid >0
             if ($request['what_paid'] > 0) {
 
                 //first get isal number with treasuries 
-                $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_exhcange"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
+                $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
                 if (empty($treasury_date)) {
                     return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['error' => " عفوا غير قادر علي الوصول الي بيانات الخزنة المطلوبة"]);
                 }
@@ -670,180 +783,34 @@ class Suppliers_with_ordersGeneralRetuen extends Controller
                     $dataInsert_treasuries_transactions['auto_serial'] = 1;
                 }
 
-                $dataInsert_treasuries_transactions['isal_number'] = $treasury_date['last_isal_exhcange'] + 1;
+                $dataInsert_treasuries_transactions['isal_number'] = $treasury_date['last_isal_collect'] + 1;
                 $dataInsert_treasuries_transactions['shift_code'] = $user_shift['shift_code'];
-                //Credit دائن
-                $dataInsert_treasuries_transactions['money'] = $request['what_paid'] * (-1);
+                // مدين
+                $dataInsert_treasuries_transactions['money'] = $request['what_paid'];
                 $dataInsert_treasuries_transactions['treasuries_id'] = $user_shift['treasuries_id'];
-                $dataInsert_treasuries_transactions['mov_type'] = 9;
+                $dataInsert_treasuries_transactions['mov_type'] = 10;
                 $dataInsert_treasuries_transactions['move_date'] = date("Y-m-d");
                 $dataInsert_treasuries_transactions['account_number'] = $data["account_number"];
                 $dataInsert_treasuries_transactions['is_account'] = 1;
                 $dataInsert_treasuries_transactions['is_approved'] = 1;
                 $dataInsert_treasuries_transactions['the_foregin_key'] = $data["auto_serial"];
                 //debit مدين
-                $dataInsert_treasuries_transactions['money_for_account'] = $request['what_paid'];
-                $dataInsert_treasuries_transactions['byan'] = "صرف نظير فاتورة مشتريات  رقم" . $auto_serial;
+                $dataInsert_treasuries_transactions['money_for_account'] = $request['what_paid']*(-1);
+                $dataInsert_treasuries_transactions['byan'] = "تحصيل نظير فاتورة مرتجع مشتريات عام فاتورة  رقم" . $auto_serial;
                 $dataInsert_treasuries_transactions['created_at'] = date("Y-m-Y H:i:s");
                 $dataInsert_treasuries_transactions['added_by'] = auth()->user()->id;
                 $dataInsert_treasuries_transactions['com_code'] = $com_code;
                 $flag = insert(new Treasuries_transactions(), $dataInsert_treasuries_transactions);
                 if ($flag) {
                     //update Treasuries last_isal_collect
-                    $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transactions['isal_number'];
+                    $dataUpdateTreasuries['last_isal_collect'] = $dataInsert_treasuries_transactions['isal_number'];
                     update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
                 }
             }
 
             refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
 
-            //store move حركة المخزن
-            //first Get item card data جنجيب الاصناف اللي علي الفاتورة
-            $items = get_cols_where(new Suppliers_with_orders_details(), array("*"), array("suppliers_with_orders_auto_serial" => $auto_serial, "com_code" => $com_code, "order_type" => 1), "id", "ASC");
-            if (!empty($items)) {
-                foreach ($items as $info) {
-                    //get itemCard Data
-                    $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit"), array("com_code" => $com_code, "item_code" => $info->item_code));
-                    if (!empty($itemCard_Data)) {
-                        //get Quantity Befor any Action  حنجيب كيمة الصنف بكل المخازن قبل الحركة
-                        $quantityBeforMove = get_sum_where(new Inv_itemcard_batches(), "quantity", array("item_code" => $info->item_code, "com_code" => $com_code));
-                        //get Quantity Befor any Action  حنجيب كيمة الصنف  بمخزن فاتورة المشتريات الحالي قبل الحركة
-                        $quantityBeforMoveCurrntStore = get_sum_where(new Inv_itemcard_batches(), "quantity", array("item_code" => $info->item_code, "com_code" => $com_code, 'store_id' => $data['store_id']));
-
-                        $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
-
-
-                        //if is parent Uom لو وحده اب
-                        if ($info->isparentuom == 1) {
-                            $quntity = $info->deliverd_quantity;
-                            $unit_price = $info->unit_price;
-                        } else {
-                            // if is retail  لو كان بوحده الابن التجزئة
-                            //التحويل من الاب للابن بنضرب   في النسبة بينهم - اما التحويل من الابن للاب بنقسم علي النسبه بينهما 
-                            $quntity = ($info->deliverd_quantity / $itemCard_Data['retail_uom_quntToParent']);
-                            $unit_price = $info->unit_price * $itemCard_Data['retail_uom_quntToParent'];
-                        }
-                        //بندخل الكميات للمخزن بوحده القياس الاب  اجباري 
-
-                        //لو الصنف استهلاكي له تاريخ صلاحيه وانتاج فبعمل تحقق بسعر الشراء مع التواريخ
-                        //لو الصنف  غير استهلاكي يبقي بعمل تحقق فقط بسعر الشراء
-
-                        if ($info->item_card_type == 2) {
-                            //استهلاكي بتواريخ 
-                            $dataInsertBatch["store_id"] = $data['store_id'];
-                            $dataInsertBatch["item_code"] = $info->item_code;
-                            $dataInsertBatch["production_date"] = $info->production_date;
-                            $dataInsertBatch["expired_date"] = $info->expire_date;
-                            $dataInsertBatch["unit_cost_price"] = $unit_price;
-                            $dataInsertBatch["inv_uoms_id"] = $itemCard_Data['uom_id'];
-                        } else {
-                            //بسعر فقط
-                            $dataInsertBatch["store_id"] = $data['store_id'];
-                            $dataInsertBatch["item_code"] = $info->item_code;
-                            $dataInsertBatch["unit_cost_price"] = $unit_price;
-                            $dataInsertBatch["inv_uoms_id"] = $itemCard_Data['uom_id'];
-                        }
-
-                        $OldBatchExsists = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "id", "unit_cost_price"), $dataInsertBatch);
-                        if (!empty($OldBatchExsists)) {
-                            //update current Batch تحديث علي الباتش القديمة
-                            $dataUpdateOldBatch['quantity'] = $OldBatchExsists['quantity'] + $quntity;
-                            $dataUpdateOldBatch['total_cost_price'] = $OldBatchExsists['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
-                            $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
-                            $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
-                            update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $OldBatchExsists['id'], "com_code" => $com_code));
-                        } else {
-                            //insert new Batch ادخال باتش جديده
-                            $dataInsertBatch["quantity"] = $quntity;
-                            $dataInsertBatch["total_cost_price"] = $info->total_price;
-                            $dataInsertBatch["created_at"] = date("Y-m-d H:i:s");
-                            $dataInsertBatch["added_by"] = auth()->user()->id;
-                            $dataInsertBatch["com_code"] = $com_code;
-                            $row = get_cols_where_row_orderby(new Suppliers_with_orders(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
-                            if (!empty($row)) {
-                                $dataInsertBatch['auto_serial'] = $row['auto_serial'] + 1;
-                            } else {
-                                $dataInsertBatch['auto_serial'] = 1;
-                            }
-
-                            insert(new Inv_itemcard_batches(), $dataInsertBatch);
-                        }
-                        //كمية الصنف بكل المخازن بعد اتمام حركة الباتشات وترحيلها
-                        $quantityAfterMove = get_sum_where(new Inv_itemcard_batches(), "quantity", array("item_code" => $info->item_code, "com_code" => $com_code));
-                        //كمية الصنف بمخزن فاتورة الشراء  بعد اتمام حركة الباتشات وترحيلها
-                        $quantityAfterMoveCurrentStore = get_sum_where(new Inv_itemcard_batches(), "quantity", array("item_code" => $info->item_code, "com_code" => $com_code, 'store_id' => $data['store_id']));
-
-                        $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 1;
-                        $dataInsert_inv_itemcard_movements['items_movements_types'] = 1;
-                        $dataInsert_inv_itemcard_movements['item_code'] = $info->item_code;
-                        //كود الفاتورة الاب
-                        $dataInsert_inv_itemcard_movements['FK_table'] = $auto_serial;
-                        //كود صف الابن بتفاصيل الفاتورة
-                        $dataInsert_inv_itemcard_movements['FK_table_details'] = $info->id;
-                        $dataInsert_inv_itemcard_movements['byan'] = "نظير مشتريات من المورد " . " " . $SupplierName . " فاتورة رقم" . " " . $auto_serial;
-                        //كمية الصنف بكل المخازن قبل الحركة
-                        $dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
-                        // كمية الصنف بكل المخازن بعد  الحركة
-                        $dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
-
-
-                        //كمية الصنف  المخزن الحالي قبل الحركة
-                        $dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
-                        // كمية الصنف بالمخزن الحالي بعد الحركة الحركة
-                        $dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
-                        $dataInsert_inv_itemcard_movements["store_id"] = $data['store_id'];
-
-                        $dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
-                        $dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
-                        $dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
-                        $dataInsert_inv_itemcard_movements["com_code"] = $com_code;
-
-                        insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
-
-
-                        //item Move Card حركة الصنف 
-
-
-
-
-
-
-
-
-                    }
-
-                    //update last Cost price   تحديث اخر سعر شراء للصنف
-                    if ($info->isparentuom == 1) {
-                        //لو الوحده اللي اشتريت بيها كانت وحده اب 
-                        $dataUpdateItemCardCosts['cost_price'] = $info->unit_price;
-                        if ($itemCard_Data['does_has_retailunit'] == 1) {
-                            $dataUpdateItemCardCosts['cost_price_retail'] = $info->unit_price / $itemCard_Data['retail_uom_quntToParent'];
-                        }
-                    } else {
-                        // if is retail  لو كان بوحده الابن التجزئة
-                        //التحويل من الاب للابن بنضرب   في النسبة بينهم - اما التحويل من الابن للاب بنقسم علي النسبه بينهما 
-                        $dataUpdateItemCardCosts['cost_price'] = $info->unit_price * $itemCard_Data['retail_uom_quntToParent'];
-                        $dataUpdateItemCardCosts['cost_price_retail'] = $info->unit_price;
-                    }
-
-                    update(new Inv_itemCard(), $dataUpdateItemCardCosts, array("com_code" => $com_code, "item_code" => $info->item_code));
-
-
-
-                    // update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
-                    do_update_itemCardQuantity(new Inv_itemCard(), $info->item_code, new Inv_itemcard_batches(), $itemCard_Data['does_has_retailunit'], $itemCard_Data['retail_uom_quntToParent']);
-                }
-            }
-
-
-
-
-
-
-
-
-
-            return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
+            return redirect()->route("admin.suppliers_orders_general_return.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
         }
     }
 

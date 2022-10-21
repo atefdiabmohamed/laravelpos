@@ -3,7 +3,7 @@
 @if($counterDetails>0)
 
 
-<form action="{{ route("admin.suppliers_orders.do_approve",$data['auto_serial']) }}" method="post">
+<form action="{{ route("admin.suppliers_orders_general_return.do_approve",$data['auto_serial']) }}" method="post">
      @csrf
      
 <div class="row">
@@ -104,13 +104,13 @@
          </div>
          <div class="col-md-6 > 
           <div class="form-group">
-            <label>    المدفوع للمورد الان   </label>
+            <label>    المحصل الان  من المورد    </label>
             <input   name="what_paid" id="what_paid" class="form-control"  @if($data['pill_type']==2)  value="0" @else readonly value="{{ $data['total_cost']*1 }}"   @endif  >
             </div>
 
             <div class="col-md-6 > 
                <div class="form-group">
-                 <label>    المتبقي للمورد    </label>
+                 <label>    المتبقي علي المورد    </label>
                  <input readonly   name="what_remain" id="what_remain" class="form-control"  @if($data['pill_type']==2)  value="{{ $data['total_cost']*1 }}" @else value="0"   @endif  >
                  </div>
                  <div class="col-md-12 text-center" > 

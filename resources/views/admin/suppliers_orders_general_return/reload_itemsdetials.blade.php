@@ -39,7 +39,6 @@
    <td>
  @if($data['is_approved']==0)
 
- <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
  <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
 
 

@@ -795,21 +795,10 @@ $(document).ready(function () {
     if (what_paid > 0) {
       var treasuries_id = $("#treasuries_id").val();
       if (treasuries_id == "") {
-        alert("من فضلك اختر خزنة الصرف         ");
+        alert("من فضلك اختر خزنة التحصيل         ");
         return false;
       }
-      var treasuries_balance = $("#treasuries_balance").val();
-      if (treasuries_balance == "") {
-        alert("من فضلك  ادخل رصيد الخزنة          ");
-        return false;
-      }
-      if (parseFloat(what_paid) > parseFloat(treasuries_balance)) {
-        alert("عفوا لايوجد لديك رصيد كافي في خزنة الصرف !!!");
-        return false;
-      }
-
-
-
+    
     }
 
   });
