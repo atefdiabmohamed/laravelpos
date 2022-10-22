@@ -23,8 +23,7 @@ use App\Http\Controllers\Admin\ExchangeController;
 use App\Http\Controllers\Admin\SalesInvoicesController;
 use App\Http\Controllers\Admin\DelegatesController;
 use App\Http\Controllers\Admin\Suppliers_with_ordersGeneralRetuen;
-
-
+use App\Http\Controllers\Admin\ItemcardBalanceController;
 
 
 /*
@@ -304,14 +303,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_with_ordersGeneralRetuen::class, 'load_usershiftDiv'])->name('admin.suppliers_orders_general_return.load_usershiftDiv');
     Route::post('/suppliers_orders_general_return/get_item_batches', [Suppliers_with_ordersGeneralRetuen::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_item_batches');
 
-    
-
-
     /*           end  suppliers_orders Gernal Return                */
 
+    /*          start    itemcardBalance               */
+    Route::get('/itemcardBalance/index', [ItemcardBalanceController::class, 'index'])->name('admin.itemcardBalance.index');
 
 
-
+    /*          end    itemcardBalance               */
 
 
 });

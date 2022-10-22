@@ -193,8 +193,8 @@
               </li>
 
             
-              <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*'))?'menu-open':'' }}     ">
-                <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') )?'active':'' }}">
+              <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*'))?'menu-open':'' }}     ">
+                <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') )?'active':'' }}">
                    <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                      حركات مخزنية
@@ -220,6 +220,16 @@
                     </a>
                   </li>
                 
+                  <li class="nav-item">
+                    <a href="{{ route('admin.itemcardBalance.index') }}" class="nav-link {{ (request()->is('admin/itemcardBalance*')  )?'active':'' }}">
+                     
+                      <p>
+     أرصدة الأصناف        
+                      </p>
+                    </a>
+                  </li>
+
+
                 </ul>
               </li>
 
