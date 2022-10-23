@@ -31,6 +31,15 @@ function get_cols_where($model=null, $columns_names = array(), $where = array(),
   $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->get();
   return $data;
 }
+
+
+/*get some cols  table 2 */
+function get_cols_where_order2($model=null, $columns_names = array(), $where = array(), $order_field="id",$order_type="DESC",$order_field2="id",$order_type2="DESC")
+{
+  $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->orderby($order_field2, $order_type2)->get();
+  return $data;
+}
+
 /*get some cols  table */
 function get_cols($model=null, $columns_names = array(), $order_field="id",$order_type="DESC")
 {
