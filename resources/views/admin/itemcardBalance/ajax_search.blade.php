@@ -1,43 +1,73 @@
-  
-          @if (@isset($data) && !@empty($data) && count($data) >0)
+
+          @if (@isset($allitemscardData) && !@empty($allitemscardData))
           @php
            $i=1;   
           @endphp
-           <table id="example2" class="table table-bordered table-hover">
+          <table id="example2" class="table table-bordered table-hover">
             <thead class="custom_thead">
-              <th>كود آلي </th>
-           <th>الاسم </th>
-           <th> النوع </th>
-           <th> الفئة </th>
-           <th> الوحدة الاب </th>
-           <th>  الكمية الحالية </th>
-           <th>حالة التفعيل</th>
+              <th style="width:10%;">كود  </th>
+           <th style="width:20%;">الاسم </th>
+          
+           <th style="width:70%;"> الكميات بالمخازن</th>
          
-           <th></th>
+ 
 
             </thead>
             <tbody>
-         @foreach ($data as $info )
+         @foreach ($allitemscardData as $info )
             <tr>
              <td>{{ $info->item_code }}</td>  
              <td>{{ $info->name }}</td>  
-             <td>@if($info->item_type==1) مخزني  @elseif($info->item_type==2) استهلاكي بصلاحية   @elseif($info->item_type==3) عهدة @else غير محدد @endif</td>  
-             <td>{{ $info->inv_itemcard_categories_name }}</td>  
-             <td>{{ $info->Uom_name }}</td>  
-             <td>{{ $info->All_QUENTITY*1 }} {{ $info->Uom_name }}</td>  
-
-
-             <td>@if($info->active==1) مفعل @else معطل @endif</td> 
-      
-         <td>
-
-        <a href="{{ route('admin.itemcard.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.itemcard.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>   
-
-         </td>
+             <td>
+             كل الكمية بنتيجة البحث (  {{ $info->allQuantitySearch*1 }} {{ $info->Uom_name }}  ) <br> <br>
+             <h3 style="text-align: center; font-size:15px; color:brown;">تفاصيل كميات الصنف بالمخازن</h3>
+             @if ( !@empty($info->allBathces) and count($info->allBathces)>0)
+             <table id="example2" class="table table-bordered table-hover">
+              <thead class="bg-info" >
+                <th style="width:20%;">رقم الباتش  </th>
+             <th style="width:20%;">المخزن </th>
+             <th style="width:60%;">  الكمية</th>
            
-   
+  
+              </thead>
+              <tbody>
+             @foreach ($info->allBathces as $Det )
+             <tr>
+              <td @if($Det->quantity==0) class="bg-danger"  @endif>{{ $Det->auto_serial }}</td>
+              <td>{{ $Det->store_name }}</td>
+              <td >
+                عدد ( {{ $Det->quantity*1 }} ) {{ $info->Uom_name }}  بإجمالي تكلفة  ( {{ $Det->total_cost_price*1 }} جنيه ) <br>
+                بسعر  ( {{ $Det->unit_cost_price*(1) }} جنيه ) لوحدة {{ $info->Uom_name }} 
+                @if($info->does_has_retailunit==1)
+                <br> 
+                @if($info->item_type==2)
+                تاريخ انتاج ( {{ $Det->production_date }} ) <br>
+                تاريخ انتهاء ( {{ $Det->expired_date }} ) <br>
+
+                @endif
+          <span style="color: brown;"> مايوزاي بوحدة التجزئة</span>
+                <br>
+                عدد ( {{ $Det->qunatityRetail*1 }} ) {{ $info->retail_uom_name }} بإجمالي تكلفة  ({{ $Det->total_cost_price*1 }} جنيه) <br>
+                بسعر  ( {{ $Det->priceRetail*(1) }} جنيه ) لوحدة {{ $info->retail_uom_name }}  
+
+                @endif
+
+              </td>
+             </tr>
+
+            @endforeach
+            
+          </tbody>
+        </table>
+             @else
+             <h3 style="text-align: center; font-size:13px; color:brown;">   لاتوجد باتشات لهذا الصنف</h3>
+
+             @endif
+             </td>
            </tr> 
+         
+
+
       @php
          $i++; 
       @endphp
@@ -48,13 +78,12 @@
             </tbody>
              </table>
              
-             <br>
-             <div class="col-md-12" id="ajax_pagination_in_search">
-                {{ $data->links() }}
-             </div>
+      <br>
+      <div class="col-md-12" id="ajax_pagination_in_search">
+         {{ $allitemscardData->links() }}
+      </div>
        
            @else
-           <div class="clearfix"></div>
            <div class="alert alert-danger">
              عفوا لاتوجد بيانات لعرضها !!
            </div>

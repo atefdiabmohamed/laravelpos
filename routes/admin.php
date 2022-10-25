@@ -307,6 +307,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     /*          start    itemcardBalance               */
     Route::get('/itemcardBalance/index', [ItemcardBalanceController::class, 'index'])->name('admin.itemcardBalance.index');
+    Route::post('/itemcardBalance/ajax_search', [ItemcardBalanceController::class, 'ajax_search'])->name('admin.itemcardBalance.ajax_search');
 
 
     /*          end    itemcardBalance               */

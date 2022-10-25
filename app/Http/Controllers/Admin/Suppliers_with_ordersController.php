@@ -751,6 +751,7 @@ class Suppliers_with_ordersController extends Controller
 
                     // update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
                     do_update_itemCardQuantity(new Inv_itemCard(), $info->item_code, new Inv_itemcard_batches(), $itemCard_Data['does_has_retailunit'], $itemCard_Data['retail_uom_quntToParent']);
+        
                 }
             }
 
