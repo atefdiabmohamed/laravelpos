@@ -21,7 +21,8 @@
              <td>
              كل الكمية بنتيجة البحث (  {{ $info->allQuantitySearch*1 }} {{ $info->Uom_name }}  ) <br> <br>
              <h3 style="text-align: center; font-size:15px; color:brown;">تفاصيل كميات الصنف بالمخازن</h3>
-             @if ( !@empty($info->allBathces) and count($info->allBathces)>0)
+             @if ( !@empty($info->allBathces) and count($info->allBathces)>0
+             )
              <table id="example2" class="table table-bordered table-hover">
               <thead class="bg-info" >
                 <th style="width:20%;">رقم الباتش  </th>
