@@ -39,7 +39,7 @@
                    <div class="col-md-4" id="customer_codeDiv" >
                    <div class="form-group"> 
                     <label>   بيانات العملاء
-                     (<a title=" اضافة عميل جديد " href="#">جديد <i   class="fa fa-plus-circle  "></i> </a>) 
+                     (<a id="load_add_new_customer" title=" اضافة عميل جديد " href="#">جديد <i   class="fa fa-plus-circle  "></i> </a>) 
                     </label>
                     <select name="customer_code" id="customer_code_activeAdd" class="form-control select2">
                       <option value=""> لايوجد عميل</option>

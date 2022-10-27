@@ -21,6 +21,7 @@ use App\Models\Inv_itemcard_movements;
 use App\Models\Account;
 use App\Models\Supplier;
 use App\Models\Suppliers_with_orders;
+use App\Models\Admin_panel_setting;
 
 class SalesInvoicesController extends Controller
 {
@@ -905,6 +906,134 @@ class SalesInvoicesController extends Controller
       return view('admin.sales_invoices.ajax_search', ['data' => $data]);
     }
   }
+public function do_add_new_customer(Request $request){
+if($request->ajax()){
+$com_code = auth()->user()->com_code;
+
+//check if not exsits for name
+  $checkExists_name = get_cols_where_row(new Customer(), array("id"),
+   array('name' => $request->name, 
+  'com_code' => $com_code));
+
+  if (empty($checkExists_name)) {
+    //set customer code
+  $row = get_cols_where_row_orderby(new Customer(), array("customer_code"), 
+  array("com_code" => $com_code), 'id', 'DESC');
+  if (!empty($row)) {
+    $data_insert['customer_code'] = $row['customer_code'] + 1;
+  } else {
+    $data_insert['customer_code'] = 1;
+  }
+
+//set account number
+$row = get_cols_where_row_orderby(new Account(), array("account_number"),
+ array("com_code" => $com_code), 'id', 'DESC');
+if (!empty($row)) {
+  $data_insert['account_number'] = $row['account_number'] + 1;
+} else {
+  $data_insert['account_number'] = 1;
+}
+
+
+$data_insert['name'] = $request->name;
+$data_insert['address'] = $request->address;
+$data_insert['start_balance_status'] = $request->start_balance_status;
+if ($data_insert['start_balance_status'] == 1) {
+  //credit
+  $data_insert['start_balance'] = $request->start_balance * (-1);
+} elseif ($data_insert['start_balance_status'] == 2) {
+  //debit
+  $data_insert['start_balance'] = $request->start_balance;
+  if ($data_insert['start_balance'] < 0) {
+    $data_insert['start_balance'] = $data_insert['start_balance'] * (-1);
+  }
+} elseif ($data_insert['start_balance_status'] == 3) {
+  //balanced
+  $data_insert['start_balance'] = 0;
+} else {
+  $data_insert['start_balance_status'] = 3;
+  $data_insert['start_balance'] = 0;
+}
+$data_insert['phones'] = $request->phones;
+
+$data_insert['current_balance'] = $data_insert['start_balance'];
+$data_insert['notes'] = $request->notes;
+$data_insert['active'] = $request->active;
+$data_insert['added_by'] = auth()->user()->id;
+$data_insert['created_at'] = date("Y-m-d H:i:s");
+$data_insert['date'] = date("Y-m-d");
+$data_insert['com_code'] = $com_code;
+$flag = insert(new Customer(), $data_insert);
+if ($flag) {
+  //insert into accounts
+  $data_insert_account['name'] = $request->name;
+  $data_insert_account['start_balance_status'] = $request->start_balance_status;
+  if ($data_insert_account['start_balance_status'] == 1) {
+    //credit
+    $data_insert_account['start_balance'] = $request->start_balance * (-1);
+  } elseif ($data_insert_account['start_balance_status'] == 2) {
+    //debit
+    $data_insert_account['start_balance'] = $request->start_balance;
+    if ($data_insert_account['start_balance'] < 0) {
+      $data_insert_account['start_balance'] = $data_insert_account['start_balance'] * (-1);
+    }
+  } elseif ($data_insert_account['start_balance_status'] == 3) {
+    //balanced
+    $data_insert_account['start_balance'] = 0;
+  } else {
+    $data_insert_account['start_balance_status'] = 3;
+    $data_insert_account['start_balance'] = 0;
+  }
+  $data_insert_account['current_balance'] = $data_insert_account['start_balance'];
+
+  $customer_parent_account_number = get_field_value(new Admin_panel_setting(), "customer_parent_account_number", 
+  array('com_code' => $com_code));
+  $data_insert_account['notes'] = $request->notes;
+  $data_insert_account['parent_account_number'] = $customer_parent_account_number;
+  $data_insert_account['is_parent'] = 0;
+  $data_insert_account['account_number'] = $data_insert['account_number'];
+  $data_insert_account['account_type'] = 3;
+  $data_insert_account['active'] = $request->active;
+  $data_insert_account['added_by'] = auth()->user()->id;
+  $data_insert_account['created_at'] = date("Y-m-d H:i:s");
+  $data_insert_account['date'] = date("Y-m-d");
+  $data_insert_account['com_code'] = $com_code;
+  $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
+  $flag = insert(new Account(), $data_insert_account);
+  if($flag){
+    echo json_encode("done");
+  }
+
+}
+
+
+
+
+
+  }else{
+    echo json_encode('exsits');
+  }
+
+ 
+
+  
+
+ 
+
+
+}
+}
+  
+
+public function get_last_added_customer(Request $request){
+  if($request->ajax()){
+$com_code=auth()->user()->com_code;
+$customers=get_cols_where_limit(new Customer(),array("customer_code","name"),array("com_code"=>$com_code),'id','DESC',1);
+
+return view('admin.sales_invoices.get_last_added_customer',['customers'=>$customers]);
+
+  }
+}
 
   
 }

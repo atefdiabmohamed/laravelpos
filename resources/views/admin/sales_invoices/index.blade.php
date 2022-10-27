@@ -39,12 +39,12 @@
           <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.SalesInvoices.load_usershiftDiv') }}">
           <input type="hidden" id="ajax_load_invoice_details_modal" value="{{ route('admin.SalesInvoices.load_invoice_details_modal') }}">
           <input type="hidden" id="ajax_ajax_search" value="{{ route('admin.SalesInvoices.ajax_search') }}">
+          <input type="hidden" id="ajax_do_add_new_customer" value="{{ route('admin.SalesInvoices.do_add_new_customer') }}">
+          <input type="hidden" id="ajax_getlastaddedcustomer" value="{{ route('admin.SalesInvoices.get_last_added_customer') }}">
 
           
-
           
           
-
           
           <button class="btn btn-sm btn-success" id="LoadModalAddBtnMirror" >  مرآة فاتورة عرض اسعار</button>
           <button class="btn btn-sm btn-primary" id="LoadModalAddBtnActiveInvoice" >     اضافة فاتورة فعلية</button>
@@ -61,7 +61,7 @@
               <input  type="radio" name="searchbyradio" id="searchbyradio" value="customer_code"> كود العميل   
               <input  type="radio" name="searchbyradio" id="searchbyradio" value="account_number"> رقم الحساب   
 
-              <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
+              <input  style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
               
                         </div>
                         <div class="col-md-4"> 
@@ -296,7 +296,7 @@
         </div>
 
         <div class="modal fade  "   id="InvoiceModalActiveDetails">
-          <div class="modal-dialog modal-xl" >
+          <div class="modal-dialog modal-xl"  >
             <div class="modal-content bg-info">
               <div class="modal-header">
                 <h4 class="modal-title text-center">             تفاصيل فاتورة مبيعات </h4>
@@ -317,6 +317,109 @@
           <!-- /.modal-dialog -->
         </div>
 
+
+     
+        <div class="modal fade  "   id="load_add_new_customerModal">
+          <div class="modal-dialog modal-xl" >
+            <div class="modal-content bg-info">
+              <div class="modal-header">
+                <h4 class="modal-title text-center">               اضافة عميل جديد </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body" id="load_add_new_customerModalBody" style="background-color: white !important; color:black;">
+                <div class="row">
+            
+          <div class="col-md-6">   
+          <div class="form-group">
+            <label>اسم   العميل</label>
+            <input  name="customer_name" id="customer_name" class="form-control" value=""    >
+         
+          </div>
+          </div>
+          
+          
+          
+            
+          
+             
+                <div class="col-md-6">   
+                  <div class="form-group">
+                    <label>   حالة رصيد اول المدة</label>
+                    <select name="start_balance_status" id="start_balance_status" class="form-control">
+                      <option value="">اختر الحالة</option>
+                     <option    value="1"> دائن</option>
+                     <option     value="2"> مدين</option>
+                     <option  selected="selected"   value="3"> متزن</option>
+                     </select>
+                    @error('start_balance_status')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                  </div>
+                  </div>
+                  <div class="col-md-6">   
+                    <div class="form-group">
+                      <label>   رصيد أول المدة للحساب</label>
+                      <input  name="start_balance" id="start_balance" class="form-control" value="0"  oninput="this.value=this.value.replace(/[^0-9.]/g,'');"     >
+                     
+                    </div>
+                    </div>
+                    <div class="col-md-6">   
+                      <div class="form-group">
+                        <label>   العنوان </label>
+                        <input name="customer_address" id="customer_address" class="form-control" value=""    >
+                       
+                      </div>
+                      </div>
+                      <div class="col-md-6">   
+                        <div class="form-group">
+                          <label>   الهاتف</label>
+                          <input name="customer_phones" id="customer_phones" class="form-control" value=""    >
+                        
+                        </div>
+                        </div>
+                    <div class="col-md-6">   
+                      <div class="form-group">
+                        <label>   ملاحظات</label>
+                        <input name="customer_notes" id="customer_notes" class="form-control" value=""    >
+                      
+                      </div>
+                      </div>
+                   
+          <div class="col-md-6">
+                <div class="form-group"> 
+                  <label>  حالة التفعيل</label>
+                  <select name="customer_active" id="customer_active" class="form-control">
+                  <option   value="1"> نعم</option>
+                   <option   value="0"> لا</option>
+                  </select>
+                 
+                  </div>
+                </div>
+               
+                
+                <div class="col-md-2">
+                <div class="form-group text-center pull-left">
+                  <button style="margin-top: 33px;" id="do_add_new_customer_btn" type="submit" class="btn btn-primary btn-sm"> أضف العميل</button>
+                
+                </div>
+              </div>
+              
+            </div>  
+            
+
+        
+
+
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>   
 
 
 </div>

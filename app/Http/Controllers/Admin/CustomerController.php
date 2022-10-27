@@ -133,6 +133,8 @@ class CustomerController extends Controller
         $data_insert_account['com_code'] = $com_code;
         $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
         $flag = insert(new Account(), $data_insert_account);
+
+        
       }
       return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
     } catch (\Exception $ex) {

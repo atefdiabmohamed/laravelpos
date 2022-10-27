@@ -1094,6 +1094,8 @@ $(document).ready(function () {
         alert("حدث خطاما");
       }
     });
+
+
   });
 
   function make_search() {
@@ -1173,6 +1175,8 @@ $(document).ready(function () {
     
     });
 
+  
+
 
 
   $('input[type=radio][name=searchbyradio]').change(function () {
@@ -1207,4 +1211,150 @@ $(document).ready(function () {
   $(document).on('change', '#invoice_date_to', function (e) {
     make_search();
   });
+  $(document).on('click', '#load_add_new_customer', function (e) {
+   e.preventDefault();
+   $("#load_add_new_customerModal").modal("show");
+
+
+});
+
+
+
+$(document).on('change','#start_balance_status',function(e){
+  if($(this).val()==""){
+    $("#start_balance").val("");
+  }else{
+    if($(this).val()==3){
+
+      $("#start_balance").val(0);
+    
+      }
+  }
+ 
+  });
+  $(document).on('input','#start_balance',function(e){
+   var start_balance_status=$("#start_balance_status").val();
+   if(start_balance_status==""){
+    alert("من فضلك اختر حالة الحساب اولا");
+    $(this).val("");
+    return false;
+   }
+   if($(this).val()==0 && start_balance_status!=3 ){
+    alert("يجب ادخال مبلغ اكبر من الصفر");
+    $(this).val("");
+    return false;
+   }
+   
+   
+  });
+
+  $(document).on('click','#do_add_new_customer_btn',function(e){
+var customer_name=$("#customer_name").val();
+if(customer_name==""){
+  alert("اسم العميل مطلوب ");
+  $("#customer_name").focus();
+  return false;
+}
+  
+var start_balance_status=$("#start_balance_status").val();
+if(start_balance_status==""){
+  alert("  حالة رصيد العميل اول المدة مطلوبة !!! ");
+  $("#start_balance_status").focus();
+  return false;
+}
+
+var start_balance=$("#start_balance").val();
+if(start_balance==""){
+  alert("   رصيد العميل اول المدة مطلوب !!! ");
+  $("#start_balance").focus();
+  return false;
+}
+if(start_balance_status==3 && start_balance!=0 ){
+  alert("   عفوا لابد ان يكون رصيد اول المده صفر في حالة الاتزان");
+  $("#start_balance").val(0);
+  $("#start_balance").focus();
+  return false;
+}
+
+
+var customer_active=$("#customer_active").val();
+if(customer_active==""){
+  alert("  حالة تفعيل العميل مطلوبة !!! ");
+  $("#customer_active").focus();
+  return false;
+}
+var customer_active=$("#customer_active").val();
+var customer_address=$("#customer_address").val();
+var customer_phones=$("#customer_phones").val();
+var customer_notes=$("#customer_notes").val();
+
+
+var token = $("#token_search").val();
+var url = $("#ajax_do_add_new_customer").val();
+var auto_serial = $(this).data("autoserial");
+jQuery.ajax({
+  url: url,
+  type: 'post',
+  dataType: 'json',
+  cache: false,
+  data: { "_token": token,
+  name: customer_name,
+  start_balance_status:start_balance_status,start_balance:start_balance,
+  active:customer_active,address:customer_address,phones:customer_phones,
+  notes:customer_notes
+
+
+
+},
+  success: function (data) {
+ if(data=="exsits"){
+  alert("عفوا اسم العميل مسجل من قبل");
+  $("#customer_name").focus();
+ }else{
+  $("#load_add_new_customerModal").modal("hide");
+  $("#customer_active").val("");
+ $("#customer_address").val("");
+$("#customer_phones").val("");
+$("#customer_notes").val("");
+$("#customer_name").val("");
+$("#start_balance").val(0);
+$("#customer_active").val(1);
+ get_last_added_customer();
+
+
+ }
+
+  },
+  error: function () {
+    alert("حدث خطاما");
+  }
+});
+
+
+});
+
+
+
+function get_last_added_customer(){
+  var token = $("#token_search").val();
+  var url = $("#ajax_getlastaddedcustomer").val();
+  var auto_serial = $(this).data("autoserial");
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'html',
+    cache: false,
+    data: { "_token": token },
+    success: function (data) {
+
+      $("#customer_codeDiv").html(data);
+     
+    },
+    error: function () {
+      alert("حدث خطاما");
+    }
+  });
+}
+
+
 });
