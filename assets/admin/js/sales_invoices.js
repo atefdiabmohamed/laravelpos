@@ -450,13 +450,13 @@ $(document).ready(function () {
     }
 
 
-    var customer_code = $("#customer_code_activeAdd").val();
+    var customer_code = $("#customer_code").val();
 
-    var is_has_customer = $("#is_has_customer_activeAdd").val();
+    var is_has_customer = $("#is_has_customer").val();
     if (is_has_customer == 1) {
       if (customer_code == "") {
         alert("من فضلك  اختر العميل");
-        $("#customer_code_activeAdd").focus();
+        $("#customer_code").focus();
         return false;
 
       }
@@ -482,7 +482,8 @@ $(document).ready(function () {
         sales_matrial_types: Sales_matrial_types_id, "_token": token
       },
       success: function (auto_serial) {
-        load_invoice_update_modal(auto_serial);
+       load_invoice_update_modal(auto_serial);
+       make_search();
 
       },
       error: function () {
@@ -506,9 +507,9 @@ $(document).ready(function () {
 
   });
 
-  $(document).on('change', '#is_has_customer_activeAdd', function (e) {
+  $(document).on('change', '#is_has_customer', function (e) {
 
-    $("#customer_code_activeAdd").val("");
+    $("#customer_code").val("");
     if ($(this).val() == 1) {
 
       $("#customer_codeDiv").show();
@@ -722,6 +723,10 @@ $(document).ready(function () {
 
 
   function recalcualte() {
+
+    if($("#Do_Add_new_active_invoice").length){
+      return false;
+    }
 
     var total_cost_items = 0;
     $(".item_total_array").each(function () {
@@ -1355,6 +1360,51 @@ function get_last_added_customer(){
     }
   });
 }
+$(document).on('input', '#searchbytextforcustomer', function (e) {
+var searchtext=$(this).val();
+var token = $("#token_search").val();
+var url = $("#ajax_searchforcustomer").val();
+jQuery.ajax({
+  url: url,
+  type: 'post',
+  dataType: 'html',
+  cache: false,
+  data: { "_token": token,searchtext:searchtext },
+  success: function (data) {
+
+    $("#searchbytextforcustomerDiv").html(data);
+   
+  },
+  error: function () {
+   
+  }
+});
+
+
+});
+
+$(document).on('input', '#searchforitem', function (e) {
+  var searchtext=$(this).val();
+  var token = $("#token_search").val();
+  var url = $("#ajax_searchforitems").val();
+  jQuery.ajax({
+    url: url,
+    type: 'post',
+    dataType: 'html',
+    cache: false,
+    data: { "_token": token,searchtext:searchtext },
+    success: function (data) {
+  
+      $("#searchforitemresultDiv").html(data);
+     
+    },
+    error: function () {
+     
+    }
+  });
+  
+  
+  });
 
 
 });
