@@ -24,7 +24,7 @@ use App\Http\Controllers\Admin\SalesInvoicesController;
 use App\Http\Controllers\Admin\DelegatesController;
 use App\Http\Controllers\Admin\Suppliers_with_ordersGeneralRetuen;
 use App\Http\Controllers\Admin\ItemcardBalanceController;
-
+use App\Http\Controllers\Admin\SalesReturnInvoicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -268,10 +268,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('/SalesInvoices/searchforcustomer', [SalesInvoicesController::class, 'searchforcustomer'])->name('admin.SalesInvoices.searchforcustomer');
     Route::post('/SalesInvoices/searchforitems', [SalesInvoicesController::class, 'searchforitems'])->name('admin.SalesInvoices.searchforitems');
 
-
-
-
     /*           sales Invoices   المبيعات                   */
+
+
 
     /*         start  delegates                */
     Route::get('/delegates/index', [DelegatesController::class, 'index'])->name('admin.delegates.index');
@@ -317,6 +316,43 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 
     /*          end    itemcardBalance               */
+
+
+
+    /*         start  sales Invoices   مرتجع المبيعات العام             */
+    Route::get('/SalesReturnInvoices/index', [SalesReturnInvoicesController::class, 'index'])->name('admin.SalesReturnInvoices.index');
+    Route::get('/SalesReturnInvoices/create', [SalesReturnInvoicesController::class, 'create'])->name('admin.SalesReturnInvoices.create');
+    Route::post('/SalesReturnInvoices/store', [SalesReturnInvoicesController::class, 'store'])->name('admin.SalesReturnInvoices.store');
+    Route::get('/SalesReturnInvoices/edit/{id}', [SalesReturnInvoicesController::class, 'edit'])->name('admin.SalesReturnInvoices.edit');
+    Route::post('/SalesReturnInvoices/update/{id}', [SalesReturnInvoicesController::class, 'update'])->name('admin.SalesReturnInvoices.update');
+    Route::get('/SalesReturnInvoices/delete/{id}', [SalesReturnInvoicesController::class, 'delete'])->name('admin.SalesReturnInvoices.delete');
+    Route::get('/SalesReturnInvoices/show/{id}', [SalesReturnInvoicesController::class, 'show'])->name('admin.SalesReturnInvoices.show');
+    Route::post('/SalesReturnInvoices/get_item_uoms', [SalesReturnInvoicesController::class, 'get_item_uoms'])->name('admin.SalesReturnInvoices.get_item_uoms');
+    Route::post('/SalesReturnInvoices/get_item_batches', [SalesReturnInvoicesController::class, 'get_item_batches'])->name('admin.SalesReturnInvoices.get_item_batches');
+    Route::post('/SalesReturnInvoices/get_item_unit_price', [SalesReturnInvoicesController::class, 'get_item_unit_price'])->name('admin.SalesReturnInvoices.get_item_unit_price');
+    Route::post('/SalesReturnInvoices/get_Add_new_item_row', [SalesReturnInvoicesController::class, 'get_Add_new_item_row'])->name('admin.SalesReturnInvoices.get_Add_new_item_row');
+    Route::post('/SalesReturnInvoices/load_modal_addMirror', [SalesReturnInvoicesController::class, 'load_modal_addMirror'])->name('admin.SalesReturnInvoices.load_modal_addMirror');
+    Route::post('/SalesReturnInvoices/load_modal_addActiveInvoice', [SalesReturnInvoicesController::class, 'load_modal_addActiveInvoice'])->name('admin.SalesReturnInvoices.load_modal_addActiveInvoice');
+    Route::post('/SalesReturnInvoices/store', [SalesReturnInvoicesController::class, 'store'])->name('admin.SalesReturnInvoices.store');
+    Route::post('/SalesReturnInvoices/load_invoice_update_modal', [SalesReturnInvoicesController::class, 'load_invoice_update_modal'])->name('admin.SalesReturnInvoices.load_invoice_update_modal');
+    Route::post('/SalesReturnInvoices/Add_item_to_invoice', [SalesReturnInvoicesController::class, 'Add_item_to_invoice'])->name('admin.SalesReturnInvoices.Add_item_to_invoice');
+    Route::post('/SalesReturnInvoices/reload_items_in_invoice', [SalesReturnInvoicesController::class, 'reload_items_in_invoice'])->name('admin.SalesReturnInvoices.reload_items_in_invoice');
+    Route::post('/SalesReturnInvoices/recalclate_parent_invoice', [SalesReturnInvoicesController::class, 'recalclate_parent_invoice'])->name('admin.SalesReturnInvoices.recalclate_parent_invoice');
+    Route::post('/SalesReturnInvoices/remove_active_row_item', [SalesReturnInvoicesController::class, 'remove_active_row_item'])->name('admin.SalesReturnInvoices.remove_active_row_item');
+    Route::post('/SalesReturnInvoices/DoApproveInvoiceFinally', [SalesReturnInvoicesController::class, 'DoApproveInvoiceFinally'])->name('admin.SalesReturnInvoices.DoApproveInvoiceFinally');
+    Route::post('/SalesReturnInvoices/load_usershiftDiv', [SalesReturnInvoicesController::class, 'load_usershiftDiv'])->name('admin.SalesReturnInvoices.load_usershiftDiv');
+    Route::post('/SalesReturnInvoices/load_invoice_details_modal', [SalesReturnInvoicesController::class, 'load_invoice_details_modal'])->name('admin.SalesReturnInvoices.load_invoice_details_modal');
+    Route::post('/SalesReturnInvoices/ajax_search', [SalesReturnInvoicesController::class, 'ajax_search'])->name('admin.SalesReturnInvoices.ajax_search');
+    Route::post('/SalesReturnInvoices/do_add_new_customer', [SalesReturnInvoicesController::class, 'do_add_new_customer'])->name('admin.SalesReturnInvoices.do_add_new_customer');
+    Route::post('/SalesReturnInvoices/get_last_added_customer', [SalesReturnInvoicesController::class, 'get_last_added_customer'])->name('admin.SalesReturnInvoices.get_last_added_customer');
+    Route::post('/SalesReturnInvoices/searchforcustomer', [SalesReturnInvoicesController::class, 'searchforcustomer'])->name('admin.SalesReturnInvoices.searchforcustomer');
+    Route::post('/SalesReturnInvoices/searchforitems', [SalesReturnInvoicesController::class, 'searchforitems'])->name('admin.SalesReturnInvoices.searchforitems');
+
+    /*           sales Invoices   المبيعات                   */
+
+    
+
+
 
 
 });

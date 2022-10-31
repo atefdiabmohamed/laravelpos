@@ -235,8 +235,8 @@
 
         
 
-              <li class="nav-item has-treeview {{ (request()->is('admin/SalesInvoices*'))?'menu-open':'' }}     ">
-                <a href="#" class="nav-link {{ (request()->is('admin/SalesInvoices*') )?'active':'' }}">
+              <li class="nav-item has-treeview {{ (request()->is('admin/SalesInvoices*') || request()->is('admin/SalesReturnInvoices*'))?'menu-open':'' }}     ">
+                <a href="#" class="nav-link {{ (request()->is('admin/SalesInvoices*') || request()->is('admin/SalesReturnInvoices*') )?'active':'' }}">
                    <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                 المبيعات
@@ -254,6 +254,14 @@
                     </a>
                   </li>
 
+                  <li class="nav-item">
+                    <a href="{{ route('admin.SalesReturnInvoices.index') }}" class="nav-link {{ (request()->is('admin/SalesReturnInvoices*') )?'active':'' }}">
+                     
+                      <p>
+          مرتجع المبيعات العام         
+                      </p>
+                    </a>
+                  </li>
                 
                 </ul>
               </li>

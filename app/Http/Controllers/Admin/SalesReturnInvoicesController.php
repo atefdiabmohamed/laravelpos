@@ -1,8 +1,8 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Sales_invoices;
 use App\Models\Admin;
 use App\Models\Sales_matrial_types;
 use App\Models\Customer;
@@ -14,19 +14,21 @@ use App\Models\Treasuries_transactions;
 use App\Models\Treasuries;
 use App\Models\Admins_Shifts;
 use App\Models\Delegate;
-use App\Models\Sales_invoices_details;
+use App\Models\SalesReturn;
+use App\Models\SalesReturnDetails;
 use App\Models\Inv_itemcard_movements;
 use App\Models\Account;
 use App\Models\Supplier;
 use App\Models\Suppliers_with_orders;
 use App\Models\Admin_panel_setting;
-class SalesInvoicesController extends Controller
+class SalesReturnInvoicesController extends Controller
 {
-    
+ 
+  
 public function index()
 {
 $com_code = auth()->user()->com_code;
-$data = get_cols_where_p(new Sales_invoices(), array("*"), array("com_code" => $com_code), "id", "DESC", PAGINATION_COUNT);
+$data = get_cols_where_p(new SalesReturn(), array("*"), array("com_code" => $com_code), "id", "DESC", PAGINATION_COUNT);
 if (!empty($data)) {
 foreach ($data as $info) {
 $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
@@ -41,7 +43,7 @@ $info->customer_name = "بدون عميل";
 $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1));
 $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "active" => 1));
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "active" => 1));
-return view("admin.sales_invoices.index", ['data' => $data, 'delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types]);
+return view("admin.sales_return_invoices.index", ['data' => $data, 'delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types]);
 }
 public function get_item_uoms(Request $request)
 {
@@ -57,7 +59,7 @@ $item_card_Data['retial_uom_name'] = get_field_value(new Inv_uom(), "name", arra
 $item_card_Data['parent_uom_name'] = get_field_value(new Inv_uom(), "name", array("id" => $item_card_Data['uom_id']));
 }
 }
-return view("admin.sales_invoices.get_item_uoms", ['item_card_Data' => $item_card_Data]);
+return view("admin.sales_return_invoices.get_item_uoms", ['item_card_Data' => $item_card_Data]);
 }
 }
 //مرآة فاتوةر موقته للعميل لاتؤثر علي اي شيء  مجرد عرض سعر 
@@ -68,7 +70,7 @@ if ($request->ajax()) {
 $item_cards = get_cols_where(new Inv_itemCard(), array("item_code", "name", "item_type"), array("com_code" => $com_code, "active" => 1));
 $stores = get_cols_where(new Store(), array("id", "name"), array("com_code" => $com_code, "active" => 1), 'id', 'ASC');
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
-return view("admin.sales_invoices.loadModalAddInvoiceMirror", ['item_cards' => $item_cards, 'stores' => $stores, 'user_shift' => $user_shift]);
+return view("admin.sales_return_invoices.loadModalAddInvoiceMirror", ['item_cards' => $item_cards, 'stores' => $stores, 'user_shift' => $user_shift]);
 }
 }
 //عرض صفحة اضافة فاتورة مبيعات فعلية ذات الخصم اللحظي للأصناف من المخازن  
@@ -78,7 +80,7 @@ $com_code = auth()->user()->com_code;
 if ($request->ajax()) {
 $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1));
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "active" => 1));
-return view("admin.sales_invoices.load_modal_addActiveInvoice", [
+return view("admin.sales_return_invoices.load_modal_addActiveInvoice", [
 'delegates' => $delegates, 'Sales_matrial_types' => $Sales_matrial_types
 ]);
 }
@@ -113,7 +115,7 @@ array("com_code" => $com_code, "store_id" => $requesed['store_id'], "item_code" 
 'ASC'
 );
 }
-return view("admin.sales_invoices.get_item_batches", ['item_card_Data' => $item_card_Data, 'requesed' => $requesed, 'uom_Data' => $uom_Data, 'inv_itemcard_batches' => $inv_itemcard_batches]);
+return view("admin.sales_return_invoices.get_item_batches", ['item_card_Data' => $item_card_Data, 'requesed' => $requesed, 'uom_Data' => $uom_Data, 'inv_itemcard_batches' => $inv_itemcard_batches]);
 }
 }
 }
@@ -172,7 +174,7 @@ $received_data['item_code_name'] = $request->item_code_name;
 $received_data['sales_item_type_name'] = $request->sales_item_type_name;
 $received_data['is_normal_orOther_name'] = $request->is_normal_orOther_name;
 $received_data['isparentuom'] = $request->isparentuom;
-return view('admin.sales_invoices.get_Add_new_item_row', ['received_data' => $received_data]);
+return view('admin.sales_return_invoices.get_Add_new_item_row', ['received_data' => $received_data]);
 }
 }
 public function store(Request $request)
@@ -180,13 +182,14 @@ public function store(Request $request)
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
 //حنعمل اضافة للفاتورة اول مرة 
-$last_auto_serial_Date = get_cols_where_row_orderby(new Sales_invoices(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
+$last_auto_serial_Date = get_cols_where_row_orderby(new SalesReturn(), array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
 if (!empty($last_auto_serial_Date)) {
 $data_insert['auto_serial'] = $last_auto_serial_Date['auto_serial'] + 1;
 } else {
 $data_insert['auto_serial'] = 1;
 }
 $data_insert['invoice_date'] = $request->invoice_date;
+$data_insert['return_type'] = 2;
 $data_insert['is_has_customer'] = $request->is_has_customer;
 if ($request->is_has_customer == 1) {
 $data_insert['customer_code'] = $request->customer_code;
@@ -198,7 +201,7 @@ $data_insert['added_by'] = auth()->user()->id;
 $data_insert['created_at'] = date("Y-m-d H:i:s");
 $data_insert['date'] = date("Y-m-d");
 $data_insert['com_code'] = $com_code;
-$flag = insert(new Sales_invoices(), $data_insert, false);
+$flag = insert(new SalesReturn(), $data_insert, false);
 if ($flag) {
 echo  json_encode($data_insert['auto_serial']);
 }
@@ -208,13 +211,13 @@ public function load_invoice_update_modal(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 $stores = get_cols_where(new Store(), array("id", "name"), array("com_code" => $com_code, "active" => 1), 'id', 'ASC');
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
 $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1));
 $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "active" => 1));
-$sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
+$sales_invoices_details = get_cols_where(new SalesReturnDetails(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
 if (!empty($sales_invoices_details)) {
 foreach ($sales_invoices_details  as $info) {
 $info->store_name = get_field_value(new Store(), "name", array("com_code" => $com_code, "id" => $info->store_id));
@@ -222,7 +225,7 @@ $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" 
 $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
 }
 }
-return view("admin.sales_invoices.load_invoice_update_modal", ['stores' => $stores, 'user_shift' =>
+return view("admin.sales_return_invoices.load_invoice_update_modal", ['stores' => $stores, 'user_shift' =>
 $user_shift, 'delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types, 'invoice_data' => $invoice_data, 'sales_invoices_details' => $sales_invoices_details]);
 }
 }
@@ -231,7 +234,7 @@ public function Add_item_to_invoice(Request $request)
 try {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "invoice_date", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->invoiceautoserial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("is_approved", "invoice_date", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->invoiceautoserial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
@@ -256,7 +259,7 @@ $datainsert_items['added_by'] = auth()->user()->id;
 $datainsert_items['created_at'] = date("Y-m-d H:i:s");
 $datainsert_items['date'] = date("Y-m-d");
 $datainsert_items['com_code'] = $com_code;
-$flag_datainsert_items = insert(new Sales_invoices_details(), $datainsert_items, true);
+$flag_datainsert_items = insert(new SalesReturnDetails(), $datainsert_items, true);
 if (!empty($flag_datainsert_items)) {
 //خصم الكمية من الباتش 
 //كمية الصنف بكل المخازن قبل الحركة
@@ -361,7 +364,7 @@ function reload_items_in_invoice(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
+$sales_invoices_details = get_cols_where(new SalesReturnDetails(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
 if (!empty($sales_invoices_details)) {
 foreach ($sales_invoices_details  as $info) {
 $info->store_name = get_field_value(new Store(), "name", array("com_code" => $com_code, "id" => $info->store_id));
@@ -369,14 +372,14 @@ $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" 
 $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
 }
 }
-return view("admin.sales_invoices.reload_items_in_invoice", ['sales_invoices_details' => $sales_invoices_details]);
+return view("admin.sales_return_invoices.reload_items_in_invoice", ['sales_invoices_details' => $sales_invoices_details]);
 }
 }
 function recalclate_parent_invoice(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $dataUpdateParent['invoice_date'] = $request->invoice_date;
@@ -400,7 +403,7 @@ $dataUpdateParent['total_cost'] = $request->total_cost;
 $dataUpdateParent['notes'] = $request->notes;
 $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
 $dataUpdateParent['updated_by'] = auth()->user()->com_code;
-update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+update(new SalesReturn(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 echo json_encode("done");
 }
 }
@@ -410,10 +413,10 @@ function remove_active_row_item(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("is_approved", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
-$sales_invoices_details_data = get_cols_where_row(new Sales_invoices_details(), array("batch_auto_serial", "quantity", "item_code", "store_id"), array("com_code" => $com_code, "id" => $request->id));
+$sales_invoices_details_data = get_cols_where_row(new SalesReturnDetails(), array("batch_auto_serial", "quantity", "item_code", "store_id"), array("com_code" => $com_code, "id" => $request->id));
 if (!empty($sales_invoices_details_data)) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $sales_invoices_details_data['batch_auto_serial']));
 if (!empty($batch_data)) {
@@ -421,7 +424,7 @@ $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_
 if (!empty($itemCard_Data)) {
 $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 //حذف السطر من تفاصيل الفاتورة
-$flag = delete(new Sales_invoices_details(), array("com_code" => $com_code, "id" => $request->id));
+$flag = delete(new SalesReturnDetails(), array("com_code" => $com_code, "id" => $request->id));
 if ($flag) {
 //رد الكمية الي الباتش 
 //كمية الصنف بكل المخازن قبل الحركة
@@ -519,13 +522,13 @@ $com_code = auth()->user()->com_code;
 //current user shift
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
 }
-return view("admin.sales_invoices.load_usershiftDiv", ['user_shift' => $user_shift]);
+return view("admin.sales_return_invoices.load_usershiftDiv", ['user_shift' => $user_shift]);
 }
 function DoApproveInvoiceFinally(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "pill_type", "total_cost", "customer_code", "is_has_customer"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("is_approved", "pill_type", "total_cost", "customer_code", "is_has_customer"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $dataUpdateParent['money_for_account'] = $invoice_data['total_cost'];
@@ -539,7 +542,7 @@ if ($invoice_data['is_has_customer'] == 1) {
 $customerData = get_cols_where_row(new Customer(), "account_number", array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
 $dataUpdateParent['account_number'] = $customerData['account_number'];
 }
-$flag = update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$flag = update(new SalesReturn(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if ($flag) {
 if ($request->what_paid > 0) {
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
@@ -578,7 +581,7 @@ update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "
 }
 if ($invoice_data['is_has_customer'] == 1) {
 //Affect on Customer Finanical Account Balance
-refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(), false);
+refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new SalesReturn(), false);
 }
 echo json_encode("done");
 }
@@ -590,11 +593,11 @@ public function delete($id)
 {
 try {
 $com_code = auth()->user()->com_code;
-$SalesInvoiceData = get_cols_where_row(new Sales_invoices(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code));
+$SalesInvoiceData = get_cols_where_row(new SalesReturn(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code));
 if (!empty($SalesInvoiceData)) {
-$flag = delete(new Sales_invoices(), array("id" => $id, "com_code" => $com_code));
+$flag = delete(new SalesReturn(), array("id" => $id, "com_code" => $com_code));
 if ($flag) {
-delete(new Sales_invoices_details(), array("sales_invoices_auto_serial" => $SalesInvoiceData['auto_serial'], "com_code" => $com_code));
+delete(new SalesReturnDetails(), array("sales_invoices_auto_serial" => $SalesInvoiceData['auto_serial'], "com_code" => $com_code));
 return redirect()->back()
 ->with(['success' => '   تم حذف البيانات بنجاح']);
 } else {
@@ -614,13 +617,13 @@ public function load_invoice_details_modal(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("*"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
 if ($invoice_data['is_has_customer'] == 1) {
 $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
 }
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "id" => $invoice_data['sales_matrial_types']));
-$sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
+$sales_invoices_details = get_cols_where(new SalesReturnDetails(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
 if (!empty($sales_invoices_details)) {
 foreach ($sales_invoices_details  as $info) {
 $info->store_name = get_field_value(new Store(), "name", array("com_code" => $com_code, "id" => $info->store_id));
@@ -628,7 +631,7 @@ $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" 
 $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
 }
 }
-return view("admin.sales_invoices.load_invoice_details_modal", ['delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types, 'invoice_data' => $invoice_data, 'sales_invoices_details' => $sales_invoices_details]);
+return view("admin.sales_return_invoices.load_invoice_details_modal", ['delegates' => $delegates, 'customers' => $customers, 'Sales_matrial_types' => $Sales_matrial_types, 'invoice_data' => $invoice_data, 'sales_invoices_details' => $sales_invoices_details]);
 }
 }
 public function ajax_search(Request $request)
@@ -754,7 +757,7 @@ $field9 = "id";
 $operator9 = ">";
 $value9 = 0;
 }
-$data = Sales_invoices::where($field1, $operator1, $value1)->
+$data = SalesReturn::where($field1, $operator1, $value1)->
 where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where
 ($field4, $operator4, $value4)->
 where($field5, $operator5, $value5)->
@@ -776,7 +779,7 @@ $info->customer_name = "بدون عميل";
 }
 }
 }
-return view('admin.sales_invoices.ajax_search', ['data' => $data]);
+return view('admin.sales_return_invoices.ajax_search', ['data' => $data]);
 }
 }
 public function do_add_new_customer(Request $request){
@@ -879,7 +882,7 @@ public function get_last_added_customer(Request $request){
 if($request->ajax()){
 $com_code=auth()->user()->com_code;
 $customers=get_cols_where_limit(new Customer(),array("customer_code","name"),array("com_code"=>$com_code),'id','DESC',1);
-return view('admin.sales_invoices.get_last_added_customer',['customers'=>$customers]);
+return view('admin.sales_return_invoices.get_last_added_customer',['customers'=>$customers]);
 }
 }
 public function searchforcustomer(Request $request){
@@ -891,7 +894,7 @@ $customers=Customer::where('name','like',"%{$searchtext}%")->orWhere('customer_c
 }else{
 $customers=array();
 }
-return view('admin.sales_invoices.get_searchforcustomer_result',['customers'=>$customers]);
+return view('admin.sales_return_invoices.get_searchforcustomer_result',['customers'=>$customers]);
 }
 }
 public function searchforitems(Request $request){
@@ -903,7 +906,8 @@ $item_cards=Inv_itemCard::where('name','like',"%{$searchtext}%")->orWhere('barco
 }else{
 $item_cards=array();
 }
-return view('admin.sales_invoices.searchforitemsResult',['item_cards'=>$item_cards]);
+return view('admin.sales_return_invoices.searchforitemsResult',['item_cards'=>$item_cards]);
 }
-}
+}  
+
 }
