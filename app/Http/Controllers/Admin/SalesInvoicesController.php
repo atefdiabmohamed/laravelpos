@@ -19,10 +19,10 @@ use App\Models\Inv_itemcard_movements;
 use App\Models\Account;
 use App\Models\Supplier;
 use App\Models\Suppliers_with_orders;
+use App\Models\SalesReturn;
 use App\Models\Admin_panel_setting;
 class SalesInvoicesController extends Controller
 {
-    
 public function index()
 {
 $com_code = auth()->user()->com_code;
@@ -413,7 +413,7 @@ $com_code = auth()->user()->com_code;
 $invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
-$sales_invoices_details_data = get_cols_where_row(new Sales_invoices_details(), array("batch_auto_serial", "quantity", "item_code", "store_id"), array("com_code" => $com_code, "id" => $request->id));
+$sales_invoices_details_data = get_cols_where_row(new Sales_invoices_details(), array("batch_auto_serial", "quantity", "item_code", "store_id","isparentuom"), array("com_code" => $com_code, "id" => $request->id));
 if (!empty($sales_invoices_details_data)) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $sales_invoices_details_data['batch_auto_serial']));
 if (!empty($batch_data)) {
@@ -442,9 +442,16 @@ array(
 'store_id' => $sales_invoices_details_data['store_id']
 )
 );
+if($sales_invoices_details_data['isparentuom']==1){
+//حنرد بشكل مباشر لانه بنفس وحده الباتش الاب
+$item_quantityByParentUom =$sales_invoices_details_data['quantity'];
+}else{
+//مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل ردها للمخزن انتبه !!
+$item_quantityByParentUom=$sales_invoices_details_data['quantity']/$itemCard_Data['retail_uom_quntToParent'];
+}
 //هنا هنرد الكمية لحظيا الي باتش الصنف
 //update current Batch تحديث علي الباتش القديمة
-$dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $sales_invoices_details_data['quantity'];
+$dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_quantityByParentUom;
 $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
 $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
 $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
@@ -578,7 +585,7 @@ update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "
 }
 if ($invoice_data['is_has_customer'] == 1) {
 //Affect on Customer Finanical Account Balance
-refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(), false);
+refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), false);
 }
 echo json_encode("done");
 }

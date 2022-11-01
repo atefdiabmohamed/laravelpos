@@ -86,7 +86,7 @@
    </div>
    <div class="col-md-3" >
       <div class="form-group">
-         <label>    نوع البيع</label>
+         <label>    نوع المرتجع</label>
          <select name="sales_item_type" id="sales_item_type" class="form-control ">
             <option value="1">قطاعي</option>
             <option value="2">نص جملة</option>
@@ -107,22 +107,22 @@
    <!--  الوحدات للصنف-->
    <div class="col-md-3  " style="display: none;" id="UomDiv">
    </div>
-   <!--   باتشات الكميات بالمخازن-->
-   <div class="col-md-6  " style="display: none;" id="inv_itemcard_batchesDiv">
-   </div>
+  <!--   باتشات الكميات بالمخازن-->
+  <div class="col-md-6  " style="display: none;" id="inv_itemcard_batchesDiv">
+</div>
    <div class="col-md-3  "
    <div class="form-group">
-      <label> الكمية</label>
+      <label> الكمية المرتجعة</label>
       <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_quantity" id="item_quantity" class="form-control"  value="1"   >
    </div>
    <div class="col-md-3  "
    <div class="form-group">
-      <label> السعر</label>
+      <label> سعر المرتجع</label>
       <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_price" id="item_price" class="form-control"  value=""   >
    </div>
    <div class="col-md-3" >
       <div class="form-group">
-         <label> هل بيع عادي</label>
+         <label> هل  مرتجع عادي</label>
          <select name="is_normal_orOther" id="is_normal_orOther" class="form-control ">
             <option value="1">عادي</option>
             <option value="2">بونص </option>
@@ -131,14 +131,33 @@
          </select>
       </div>
    </div>
+   <div class="col-md-3  " id="unit_cost_priceDiv">
+   <div class="form-group">
+      <label> سعر تكلفة شراء الوحدة</label>
+      <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="unit_cost_price" id="unit_cost_price" class="form-control"  value=""   >
+   </div>
+</div>
+   <div class="col-md-3 relatedtoDateproExp" style="display: none;">
+      <div class="form-group">
+       <label>   تاريخ الانتاج</label>
+       <input type="date"    id="production_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+       </div>
+     </div>
+  
+     <div class="col-md-3 relatedtoDateproExp" style="display: none;">
+      <div class="form-group">
+       <label>   تاريخ انتهاء الصلاحية</label>
+       <input type="date"    id="expire_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+       </div>
+     </div>
    <div class="col-md-3  "
    <div class="form-group">
       <label> الاجمالي</label>
       <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="item_total" id="item_total" class="form-control"  value=""   >
    </div>
-   <div class="col-md-2  "
-   <div class="form-group">
-      <button style="margin-top:35px" class="btn btn-sm btn-success" id="AddItemToIvoiceDetailsActive">أضف الصنف فعليا </button>  
+   <div class="col-md-3  "
+   <div class="form-group " style="text-align: right">
+      <button style="margin-top:35px" class="btn btn-sm btn-success " id="AddItemToIvoiceDetailsActive">أضف الصنف فعليا </button>  
    </div>
 </div>
 <div class="clearfix"></div>
@@ -243,7 +262,7 @@
 <div class="row" id="shiftDiv">
    <div class="col-md-3">
       <div class="form-group">
-         <label>    خزنة التحصيل  </label>
+         <label>    خزنة الصرف  </label>
          <select id="treasuries_id" name="treasuries_id" class="form-control">
             @if(!@empty($user_shift))
             <option selected value="{{ $user_shift['treasuries_id']  }}"> {{ $user_shift['name'] }} </option>
@@ -277,12 +296,12 @@
    </div>
    <div class="col-md-3 > 
       <div class="form-group">
-      <label>    المحصل  الان   </label>
+      <label>    المصروف  الان   </label>
       <input   name="what_paid" id="what_paid" class="form-control"  @if($invoice_data['pill_type']==1)  readonly  @endif"  value="@if($invoice_data['pill_type']==1) {{$invoice_data['total_cost']*1  }} @else 0 @endif"    >
    </div>
    <div class="col-md-3 > 
       <div class="form-group">
-      <label>    المتبقي تحصيله    </label>
+      <label>    المتبقي صرفه    </label>
       <input readonly   name="what_remain" id="what_remain" class="form-control"   value="@if($invoice_data['pill_type']==1) 0 @else {{$invoice_data['what_remain']*1  }}  @endif"     >
    </div>
    <div class="col-md-6 ">

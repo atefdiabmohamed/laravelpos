@@ -148,7 +148,7 @@ if($returnFlag){
 
 
 //get Account Balance دالة احتساب وتحديث رصيد الحساب المالي للعميل  
-function refresh_account_blance_customer($account_number=null,$AccountModel=null,$customerModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$returnFlag=false){
+function refresh_account_blance_customer($account_number=null,$AccountModel=null,$customerModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$SalesReturnModel=null,$returnFlag=false){
   $com_code=auth()->user()->com_code;
  //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
   $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
@@ -157,9 +157,10 @@ function refresh_account_blance_customer($account_number=null,$AccountModel=null
 
     //صافي مجموع المبيعات والمرتجعات للمورد   
 $the_net_sales_invoicesForCustomer=$SalesinvoiceModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
-    //لسه مستقبلا حنجيب من جدول مرتجع المبيعات بس لما نعمله
+    //    صافي  مرتجع المبيعات بس لما نعمله
+    $the_net_sales_invoicesReturnForCustomer=$SalesReturnModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
 
-$the_net_sales_invoicesReturnForCustomer=0;
+
 
 //صافي حركة النقديه بالخزن علي حساب العميل
 $the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");

@@ -1,7 +1,10 @@
 @if (@isset($item_card_Data) && !@empty($item_card_Data))
 <div class="form-group"> 
-    <label>      الكميات بالمخزن المحدد</label>
-    <select  id="inv_itemcard_batches_autoserial" class="form-control " style="width: 100%;">
+    <label>       الكميات بالمخزن المحدد 
+      @if (@isset($inv_itemcard_batches) && !@empty($inv_itemcard_batches) && count($inv_itemcard_batches)>0)
+       يوجد {{ $inv_itemcard_batches->count() }} باتش  @endif</label>
+    <select   id="inv_itemcard_batches_autoserial" class="form-control " style="width: 100%;">
+    <option value="">ادخلها بباتش جديد</option>
       @if (@isset($inv_itemcard_batches) && !@empty($inv_itemcard_batches) && count($inv_itemcard_batches)>0)
      <!-- لو كان مختار الوحده الاب يبقي الشغل علي وضعه لانه الكميات اساسا بالمخزن بالوحده الاب -->
       @if($uom_Data['is_master']==1)
@@ -44,9 +47,11 @@
     
 
 
-
-    
+   @else
+    <option value="">عفوا لاتوجد باتشات</option>
     @endif
+
+   
     </select>
    
     </div>

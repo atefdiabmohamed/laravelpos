@@ -129,6 +129,7 @@ $(document).ready(function () {
 
   }
 
+  
   $(document).on('change', '#uom_id', function (e) {
     get_inv_itemcard_batches();
   });
