@@ -35,12 +35,35 @@
           <div class="col-md-4">
             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code"> برقم العميل
             <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
-
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
-
             <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود العميل" class="form-control"> <br>
             
                       </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group"> 
+                          <label>  بحث بحالة الرصيد</label>
+                          <select name="searchByBalanceStatus" id="searchByBalanceStatus" class="form-control">
+                            <option   value="all"> بحث بالكل</option>
+                            <option   value="1"> دائن</option>
+                            <option  value="2"> مدين</option>
+                            <option    value="3"> متزن</option>
+                          </select>
+                         
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group"> 
+                            <label>  بحث بحالة التفعيل</label>
+                            <select name="searchByactiveStatus" id="searchByactiveStatus" class="form-control">
+                              <option   value="all"> بحث بالكل</option> 
+                              <option   value="1"> مفعل</option>
+                              <option  value="0"> معطل</option>
+                            </select>
+                           
+                            </div>
+                          </div>
+  
                      
                           </div>
                <div class="clearfix"></div>

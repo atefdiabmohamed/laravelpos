@@ -32,7 +32,12 @@ $(document).on('change','#start_balance_status',function(e){
   $(document).on('input','#search_by_text',function(e){
     make_search();
   });
-
+  $(document).on('input','#searchByactiveStatus',function(e){
+    make_search();
+  });
+  $(document).on('input','#searchByBalanceStatus',function(e){
+    make_search();
+  });
 
   $('input[type=radio][name=searchbyradio]').change(function() {
     make_search();
@@ -42,6 +47,8 @@ $(document).on('change','#start_balance_status',function(e){
 
   function make_search(){
     var search_by_text=$("#search_by_text").val();
+    var searchByBalanceStatus=$("#searchByBalanceStatus").val();
+    var searchByactiveStatus=$("#searchByactiveStatus").val();
     var searchbyradio=$("input[type=radio][name=searchbyradio]:checked").val();
     var token_search=$("#token_search").val();
     var ajax_search_url=$("#ajax_search_url").val();
@@ -51,7 +58,9 @@ $(document).on('change','#start_balance_status',function(e){
       type:'post',
       dataType:'html',
       cache:false,
-      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio},
+      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio,searchByactiveStatus:searchByactiveStatus
+    ,searchByBalanceStatus:searchByBalanceStatus
+    },
       success:function(data){
      
        $("#ajax_responce_serarchDiv").html(data);
@@ -66,6 +75,8 @@ $(document).on('change','#start_balance_status',function(e){
   $(document).on('click','#ajax_pagination_in_search a ',function(e){
     e.preventDefault();
     var search_by_text=$("#search_by_text").val();
+    var searchByBalanceStatus=$("#searchByBalanceStatus").val();
+    var searchByactiveStatus=$("#searchByactiveStatus").val();
     var searchbyradio=$("input[type=radio][name=searchbyradio]:checked").val();
     var token_search=$("#token_search").val();
     var url=$(this).attr("href");
@@ -75,7 +86,9 @@ $(document).on('change','#start_balance_status',function(e){
       type:'post',
       dataType:'html',
       cache:false,
-      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio},
+      data:{search_by_text:search_by_text,"_token":token_search,searchbyradio:searchbyradio,searchByactiveStatus:searchByactiveStatus
+      ,searchByactiveStatus:searchByactiveStatus
+      },
       success:function(data){
      
        $("#ajax_responce_serarchDiv").html(data);
