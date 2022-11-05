@@ -443,6 +443,15 @@ $(document).ready(function () {
       $("#invoice_date_activeAdd").focus();
       return false;
     }
+
+    var sales_item_type_main = $("#sales_item_type_main").val();
+
+    if (sales_item_type_main == "") {
+      alert("من فضلك  اختر نوع بيع الفاتورة");
+      $("#sales_item_type_main").focus();
+      return false;
+    }
+
     var Sales_matrial_types_id = $("#Sales_matrial_types_id_activeAdd").val();
     if (Sales_matrial_types_id == "") {
       alert("من فضلك اختر فئة الفاتورة");
@@ -479,7 +488,8 @@ $(document).ready(function () {
       cache: false,
       data: {
         invoice_date: invoice_date, customer_code: customer_code,
-        is_has_customer: is_has_customer, delegate_code: delegate_code, pill_type: pill_type,
+        is_has_customer: is_has_customer, delegate_code: delegate_code,
+         pill_type: pill_type,sales_item_type_main:sales_item_type_main,
         sales_matrial_types: Sales_matrial_types_id, "_token": token
       },
       success: function (auto_serial) {
@@ -736,6 +746,16 @@ make_enter_add();
       return false;
     }
 
+    if($(".remove_active_row_item").length){ 
+   $("#sales_item_type_mainUpdate").prop('disabled',true)
+    }else{
+      $("#sales_item_type_mainUpdate").prop('disabled',false)
+
+    }
+
+
+var sales_item_type_mainUpdate=$("#sales_item_type_mainUpdate").val();
+
     var total_cost_items = 0;
     $(".item_total_array").each(function () {
       total_cost_items += parseFloat($(this).val());
@@ -825,8 +845,10 @@ make_enter_add();
         total_befor_discount: total_befor_discount,
         discount_type: discount_type, discount_percent: discount_percent,
         discount_value: discount_value, total_cost: total_cost,
-        notes: notes, invoice_date: invoice_date, is_has_customer: is_has_customer, pill_type: pill_type,
-        customer_code: customer_code, delegate_code: delegate_code, Sales_matrial_types_id: Sales_matrial_types_id
+        notes: notes, invoice_date: invoice_date, is_has_customer: is_has_customer, 
+        pill_type: pill_type,
+        customer_code: customer_code, delegate_code: delegate_code,
+         Sales_matrial_types_id: Sales_matrial_types_id,sales_item_type:sales_item_type_mainUpdate
       },
       success: function (data) {
 
@@ -1420,8 +1442,17 @@ $(document).on('input', '#searchforitem', function (e) {
 
   make_enter_add();
  }
+});
 
+$(document).on('change', '#sales_item_type_mainUpdate', function (e) {
+if(!$(".remove_active_row_item").length){
+var sales_item_type_parent=$(this).val();
+$("#sales_item_type").val(sales_item_type_parent);
+}
+recalcualte();
 
 
 });
+
+
 });

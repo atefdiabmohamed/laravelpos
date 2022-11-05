@@ -7,6 +7,16 @@
                      </div>
                   </div>
                   <div class="col-md-4" >
+                    <div class="form-group">
+                       <label>    نوع الفاتورة</label>
+                       <select  disabled       name="sales_item_type_mainUpdate" id="sales_item_type_mainUpdate" class="form-control ">
+                          <option @if($invoice_data['sales_item_type']==1) selected @endif value="1">قطاعي</option>
+                          <option  @if($invoice_data['sales_item_type']==2) selected @endif  value="2">نص جملة</option>
+                          <option  @if($invoice_data['sales_item_type']==3) selected @endif  value="3">جملة</option>
+                       </select>
+                    </div>
+                 </div>
+                  <div class="col-md-4" >
                     <div class="form-group"> 
                      <label>    فئات الفواتير</label>
                      <select disabled  class="form-control ">

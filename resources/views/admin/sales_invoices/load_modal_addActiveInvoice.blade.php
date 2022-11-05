@@ -11,6 +11,16 @@
                      </div>
                   </div>
                   <div class="col-md-4" >
+                    <div class="form-group">
+                       <label>    نوع  الفاتورة</label>
+                       <select  name="sales_item_type_main" id="sales_item_type_main" class="form-control ">
+                          <option value="1">قطاعي</option>
+                          <option value="2">نص جملة</option>
+                          <option value="3">جملة</option>
+                       </select>
+                    </div>
+                 </div>
+                  <div class="col-md-4" >
                     <div class="form-group"> 
                      <label>    فئات الفواتير</label>
                      <select name="Sales_matrial_types_id" id="Sales_matrial_types_id_activeAdd" class="form-control select2">

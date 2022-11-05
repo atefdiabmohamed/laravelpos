@@ -192,6 +192,7 @@ if ($request->is_has_customer == 1) {
 $data_insert['customer_code'] = $request->customer_code;
 }
 $data_insert['delegate_code'] = $request->delegate_code;
+$data_insert['sales_item_type']=$request->sales_item_type_main;
 $data_insert['sales_matrial_types'] = $request->sales_matrial_types;
 $data_insert['pill_type'] = $request->pill_type;
 $data_insert['added_by'] = auth()->user()->id;
@@ -387,6 +388,7 @@ $dataUpdateParent['customer_code'] = $request->customer_code;
 $dataUpdateParent['customer_code'] = null;
 }
 $dataUpdateParent['delegate_code'] = $request->delegate_code;
+$dataUpdateParent['sales_item_type'] = $request->sales_item_type;
 $dataUpdateParent['pill_type'] = $request->pill_type;
 $dataUpdateParent['Sales_matrial_types'] = $request->Sales_matrial_types_id;
 $dataUpdateParent['total_cost_items'] = $request->total_cost_items;
@@ -528,11 +530,12 @@ $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuri
 }
 return view("admin.sales_invoices.load_usershiftDiv", ['user_shift' => $user_shift]);
 }
+
 function DoApproveInvoiceFinally(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "pill_type", "total_cost", "customer_code", "is_has_customer"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
+$invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "pill_type", "total_cost", "customer_code", "is_has_customer","delegate_code","sales_item_type"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $dataUpdateParent['money_for_account'] = $invoice_data['total_cost'];
@@ -542,10 +545,55 @@ $dataUpdateParent['updated_at'] = date("Y-m-d H:i:s");
 $dataUpdateParent['updated_by'] = auth()->user()->com_code;
 $dataUpdateParent['what_paid'] = $request->what_paid;
 $dataUpdateParent['what_remain'] = $request->what_remain;
+
 if ($invoice_data['is_has_customer'] == 1) {
-$customerData = get_cols_where_row(new Customer(), "account_number", array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
+$customerData = get_cols_where_row(new Customer(), array("account_number"), array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
 $dataUpdateParent['account_number'] = $customerData['account_number'];
 }
+ if($invoice_data['delegate_code']>0 and $invoice_data['delegate_code']!=null){
+$delegateData = get_cols_where_row(new Delegate(), array("percent_type","percent_salaes_commission_kataei","percent_salaes_commission_nosjomla","percent_salaes_commission_jomla"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
+if(!empty($delegateData)){
+if($invoice_data['sales_item_type']==1){
+    $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
+    $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_kataei'];
+  if($delegateData['percent_type']==1){
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_kataei'];
+  }else{
+    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_kataei'])/100;
+
+  }
+
+
+}elseif($invoice_data['sales_item_type']==2){
+    $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
+    $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_nosjomla'];
+  if($delegateData['percent_type']==1){
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_nosjomla'];
+  }else{
+    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_nosjomla'])/100;
+
+  }
+
+}else{
+    $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
+    $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_jomla'];
+  if($delegateData['percent_type']==1){
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_jomla'];
+  }else{
+    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_jomla'])/100;
+
+  }
+
+}
+
+
+}
+
+
+ }
+
+
+
 $flag = update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if ($flag) {
 if ($request->what_paid > 0) {
@@ -625,6 +673,8 @@ $invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_
 $delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
 if ($invoice_data['is_has_customer'] == 1) {
 $customers = get_cols_where(new Customer(), array("customer_code", "name"), array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
+}else{
+    $customers=array();  
 }
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "id" => $invoice_data['sales_matrial_types']));
 $sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $request->auto_serial));
