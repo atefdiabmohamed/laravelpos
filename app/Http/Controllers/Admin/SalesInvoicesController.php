@@ -557,9 +557,9 @@ if($invoice_data['sales_item_type']==1){
     $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
     $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_kataei'];
   if($delegateData['percent_type']==1){
-    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_kataei'];
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_kataei']*(-1);
   }else{
-    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_kataei'])/100;
+    $dataUpdateParent['delegate_commission_value']=(($invoice_data['total_cost']*$delegateData['percent_salaes_commission_kataei'])/100)*(-1);
 
   }
 
@@ -568,9 +568,9 @@ if($invoice_data['sales_item_type']==1){
     $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
     $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_nosjomla'];
   if($delegateData['percent_type']==1){
-    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_nosjomla'];
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_nosjomla']*(-1);;
   }else{
-    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_nosjomla'])/100;
+    $dataUpdateParent['delegate_commission_value']=(($invoice_data['total_cost']*$delegateData['percent_salaes_commission_nosjomla'])/100)*(-1);
 
   }
 
@@ -578,9 +578,9 @@ if($invoice_data['sales_item_type']==1){
     $dataUpdateParent['delegate_commission_percent_type']=$delegateData['percent_type'];
     $dataUpdateParent['delegate_commission_percent']=$delegateData['percent_salaes_commission_jomla'];
   if($delegateData['percent_type']==1){
-    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_jomla'];
+    $dataUpdateParent['delegate_commission_value']=$delegateData['percent_salaes_commission_jomla']*(-1);;
   }else{
-    $dataUpdateParent['delegate_commission_value']=($invoice_data['total_cost']*$delegateData['percent_salaes_commission_jomla'])/100;
+    $dataUpdateParent['delegate_commission_value']=(($invoice_data['total_cost']*$delegateData['percent_salaes_commission_jomla'])/100)*(-1);
 
   }
 
@@ -596,6 +596,13 @@ if($invoice_data['sales_item_type']==1){
 
 $flag = update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if ($flag) {
+  $DelegateData = get_cols_where_row(new Delegate(), array("account_number"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
+if(!empty($DelegateData )){
+  refresh_account_blance_delegate($DelegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),false);
+
+}
+
+
 if ($request->what_paid > 0) {
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
 $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));

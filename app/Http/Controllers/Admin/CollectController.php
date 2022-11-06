@@ -14,6 +14,9 @@ use App\Models\Suppliers_with_orders;
 use App\Models\Customer;
 use App\Models\Sales_invoices;
 use App\Models\SalesReturn;
+use App\Models\Delegate;
+
+
 use App\Http\Requests\Collect_transactionRequest;
 class CollectController extends Controller
 {
@@ -126,7 +129,13 @@ return view('admin.collect_transactions.get_account_blance',['the_final_Balance'
 }elseif($AccountData['account_type']==3){
 $the_final_Balance=refresh_account_blance_customer($account_number,new Account(),new Customer(),new Treasuries_transactions(),new Sales_invoices(),new SalesReturn(),true);
 return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
-}else{
+}elseif ($AccountData['account_type'] == 4) {
+    $the_final_Balance =  refresh_account_blance_delegate($account_number,new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+    return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
+
+}
+
+else{
 $the_final_Balance=refresh_account_blance_General($account_number,new Account(),new Treasuries_transactions(),true);
 return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
 }

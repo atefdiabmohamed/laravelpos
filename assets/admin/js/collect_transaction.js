@@ -53,6 +53,7 @@ $(document).ready(function () {
    var account_number=$(this).val();
    if(account_number==""){
     $("#mov_type").val("");
+    $("#get_account_blancesDiv").hide();
    }else{
     var account_type=$("#account_number option:selected").data("type");
      if(account_type==2){
@@ -70,10 +71,38 @@ $(document).ready(function () {
        $("#mov_type").val(4);  
      }
 
+     var token_search=$("#token_search").val();
+     var url=$("#ajax_url_get_account_blance").val();
+ var id=$(this).data("id");
+ jQuery.ajax({
+ url:url,
+ type:'post',
+ dataType:'html',
+ cache:false,
+ data:{id:id,"_token":token_search,account_number:$(this).val()},
+ success:function(data){
+ 
+ $("#get_account_blancesDiv").html(data);
+ $("#get_account_blancesDiv").show();
+ 
+ },
+ error:function(){
+ 
+ }
+ });
+ 
+ 
+
 
    }
 
-    });
+
+      
+   });
+
+
+
+   
 
 
     $(document).on('change', "#mov_type", function () {
@@ -102,36 +131,7 @@ $(document).ready(function () {
 
     });
 
-    $(document).on('change', "#account_number", function () {
- if($(this).val()!=""){
 
-    var token_search=$("#token_search").val();
-    var url=$("#ajax_url_get_account_blance").val();
-var id=$(this).data("id");
-jQuery.ajax({
-url:url,
-type:'post',
-dataType:'html',
-cache:false,
-data:{id:id,"_token":token_search,account_number:$(this).val()},
-success:function(data){
-
-$("#get_account_blancesDiv").html(data);
-$("#get_account_blancesDiv").show();
-
-},
-error:function(){
-
-}
-});
-
-
-
- }else{
-    $("#get_account_blancesDiv").hide();
- }
-   
-});
 
 
 function make_search() {

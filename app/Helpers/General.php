@@ -146,9 +146,48 @@ if($returnFlag){
 
   }
 
+function refresh_account_blance_delegate($account_number=null,$AccountModel=null,$delgateModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$returnFlag=true){
+
+  $com_code=auth()->user()->com_code;
+  //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
+   $AccountData=  $AccountModel::select("start_balance","account_type","other_table_FK")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+    //لو مندوب
+    if(!empty($AccountData)){
+      if($AccountData['account_type']==4){
+ 
+        //صافي مجموع عموله المندوب بالمبيعات 
+    $the_net_sales_invoicesForDelegate=$SalesinvoiceModel::where(["com_code"=>$com_code,"delegate_code"=>$AccountData['other_table_FK']])->sum("delegate_commission_value");
+    
+    //صافي حركة النقديه بالخزن علي حساب المندوب
+    $the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+    
+    //الرصيد النهائي المندوب
+    //حساب اول المده +صافي المبيعات والمرتجعات +صافي حركة النقدية بالخزن للحساب المالي المندوب الحالي
+    $the_final_Balance=$AccountData['start_balance']+$the_net_sales_invoicesForDelegate+$the_net_in_treasuries_transactions;
+    $dataToUpdateAccount['current_balance']=$the_final_Balance;
+    //update in Accounts حندث جدول الحسابات المالية بحقل المندوب
+    
+    $AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
+    $dataToUpdateDelgate['current_balance']=$the_final_Balance;
+    //update in Accounts حندث جدول   بحقل المندوب
+    $delgateModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateDelgate);
+    if($returnFlag){
+      return $the_final_Balance;
+    }
+    
+       }
+    
+
+    }
+   
+
+
+}
+
 
 //get Account Balance دالة احتساب وتحديث رصيد الحساب المالي للعميل  
 function refresh_account_blance_customer($account_number=null,$AccountModel=null,$customerModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$SalesReturnModel=null,$returnFlag=false){
+
   $com_code=auth()->user()->com_code;
  //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
   $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
@@ -182,6 +221,9 @@ if($returnFlag){
    }
 
   }
+
+
+
 
 //get Account Balance دالة احتساب وتحديث رصيد الحساب المالي العام  
 function refresh_account_blance_General($account_number=null,$AccountModel=null,$treasuries_transactionsModel=null,$returnFlag=false){
