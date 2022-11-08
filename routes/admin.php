@@ -215,6 +215,11 @@ Route::post('/SalesInvoices/do_add_new_customer', [SalesInvoicesController::clas
 Route::post('/SalesInvoices/get_last_added_customer', [SalesInvoicesController::class, 'get_last_added_customer'])->name('admin.SalesInvoices.get_last_added_customer');
 Route::post('/SalesInvoices/searchforcustomer', [SalesInvoicesController::class, 'searchforcustomer'])->name('admin.SalesInvoices.searchforcustomer');
 Route::post('/SalesInvoices/searchforitems', [SalesInvoicesController::class, 'searchforitems'])->name('admin.SalesInvoices.searchforitems');
+Route::get('/SalesInvoices/printsaleswina4/{id}', [SalesInvoicesController::class, 'printsaleswina4'])->name('admin.SalesInvoices.printsaleswina4');
+
+
+
+
 /*           sales Invoices   المبيعات                   */
 /*         start  delegates                */
 Route::get('/delegates/index', [DelegatesController::class, 'index'])->name('admin.delegates.index');

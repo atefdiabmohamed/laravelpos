@@ -169,6 +169,8 @@
                            <a href="{{ route("admin.SalesInvoices.delete",$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
                            @endif
                            <button data-autoserial="{{ $info->auto_serial }}"  class="btn btn-sm load_invoice_details_modal btn-info">عرض</button>   
+                          <a target="_blank" href="{{ route('admin.SalesInvoices.printsaleswina4',$info->id) }}" class="btn btn-danger btn-xs"> <span class="fa fa-print"></span>  W A4</a>
+                       
                         </td>
                      </tr>
                      @php
