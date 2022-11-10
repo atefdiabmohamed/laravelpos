@@ -952,7 +952,7 @@ $item_cards=array();
 return view('admin.sales_invoices.searchforitemsResult',['item_cards'=>$item_cards]);
 }
 }
-public function printsaleswina4($id){
+public function printsaleswina4($id,$size){
 $com_code = auth()->user()->com_code;
 $invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("com_code" => $com_code, "id" => $id));
 if(empty($invoice_data)){
@@ -969,6 +969,11 @@ $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" 
 $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
 }
 }
-return view('admin.sales_invoices.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$sales_invoices_details]);
+if($size=="A4"){
+    return view('admin.sales_invoices.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$sales_invoices_details]);
+}else{
+    return view('admin.sales_invoices.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$sales_invoices_details]);
+
+}
 }
 }

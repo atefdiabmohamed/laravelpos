@@ -5,16 +5,54 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title> طباعة فاتورة مبيعات </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-      <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
+      
       <style>
-         td{font-size: 15px !important;text-align: center;}
+  td{font-size: 15px !important;text-align: center;}
+ .mainheadtable{
+   width: 30%; margin-right: 5px; float: right;  border: 1px dashed black 
+ }
+ .tdhead{
+   padding: 3px; text-align: right;font-weight: bold;
+ }
+ .mainheadtable2{
+   width: 30%;float: right;  margin-right: 5px;
+ }
+ .headimg{
+   width: 35%;float: right; margin-left: 5px;
+ }
+ .headimg_img{
+   width: 150px; height: 110px; border-radius: 10px;
+ }
+  @media print {        
+@page {
+  size: 105mm 148mm;
+}
+td{font-size: 9px !important;text-align: center;} 
+table{margin: 0 auto;}   
+.mainheadtable{
+   width: 50%; margin-right: 1px; float: right;  border: 1 solid black 
+ }
+ .tdhead{
+   padding: 3px; text-align: right;font-weight: bold;
+ }
+ .headimg{
+   width: 45%;float: right; margin-left: 1px;
+ }
+ .headimg_img{
+   width: 70px; height: 70px; float: left;
+ }
+}
+
  
       </style>
 
    <body style="padding-top: 10px;font-family: tahoma;">
-      <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
+      <table class="mainheadtable"  cellspacing="0"   dir="rtl">
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود العميل 
+            <td style="padding: 5px; text-align: right;font-weight: bold;">  فاتورة مبيعات رقم  <span style="margin-right: 10px;">/ {{ $data['auto_serial'] }}</span></td>
+         </tr>
+         <tr>
+            <td class="tdhead"> كود العميل 
                @if($data['is_has_customer']==1)
                <span style="margin-right: 10px;">/ {{ $data["customer_code"] }}</span>
                @else
@@ -22,54 +60,36 @@
                @endif
             </td>
          </tr>
+         @if($data['is_has_customer']==1)
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم العميل  <span style="margin-right: 10px;">/ {{ $data['customer_name'] }}</span></td>
          </tr>
+      
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['customer_phones'];}}</span></td>
          </tr>
+         @endif
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['invoice_date'];}}</span></td>
+         </tr>
+         <tr>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">    نوع الفاتورة  <span style="margin-right: 10px;">/ @if($data['pill_type']==1) كاش @else آجل @endif</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
          </tr>
       </table>
       <br>
-      <table style="width: 30%;float: right;  margin-right: 5px;" dir="rtl">
-         <tr>
-            <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة مبيعات </span></td>
-         </tr>
-         <tr>
-            <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               color: red;
-               border: 1px solid black; "> رقم : {{ $data['auto_serial'] }} </span></td>
-         </tr>
-         <tr>
-            <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               color: blue;
-               border: 1px solid blue;font-weight: bold; "> @if($data['pill_type']==1) كاش @else آجل @endif</span></td>
-         </tr>
-      </table>
-      <table style="width: 35%;float: right; margin-left: 5px; " dir="rtl">
+
+      <table class="headimg"  dir="rtl" style="margin-bottom: 5px;">
          <tr>
             <td style="text-align:left !important;padding: 5px;">
-               <img style="width: 150px; height: 110px; border-radius: 10px;" src="{{ asset('assets/admin/uploads').'/'.$systemData['photo'] }}"> 
+               <img class="headimg_img"  src="{{ asset('assets/admin/uploads').'/'.$systemData['photo'] }}"> 
                <p>{{ $systemData['system_name'] }}</p>
             </td>
          </tr>
       </table>
+   
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
@@ -147,7 +167,7 @@
          bottom: 0;
          width: 100%;
          /* Height of the footer*/ 
-         text-align: center;font-size: 16px; font-weight: bold;
+         text-align: center;font-size: 11px; font-weight: bold;
          "> {{ $systemData['address'] }} - {{ $systemData['phone'] }} </p>
       <script>
          window.print();
