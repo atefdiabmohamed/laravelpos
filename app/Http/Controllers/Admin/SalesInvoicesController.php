@@ -77,7 +77,7 @@ public function load_modal_addActiveInvoice(Request $request)
 {
 $com_code = auth()->user()->com_code;
 if ($request->ajax()) {
-$delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1));
+$delegates = get_cols_where(new Delegate(), array("delegate_code", "name"), array("com_code" => $com_code, "active" => 1),'id','ASC');
 $Sales_matrial_types = get_cols_where(new Sales_matrial_types(), array("id", "name"), array("com_code" => $com_code, "active" => 1));
 return view("admin.sales_invoices.load_modal_addActiveInvoice", [
 'delegates' => $delegates, 'Sales_matrial_types' => $Sales_matrial_types

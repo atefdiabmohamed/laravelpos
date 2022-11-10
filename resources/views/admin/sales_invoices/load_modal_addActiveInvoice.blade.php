@@ -26,8 +26,10 @@
                      <select name="Sales_matrial_types_id" id="Sales_matrial_types_id_activeAdd" class="form-control select2">
                        <option value="">  اختر فئة الفاتورة</option>
                        @if (@isset($Sales_matrial_types) && !@empty($delegates))
+                       @php $i=1;  @endphp
                       @foreach ($Sales_matrial_types as $info )
-                        <option  value="{{ $info->id }}"> {{ $info->name }} </option>
+                        <option @if($i==1) selected  @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                        @php  $i++; @endphp
                       @endforeach
                        @endif
                      </select>
@@ -39,14 +41,14 @@
                     <div class="form-group"> 
                       <label>      هل يوجد عميل</label>
              <select name="is_has_customer" id="is_has_customer" class="form-control" >
-             <option value="1" selected> نعم  عميل</option>
-             <option value="0" > لايوجد عميل( طياري )</option>
+             <option value="1" > نعم  عميل</option>
+             <option selected value="0" > لايوجد عميل( طياري )</option>
 
              </select>
 
                       </div>
                    </div>
-                   <div class="col-md-4" id="customer_codeDiv" >
+                   <div class="col-md-4" id="customer_codeDiv"  style="display: none;">
                    <div class="form-group"> 
                   
                     <div class="form-group"> 
@@ -73,9 +75,11 @@
                      <select name="delegate_code" id="delegate_code_activeAdd" class="form-control select2">
                        <option value="">  اختر المندوب</option>
                        @if (@isset($delegates) && !@empty($delegates))
+                       @php $i=1;  @endphp
                       @foreach ($delegates as $info )
-                        <option  value="{{ $info->delegate_code }}"> {{ $info->name }} </option>
-                      @endforeach
+                        <option  @if($i==1) selected  @endif   value="{{ $info->delegate_code }}"> {{ $info->name }} </option>
+                        @php  $i++; @endphp
+                        @endforeach
                        @endif
                      </select>
                    

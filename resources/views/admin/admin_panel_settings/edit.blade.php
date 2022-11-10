@@ -126,6 +126,13 @@
                         </div>
                       </div>
 
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>   ملاحظات  </label>
+                          <textarea name="notes" id="notes" class="form-control" >{{ $data['notes'] }}</textarea>
+                      </div> 
+                              </div>  
+
                     <div class="col-md-12">
               <div class="form-group">
                 <label>رسالة تنبية اعلي الشاشة </label>

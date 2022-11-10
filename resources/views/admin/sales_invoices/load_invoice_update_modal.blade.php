@@ -110,7 +110,7 @@
 
    <div class="col-md-3">
       <div class="form-group">
-         <input id="searchforitem" class="form-control" type="text" placeholder="باركود - كود -اسم" >
+         <input id="searchforitem" autofocus class="form-control" type="text" placeholder="باركود - كود -اسم" >
          <div id="searchforitemresultDiv">
             <select  id="item_code" name="item_code" class="form-control " style="width: 100%;">
                <option value="">اختر الصنف</option>

@@ -1,5 +1,19 @@
 $(document).ready(function () {
 
+if($("#LoadModalAddBtnActiveInvoice").length){
+  get_load_modal_addActiveInvoice();
+ 
+}
+
+$(document).keypress(function(e) {
+  if($("#Do_Add_new_active_invoice").length){
+ if(e.keyCode==17||e.keyCode==13){
+  Do_Add_new_active_invoice();
+ }
+
+}
+});
+
   $(document).on('change', '#item_code', function (e) {
     //نجلب اولا الوحدات للصنف
     get_item_uoms();
@@ -167,6 +181,10 @@ $(document).ready(function () {
 
 
   $(document).on('click', '#LoadModalAddBtnActiveInvoice', function (e) {
+    get_load_modal_addActiveInvoice();
+  });
+
+  function get_load_modal_addActiveInvoice(){
     var token = $("#token_search").val();
     var url = $("#ajax_get_load_modal_addActiveInvoice").val();
     jQuery.ajax({
@@ -183,7 +201,7 @@ $(document).ready(function () {
         alert("حدث خطاما");
       }
     });
-  });
+  }
 
 
   function recalculate_itemTotlaRow() {
@@ -436,6 +454,10 @@ $(document).ready(function () {
     recalcualte();
   });
   $(document).on('click', '#Do_Add_new_active_invoice', function (e) {
+    Do_Add_new_active_invoice();
+  });
+
+  function Do_Add_new_active_invoice(){
     var invoice_date = $("#invoice_date_activeAdd").val();
 
     if (invoice_date == "") {
@@ -502,7 +524,8 @@ $(document).ready(function () {
       }
     });
 
-  });
+
+  }
 
   $(document).on('change', '#is_has_customer', function (e) {
 
@@ -546,9 +569,9 @@ $(document).ready(function () {
       success: function (data) {
         $("#AddNewInvoiceModalActiveInvoiceBody").html("");
         $("#AddNewInvoiceModalActiveInvoice").modal("hide");
-
         $("#updateInvoiceModalActiveInvoiceBody").html(data);
         $("#updateInvoiceModalActiveInvoice").modal("show");
+  
       },
       error: function () {
         alert("حدث خطاما");
@@ -556,6 +579,9 @@ $(document).ready(function () {
     });
   }
 
+  $('#updateInvoiceModalActiveInvoice').on('shown.bs.modal', function () {
+    $("#searchforitem").focus();
+})  
 
   $(document).on('click', '.load_invoice_update_modal', function (e) {
     var auto_serial = $(this).data("autoserial");
@@ -1437,8 +1463,11 @@ $(document).on('input', '#searchforitem', function (e) {
   
   
   });
+
+
   $(document).on('keypress', '#searchforitem', function (e) {
- if(e.keyCode==13){
+  
+ if(e.keyCode==13||e.keyCode==17){
 
   make_enter_add();
  }
@@ -1453,6 +1482,8 @@ recalcualte();
 
 
 });
+
+
 
 
 });

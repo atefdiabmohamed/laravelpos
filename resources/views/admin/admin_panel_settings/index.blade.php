@@ -76,7 +76,10 @@
                 <td > {{ $data['employees_parent_account_name'] }} رقم حساب مالي ( {{ $data["employees_parent_account_number"] }} )</td>
             </tr>
 
-
+            <tr>
+                <td class="width30">      ملاحظات</td> 
+                <td > {{ $data['notes'] }}</td>
+            </tr>
 
             <tr>
                 <td class="width30">  رسالة التنبية اعلي الشاشة للشركة</td> 
