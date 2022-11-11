@@ -31,7 +31,7 @@
         <!-- /.card-header -->
         <div class="card-body">
           <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-4">
             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="delegate_code"> برقم المندوب
             <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
 
@@ -40,6 +40,30 @@
             <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود المندوب" class="form-control"> <br>
             
                       </div>
+                      <div class="col-md-4">
+                        <div class="form-group"> 
+                          <label>  بحث بحالة الرصيد</label>
+                          <select name="searchByBalanceStatus" id="searchByBalanceStatus" class="form-control">
+                            <option   value="all"> بحث بالكل</option>
+                            <option   value="1"> دائن</option>
+                            <option  value="2"> مدين</option>
+                            <option    value="3"> متزن</option>
+                          </select>
+                         
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group"> 
+                            <label>  بحث بحالة التفعيل</label>
+                            <select name="searchByactiveStatus" id="searchByactiveStatus" class="form-control">
+                              <option   value="all"> بحث بالكل</option> 
+                              <option   value="1"> مفعل</option>
+                              <option  value="0"> معطل</option>
+                            </select>
+                           
+                            </div>
+                          </div>
+  
                      
                           </div>
                <div class="clearfix"></div>

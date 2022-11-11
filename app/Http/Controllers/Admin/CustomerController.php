@@ -191,6 +191,7 @@ return redirect()->back()
 public function ajax_search(Request $request)
 {
 if ($request->ajax()) {
+    
 $com_code = auth()->user()->com_code;
 $search_by_text = $request->search_by_text;
 $searchbyradio = $request->searchbyradio;
