@@ -264,6 +264,8 @@ if($searchByactiveStatus=="all"){
 }
 
 
+
+
 $data = Delegate::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where(['com_code' => $com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
 if (!empty($data)) {
 foreach ($data as $info) {

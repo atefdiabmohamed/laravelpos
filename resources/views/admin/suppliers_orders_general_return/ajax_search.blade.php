@@ -3,13 +3,14 @@
           @php
            $i=1;   
           @endphp
+          
           <table id="example2" class="table table-bordered table-hover">
             <thead class="custom_thead">
            <th>كود</th>
            <th> المورد</th>
            <th> تاريخ الفاتورة</th>
            <th>  نوع الفاتورة</th>
-           <th>   المخزن المستلم</th>
+           <th>   مخزن صرف المرتجع</th>
            <th>    اجمالي الفاتورة</th>
            <th>حالة الفاتورة</th>
 
@@ -31,11 +32,13 @@
          <td>
 
           @if($info->is_approved==0)
-        <a href="{{ route('admin.suppliers_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-        <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+        <a href="{{ route('admin.suppliers_orders_general_return.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.suppliers_orders_general_return.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
         @endif
-        <a href="{{ route('admin.suppliers_orders.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
-
+        <a href="{{ route('admin.suppliers_orders_general_return.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
+        <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.suppliers_orders.printsaleswina4',[$info->id,'A4']) }}" class="btn btn-primary btn-xs"> WA4</a>
+        <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.suppliers_orders.printsaleswina4',[$info->id,'A6']) }}" class="btn btn-warning btn-xs"> WA6</a>
+         
          </td>
            
    

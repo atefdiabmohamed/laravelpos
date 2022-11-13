@@ -200,6 +200,12 @@ if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
 $search_by_text = $request->search_by_text;
 $searchbyradio = $request->searchbyradio;
+$searchByBalanceStatus = $request->searchByBalanceStatus;
+$searchByactiveStatus = $request->searchByactiveStatus;
+$mirror['searchByBalanceStatus']=$searchByBalanceStatus ;
+
+
+
 if ($search_by_text != '') {
 if ($searchbyradio == 'suuplier_code') {
 $field1 = "suuplier_code";
@@ -220,7 +226,44 @@ $field1 = "id";
 $operator1 = ">";
 $value1 = 0;
 }
-$data = Supplier::where($field1, $operator1, $value1)->where(['com_code' => $com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+
+
+if($searchByBalanceStatus=="all"){
+    $field2 = "id";
+    $operator2 = ">";
+    $value2 = 0;
+}else{
+   if($searchByBalanceStatus==1){
+    $field2 = "current_balance";
+    $operator2 = "<";
+    $value2 = 0;
+
+   }elseif($searchByBalanceStatus==2){
+    $field2 = "current_balance";
+    $operator2 = ">";
+    $value2 = 0;
+}else{
+    $field2 = "current_balance";
+    $operator2 = "=";
+    $value2 = 0;
+}
+
+}
+
+if($searchByactiveStatus=="all"){
+    $field3 = "id";
+    $operator3 = ">";
+    $value3 = 0;
+}else{
+  
+    $field3 = "active";
+    $operator3 = "=";
+    $value3 = $searchByactiveStatus;
+}
+
+
+
+$data = Supplier::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where(['com_code' => $com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
 if (!empty($data)) {
 foreach ($data as $info) {
 $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
@@ -230,7 +273,11 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 }
 }
 }
-return view('admin.suppliers.ajax_search', ['data' => $data]);
+//General mirror 
+$mirror['credit_sum']=Supplier::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where("current_balance", "<", 0)->where($field3, $operator3, $value3)->where(['com_code' => $com_code])->sum('current_balance');
+$mirror['debit_sum']=Supplier::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where("current_balance", ">", 0)->where($field3, $operator3, $value3)->where(['com_code' => $com_code])->sum('current_balance');
+$mirror['net']=$mirror['credit_sum']+$mirror['debit_sum'];
+return view('admin.suppliers.ajax_search', ['data' => $data,'mirror'=>$mirror]);
 }
 }
 }

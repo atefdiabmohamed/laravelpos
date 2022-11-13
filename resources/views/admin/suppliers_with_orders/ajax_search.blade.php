@@ -3,7 +3,7 @@
           @php
            $i=1;   
           @endphp
-          <table id="example2" class="table table-bordered table-hover">
+         <table id="example2" class="table table-bordered table-hover">
             <thead class="custom_thead">
            <th>كود</th>
            <th> المورد</th>
@@ -35,7 +35,8 @@
         <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
         @endif
         <a href="{{ route('admin.suppliers_orders.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
-
+        <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.suppliers_orders.printsaleswina4',[$info->id,'A4']) }}" class="btn btn-primary btn-xs"> WA4</a>
+        <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.suppliers_orders.printsaleswina4',[$info->id,'A6']) }}" class="btn btn-warning btn-xs"> WA6</a>
          </td>
            
    

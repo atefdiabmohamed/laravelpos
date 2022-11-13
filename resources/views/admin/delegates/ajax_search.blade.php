@@ -1,5 +1,6 @@
 
           @if (@isset($data) && !@empty($data) && count($data)>0)
+          
           @if($mirror['searchByBalanceStatus']!=3)
           <table style="width: 95%; margin: 0 auto;" id="example2" class="table table-bordered table-hover">
             <thead style="background-color: gray" class="custom_thead">

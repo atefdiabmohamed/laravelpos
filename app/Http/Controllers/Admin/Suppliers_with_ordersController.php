@@ -12,6 +12,7 @@ use App\Models\Treasuries_transactions;
 use App\Models\Inv_itemcard_movements;
 use App\Models\Account;
 use App\Models\Supplier;
+use App\Models\Admin_panel_setting;
 use App\Models\Inv_itemcard_batches;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -707,4 +708,40 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
 }
 }
+
+public function printsaleswina4($id,$size){
+
+try {
+$com_code = auth()->user()->com_code;
+$invoice_data = get_cols_where_row(new Suppliers_with_orders(), array("*"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+if (empty($invoice_data)) {
+return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+$invoice_data['added_by_admin'] = Admin::where('id', $invoice_data['added_by'])->value('name');
+$invoice_data['supplier_name'] = Supplier::where('suuplier_code', $invoice_data['suuplier_code'])->value('name');
+$invoice_data['supplier_phone'] = Supplier::where('suuplier_code', $invoice_data['suuplier_code'])->value('phones');
+
+$invoice_data['store_name'] = Store::where('id', $invoice_data['store_id'])->value('name');
+
+$invoices_details = get_cols_where(new Suppliers_with_orders_details(), array("*"), array('suppliers_with_orders_auto_serial' => $invoice_data['auto_serial'], 'order_type' => 1, 'com_code' => $com_code), 'id', 'DESC');
+if (!empty($invoices_details)) {
+foreach ($invoices_details as $info) {
+$info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+$info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+}
+}
+$systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+
+if($size=="A4"){
+    return view('admin.suppliers_with_orders.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+}else{
+    return view('admin.suppliers_with_orders.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+
+}
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+
 }
