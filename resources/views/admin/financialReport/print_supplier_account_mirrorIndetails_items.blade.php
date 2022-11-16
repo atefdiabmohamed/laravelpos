@@ -42,17 +42,17 @@
      
       <table style="width: 30%;float: right;  margin-right: 5px;" dir="rtl">
          <tr>
-            <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;"> نوع التقرير </span></td>
+            <td style="text-align: center;padding: 5px;">  <span > نوع التقرير </span></td>
          </tr>
          <tr>
-            <td style="text-align: center;padding: 5px;font-weight: bold;">  <span >  
+            <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;
+               width: 400px;
+               height: 30px;
+               text-align: center;
+               color: red;
+               border: 1px solid black; ">  
            
-               تقرير مرتجع المشتريات من  <br> ({{ $data['from_date'] }} الي  {{   $data['to_date'] }})
+               تقرير تفصيلي من  ({{ $data['from_date'] }} الي  {{   $data['to_date'] }})
          
          
             </span></td>
@@ -100,6 +100,13 @@
       </tr> 
    
 
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">   المشتريات</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+            عدد  ({{ $data['BurchaseCounter']*1 }}) فاتورة مشتريات بقيمة ({{ $data['BurchaseTotalMoney']*1 }}) جنيه
+            
+            </td>
+         </tr>
          
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">   مرتجع المشريات</td>
@@ -109,9 +116,21 @@
             </td>
          </tr>
 
-       
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للمورد</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+           ({{ $data['treasuries_transactionsExchange']*1 }}) جنيه
+            
+            </td>
+         </tr>
 
-       
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي تحصيل النقدية من المورد</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+           ({{ $data['treasuries_transactionsCollect']*1*(-1) }}) جنيه
+            
+            </td>
+         </tr>
 
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">   رصيد المورد حاليا</td>
@@ -134,32 +153,25 @@
 
       </table>
 
-
-<!--  مرتجع المشتريات-->
-
-
-<h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold"> مرتجع المشتريات من المورد خلال الفترة</h3>
+ <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold"> المشتريات من المورد خلال الفترة</h3>
 
           
-@if (@isset($details['BurchasesReturn']) && !@empty($details['BurchasesReturn']) && count($details['BurchasesReturn'])>0)
+   @if (@isset($details['Burchases']) && !@empty($details['Burchases']) && count($details['Burchases'])>0)
+  
+  
+  @foreach ($details['Burchases'] as $info )
+  <table  dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
+   <thead style="background-color: lightgrey">
+  <th>رقم الفاتورة</th>
+  <th>تاريخ الفاتورة</th>
+  <th> النوع</th>
+  <th> اجمالي</th>
+  <th> المدفوع </th>
+  <th> المتبقي </th>
+  <th> الحالة</th>
 
-   <!---  هل طلبت عرض الاصناف-->
-   @if($data['Does_show_items']==1)
-
-   @foreach ($details['BurchasesReturn'] as $info )
-
-   <table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
-      <thead style="background-color: lightgrey">
-     <th>رقم الفاتورة</th>
-     <th>تاريخ الفاتورة</th>
-     <th> النوع</th>
-     <th> اجمالي</th>
-     <th> المدفوع </th>
-     <th> المتبقي </th>
-     <th> الحالة</th>
-    
-      </thead>
-      <tbody>
+   </thead>
+   <tbody>
      <tr>
       <td>{{ $info->auto_serial }}</td>  
       <td>{{ $info->order_date }}</td>  
@@ -167,11 +179,11 @@
       <td>{{ $info->total_cost*1 }}</td>
       <td>{{ $info->what_paid*1 }}</td>
       <td>{{ $info->what_remain*1 }}</td>
-   
+
       <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
     
-    </tr> 
-   
+    </tr>
+
     <!---  هل طلبت عرض الاصناف-->
     @if($data['Does_show_items']==1)
     <tr>
@@ -187,7 +199,7 @@
      <th> الكمية</th>
      <th> السعر</th>
      <th> الاجمالي</th>
-   
+
       </thead>
       <tbody>
    @foreach ($info->itemsdetails as $det )
@@ -199,72 +211,127 @@
      <td>{{ $det->deliverd_quantity*(1) }}</td>
      <td>{{ $det->unit_price*(1) }}</td>
      <td>{{ $det->total_price*(1) }}</td>
-   
+
      </tr> 
-   </tbody>
-   </table>
+
    @endforeach
-   
-   
-   
-   
+
+      </tbody>
+       </table>
+
+ 
      @else
      <div class="alert alert-danger">
        عفوا لاتوجد بيانات لعرضها !!
      </div>
            @endif
-   
+
       </td>
     </tr>
     @endif
-   
-   
-   
-   @endforeach
-   
-
-
-    
-
-   @else 
+   </tbody>
+</table>
+  @endforeach
 
 
 
-   <table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
-      <thead style="background-color: lightgrey">
-     <th>رقم الفاتورة</th>
-     <th>تاريخ الفاتورة</th>
-     <th> النوع</th>
-     <th> اجمالي</th>
-     <th> المدفوع </th>
-     <th> المتبقي </th>
-     <th> الحالة</th>
-    
-      </thead>
-      <tbody>
-    @foreach ($details['BurchasesReturn'] as $info )
-      <tr>
-       <td>{{ $info->auto_serial }}</td>  
-       <td>{{ $info->order_date }}</td>  
-       <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
-       <td>{{ $info->total_cost*1 }}</td>
-       <td>{{ $info->what_paid*1 }}</td>
-       <td>{{ $info->what_remain*1 }}</td>
-    
-       <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
-     
-     </tr> 
-    
-    @endforeach
-    
-    
-    
-      </tbody>
-       </table>
-    
+  
 
-   @endif
 
+    @else
+    <div class="alert alert-danger">
+      عفوا لاتوجد بيانات لعرضها !!
+    </div>
+          @endif
+
+<!--  مرتجع المشتريات-->
+
+
+<h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold"> مرتجع المشتريات من المورد خلال الفترة</h3>
+
+          
+@if (@isset($details['BurchasesReturn']) && !@empty($details['BurchasesReturn']) && count($details['BurchasesReturn'])>0)
+
+@foreach ($details['BurchasesReturn'] as $info )
+
+<table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
+   <thead style="background-color: lightgrey">
+  <th>رقم الفاتورة</th>
+  <th>تاريخ الفاتورة</th>
+  <th> النوع</th>
+  <th> اجمالي</th>
+  <th> المدفوع </th>
+  <th> المتبقي </th>
+  <th> الحالة</th>
+ 
+   </thead>
+   <tbody>
+  <tr>
+   <td>{{ $info->auto_serial }}</td>  
+   <td>{{ $info->order_date }}</td>  
+   <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
+   <td>{{ $info->total_cost*1 }}</td>
+   <td>{{ $info->what_paid*1 }}</td>
+   <td>{{ $info->what_remain*1 }}</td>
+
+   <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
+ 
+ </tr> 
+
+ <!---  هل طلبت عرض الاصناف-->
+ @if($data['Does_show_items']==1)
+ <tr>
+   <td colspan="7">
+      
+ @if (@isset($info->itemsdetails) && !@empty($info->itemsdetails) && count($info->itemsdetails)>0)
+ 
+ 
+ <table dir="rtl" id="example2" class="table table-bordered table-hover">
+   <thead  >
+  <th>الصنف </th>
+  <th> الوحده</th>
+  <th> الكمية</th>
+  <th> السعر</th>
+  <th> الاجمالي</th>
+
+   </thead>
+   <tbody>
+@foreach ($info->itemsdetails as $det )
+   <tr>
+ 
+  <td>{{ $det->item_card_name }}
+ </td>
+  <td>{{ $det->uom_name }}</td>
+  <td>{{ $det->deliverd_quantity*(1) }}</td>
+  <td>{{ $det->unit_price*(1) }}</td>
+  <td>{{ $det->total_price*(1) }}</td>
+
+  </tr> 
+</tbody>
+</table>
+@endforeach
+
+
+
+
+  @else
+  <div class="alert alert-danger">
+    عفوا لاتوجد بيانات لعرضها !!
+  </div>
+        @endif
+
+   </td>
+ </tr>
+ @endif
+
+
+
+@endforeach
+
+
+
+  </tbody>
+   </table>
 
 
  @else
@@ -274,6 +341,50 @@
        @endif
 
 
+
+<!--  حركة النقدية-->
+
+
+
+<h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة النقدية علي حساب  المورد خلال الفترة</h3>
+
+          
+@if (@isset($details['Treasuries_transactions']) && !@empty($details['Treasuries_transactions']) && count($details['Treasuries_transactions'])>0)
+
+<table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
+  <thead style="background-color: lightgrey">
+ <th>رقم الايصال</th>
+ <th>تاريخ الحركة</th>
+ <th> نوع الحركة</th>
+ <th> المبلغ</th>
+ <th> البيان</th>
+
+  </thead>
+  <tbody>
+@foreach ($details['Treasuries_transactions'] as $info )
+  <tr>
+   <td>{{ $info->auto_serial }}</td>  
+   <td> {{ $info->money_for_account }}</td>  
+   <td> {{ $info->move_date }}</td>  
+   <td> {{ $info->mov_type_name }}</td>  
+   <td>{{ $info->byan }}</td>
+
+ 
+ </tr> 
+
+@endforeach
+
+
+
+  </tbody>
+   </table>
+
+
+ @else
+ <div class="alert alert-danger">
+   عفوا لاتوجد بيانات لعرضها !!
+ </div>
+       @endif
 
 
        <br>

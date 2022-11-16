@@ -170,7 +170,7 @@
       </table>
       <br>
    
-      <p style="position: fixed;
+      <p style="
          padding: 10px 10px 0px 10px;
          bottom: 0;
          width: 100%;

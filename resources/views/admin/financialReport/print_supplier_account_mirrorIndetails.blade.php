@@ -183,52 +183,6 @@
     
     </tr>
 
-    <!---  هل طلبت عرض الاصناف-->
-    @if($data['Does_show_items']==1)
-    <tr>
-      <td colspan="7">
-         
-    @if (@isset($info->itemsdetails) && !@empty($info->itemsdetails) && count($info->itemsdetails)>0)
-    
-    
-    <table dir="rtl" id="example2" class="table table-bordered table-hover">
-      <thead  style="background-color:lightblue">
-     <th>الصنف </th>
-     <th> الوحده</th>
-     <th> الكمية</th>
-     <th> السعر</th>
-     <th> الاجمالي</th>
-
-      </thead>
-      <tbody>
-   @foreach ($info->itemsdetails as $det )
-      <tr>
-    
-     <td>{{ $det->item_card_name }}
-    </td>
-     <td>{{ $det->uom_name }}</td>
-     <td>{{ $det->deliverd_quantity*(1) }}</td>
-     <td>{{ $det->unit_price*(1) }}</td>
-     <td>{{ $det->total_price*(1) }}</td>
-
-     </tr> 
-
-   @endforeach
-
-      </tbody>
-       </table>
-
- 
-     @else
-     <div class="alert alert-danger">
-       عفوا لاتوجد بيانات لعرضها !!
-     </div>
-           @endif
-
-      </td>
-    </tr>
-    @endif
-
   @endforeach
 
 
@@ -275,52 +229,6 @@
    <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
  
  </tr> 
-
- <!---  هل طلبت عرض الاصناف-->
- @if($data['Does_show_items']==1)
- <tr>
-   <td colspan="7">
-      
- @if (@isset($info->itemsdetails) && !@empty($info->itemsdetails) && count($info->itemsdetails)>0)
- 
- 
- <table dir="rtl" id="example2" class="table table-bordered table-hover">
-   <thead  style="background-color:lightblue">
-  <th>الصنف </th>
-  <th> الوحده</th>
-  <th> الكمية</th>
-  <th> السعر</th>
-  <th> الاجمالي</th>
-
-   </thead>
-   <tbody>
-@foreach ($info->itemsdetails as $det )
-   <tr>
- 
-  <td>{{ $det->item_card_name }}
- </td>
-  <td>{{ $det->uom_name }}</td>
-  <td>{{ $det->deliverd_quantity*(1) }}</td>
-  <td>{{ $det->unit_price*(1) }}</td>
-  <td>{{ $det->total_price*(1) }}</td>
-
-  </tr> 
-
-@endforeach
-
-   </tbody>
-    </table>
-
-
-  @else
-  <div class="alert alert-danger">
-    عفوا لاتوجد بيانات لعرضها !!
-  </div>
-        @endif
-
-   </td>
- </tr>
- @endif
 
 
 
@@ -388,7 +296,7 @@
        <br>
       <br>
    
-      <p style="position: fixed;
+      <p style="
          padding: 10px 10px 0px 10px;
          bottom: 0;
          width: 100%;

@@ -81,11 +81,11 @@ $supplierData['report_type']=$request->report_type;
  }
  
 // حرجعلها 
- $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
+ $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
 
  if($supplierData['Does_show_items']==1){ 
   foreach(  $details['BurchasesReturn'] as $return){  
-    $return->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$Bur->auto_serial,'order_type'=>$Bur->order_type));
+    $return->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$return->auto_serial,'order_type'=>$return->order_type));
  if(!empty($return->itemsdetails)){
   foreach($return->itemsdetails as $info){
     $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
@@ -111,18 +111,39 @@ if(!empty( $details['Treasuries_transactions'])){
  
  $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
 $supplierData['report_type']=$request->report_type;
+if($supplierData['Does_show_items']==1){
+  return view('admin.financialReport.print_supplier_account_mirrorIndetails_items',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
+}else{
   return view('admin.financialReport.print_supplier_account_mirrorIndetails',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
+
+}
+
 
  //المشتريات خلال الفترة
 }elseif($request->report_type==3){
   $supplierData['from_date']=$request->from_date;
   $supplierData['to_date']=$request->to_date;
+  $supplierData['Does_show_items']=$request->Does_show_items;
 
   $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
  $supplierData['BurchaseCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
  $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
  $supplierData['BurchaseTotalMoney']= $supplierData['BurchaseTotalMoney']*(-1);
- $details['Burchases']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->get();
+ $details['Burchases']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->get();
+ if($supplierData['Does_show_items']==1){
+  foreach( $details['Burchases'] as $Bur){
+    $Bur->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$Bur->auto_serial,'order_type'=>$Bur->order_type));
+ if(!empty($Bur->itemsdetails)){
+  foreach($Bur->itemsdetails as $info){
+    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+
+  }
+ }
+  }
+ }
+ 
+ 
  $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
 $supplierData['report_type']=$request->report_type;
   return view('admin.financialReport.print_supplier_account_mirrorBurchases',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
@@ -131,11 +152,29 @@ $supplierData['report_type']=$request->report_type;
 }elseif($request->report_type==4){
   $supplierData['from_date']=$request->from_date;
   $supplierData['to_date']=$request->to_date;
+  $supplierData['Does_show_items']=$request->Does_show_items;
+
   $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
  $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
  $supplierData['BurchaseReturnTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
-  $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
- $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+  
+ $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
+
+ if($supplierData['Does_show_items']==1){ 
+  foreach(  $details['BurchasesReturn'] as $return){  
+    $return->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$return->auto_serial,'order_type'=>$return->order_type));
+ if(!empty($return->itemsdetails)){
+  foreach($return->itemsdetails as $info){
+    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+
+  }
+ }
+  }
+ } 
+ 
+ 
+  $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
 $supplierData['report_type']=$request->report_type;
   return view('admin.financialReport.print_supplier_account_mirrorBurchaseReturn',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
 
