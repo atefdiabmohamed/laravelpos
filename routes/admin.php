@@ -24,6 +24,10 @@ use App\Http\Controllers\Admin\DelegatesController;
 use App\Http\Controllers\Admin\Suppliers_with_ordersGeneralRetuen;
 use App\Http\Controllers\Admin\ItemcardBalanceController;
 use App\Http\Controllers\Admin\SalesReturnInvoicesController;
+use App\Http\Controllers\Admin\FinancialReportController;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -292,7 +296,23 @@ Route::post('/SalesReturnInvoices/do_add_new_customer', [SalesReturnInvoicesCont
 Route::post('/SalesReturnInvoices/get_last_added_customer', [SalesReturnInvoicesController::class, 'get_last_added_customer'])->name('admin.SalesReturnInvoices.get_last_added_customer');
 Route::post('/SalesReturnInvoices/searchforcustomer', [SalesReturnInvoicesController::class, 'searchforcustomer'])->name('admin.SalesReturnInvoices.searchforcustomer');
 Route::post('/SalesReturnInvoices/searchforitems', [SalesReturnInvoicesController::class, 'searchforitems'])->name('admin.SalesReturnInvoices.searchforitems');
-/*           sales Invoices   المبيعات                   */
+Route::get('/SalesReturnInvoices/printsaleswina4/{id}/{size}', [SalesReturnInvoicesController::class, 'printsaleswina4'])->name('admin.SalesReturnInvoices.printsaleswina4');
+
+/*         
+  sales Invoices   المبيعات                   */
+
+
+/* start  FinancialReportController تقاير الحسابات */
+Route::get('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
+Route::post('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
+
+
+
+/*  end  FinancialReportController */
+
+
+
+
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');

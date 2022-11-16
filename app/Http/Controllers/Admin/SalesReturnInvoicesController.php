@@ -973,4 +973,31 @@ $item_cards=array();
 return view('admin.sales_return_invoices.searchforitemsResult',['item_cards'=>$item_cards]);
 }
 }  
+
+public function printsaleswina4($id,$size){
+    $com_code = auth()->user()->com_code;
+    $invoice_data = get_cols_where_row(new SalesReturn(), array("*"), array("com_code" => $com_code, "id" => $id));
+    if(empty($invoice_data)){
+    return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي البيانات المطلوبة']);
+    }
+    $invoice_data['customer_name']=get_field_value(new Customer(),'name',array("com_code"=>$com_code,"customer_code"=>$invoice_data['customer_code']));
+    $invoice_data['customer_phones']=get_field_value(new Customer(),'phones',array("com_code"=>$com_code,"customer_code"=>$invoice_data['customer_code']));
+    $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+    $sales_invoices_details = get_cols_where(new SalesReturnDetails(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $invoice_data['auto_serial']));
+    if (!empty($sales_invoices_details)) {
+    foreach ($sales_invoices_details  as $info) {
+    $info->store_name = get_field_value(new Store(), "name", array("com_code" => $com_code, "id" => $info->store_id));
+    $info->item_name = get_field_value(new Inv_itemCard(), "name", array("com_code" => $com_code, "item_code" => $info->item_code));
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $info->uom_id));
+    }
+    }
+    if($size=="A4"){
+        return view('admin.sales_return_invoices.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$sales_invoices_details]);
+    }else{
+        return view('admin.sales_return_invoices.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$sales_invoices_details]);
+    
+    }
+    }
+
+
 }
