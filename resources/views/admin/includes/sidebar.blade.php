@@ -264,8 +264,8 @@
                  </li>
               </ul>
            </li>
-           <li class="nav-item has-treeview {{ (request()->is('admin/FinancialReport*') )?'menu-open':'' }}     ">
-              <a href="#" class="nav-link {{ (request()->is('admin/FinancialReport*')  )?'active':'' }}">
+           <li class="nav-item has-treeview {{ (request()->is('admin/FinancialReport*')  )?'menu-open':'' }}     ">
+              <a href="#" class="nav-link {{ (request()->is('admin/FinancialReport*') || request()->is('admin/customeraccountmirror*')  )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                     التقارير
@@ -280,6 +280,15 @@
                        </p>
                     </a>
                  </li>
+
+                 <li class="nav-item">
+                  <a href="{{ route('admin.FinancialReport.customeraccountmirror') }}" class="nav-link {{ (request()->is('admin/FinancialReport/customeraccountmirror') )?'active':'' }}">
+                     <p>
+                        كشف حساب عميل        
+                     </p>
+                  </a>
+               </li>
+
               </ul>
            </li>
            <li class="nav-item has-treeview      ">
