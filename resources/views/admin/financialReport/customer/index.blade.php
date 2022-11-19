@@ -55,9 +55,9 @@
                <select name="report_type" id="report_type" class="form-control">
                   <option   value="1"> كشف حساب اجمالي</option>
                   <option  selected value="2"> كشف حساب تفصيلي خلال فترة</option>
-                  <option disabled  value="3"> كشف حساب المبيعات خلال فترة</option>
-                  <option disabled value="4"> كشف حساب مرتجع المبيعات خلال فترة</option>
-                  <option disabled value="5"> كشف حساب حركة النقدية خلال فترة</option>
+                  <option   value="3"> كشف حساب المبيعات خلال فترة</option>
+                  <option  value="4"> كشف حساب مرتجع المبيعات خلال فترة</option>
+                  <option  value="5"> كشف حساب حركة النقدية خلال فترة</option>
 
                </select>
             </div>
@@ -67,7 +67,7 @@
             <div class="form-group">
                <label>     اظهار الاصناف</label>
                <select name="Does_show_items" id="Does_show_items" class="form-control">
-                  <option  disabled value="1"> نعم</option>
+                  <option   value="1"> نعم</option>
                   <option  selected value="2"> لا</option>
             
 

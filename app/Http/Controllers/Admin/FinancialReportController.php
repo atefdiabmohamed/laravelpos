@@ -81,7 +81,7 @@ $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uo
 }
 }
 }
-$details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();
+$details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();
 if(!empty( $details['Treasuries_transactions'])){
 foreach( $details['Treasuries_transactions'] as $info){
 if($info->money_for_account<0) {
@@ -151,7 +151,7 @@ $supplierData['to_date']=$request->to_date;
 $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
 $supplierData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
-$details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();
+$details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();
 if(!empty( $details['Treasuries_transactions'])){
 foreach( $details['Treasuries_transactions'] as $info){
 if($info->money_for_account<0) {
@@ -232,7 +232,7 @@ public function customer_account_mirror(Request $request){
     }
     }
     }
-    $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('money_for_account','>',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->where('account_number','=',$CustomerData['account_number'])->get();
+    $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->where('account_number','=',$CustomerData['account_number'])->get();
     if(!empty( $details['Treasuries_transactions'])){
     foreach( $details['Treasuries_transactions'] as $info){
     if($info->money_for_account<0) {
@@ -248,61 +248,63 @@ public function customer_account_mirror(Request $request){
     }else{
     return view('admin.financialReport.customer.print_customer_account_mirrorIndetails',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
     }
-    //المشتريات خلال الفترة
+    //المبيعات خلال الفترة
     }elseif($request->report_type==3){
-    $supplierData['from_date']=$request->from_date;
-    $supplierData['to_date']=$request->to_date;
-    $supplierData['Does_show_items']=$request->Does_show_items;
-    $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
-    $supplierData['BurchaseCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
-    $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
-    $supplierData['BurchaseTotalMoney']= $supplierData['BurchaseTotalMoney']*(-1);
-    $details['Burchases']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->get();
-    if($supplierData['Does_show_items']==1){
-    foreach( $details['Burchases'] as $Bur){
-    $Bur->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$Bur->auto_serial,'order_type'=>$Bur->order_type));
-    if(!empty($Bur->itemsdetails)){
-    foreach($Bur->itemsdetails as $info){
-    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
-    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
-    }
-    }
-    }
-    }
+        $CustomerData['from_date']=$request->from_date;
+        $CustomerData['to_date']=$request->to_date;
+        $CustomerData['Does_show_items']=$request->Does_show_items;
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
+        $CustomerData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+        $details['sales']=Sales_invoices::select('auto_serial','invoice_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->get();
+        if($CustomerData['Does_show_items']==1){
+        foreach( $details['sales'] as $Bur){
+        $Bur->itemsdetails=get_cols_where(new Sales_invoices_details(),array("*"),array("com_code"=>$com_code,"sales_invoices_auto_serial"=>$Bur->auto_serial));
+        if(!empty($Bur->itemsdetails)){
+        foreach($Bur->itemsdetails as $info){
+        $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+        $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+        }
+        }
+        }
+        }
+
+
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
-    $supplierData['report_type']=$request->report_type;
-    return view('admin.financialReport.print_supplier_account_mirrorBurchases',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
-    //مرتجع مشتريات خلال الفترة
+    $CustomerData['report_type']=$request->report_type;
+    return view('admin.financialReport.customer.print_customer_account_mirrorsales',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
+    //مرتجع مبيعات خلال الفترة
     }elseif($request->report_type==4){
-    $supplierData['from_date']=$request->from_date;
-    $supplierData['to_date']=$request->to_date;
-    $supplierData['Does_show_items']=$request->Does_show_items;
-    $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
-    $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
-    $supplierData['BurchaseReturnTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
-    $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
-    if($supplierData['Does_show_items']==1){ 
-    foreach(  $details['BurchasesReturn'] as $return){  
-    $return->itemsdetails=get_cols_where(new Suppliers_with_orders_details(),array("*"),array("com_code"=>$com_code,"suppliers_with_orders_auto_serial"=>$return->auto_serial,'order_type'=>$return->order_type));
-    if(!empty($return->itemsdetails)){
-    foreach($return->itemsdetails as $info){
-    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
-    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
-    }
-    }
-    }
-    } 
+        $CustomerData['from_date']=$request->from_date;
+        $CustomerData['to_date']=$request->to_date;
+        $CustomerData['Does_show_items']=$request->Does_show_items;
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['SalesReturnCounter']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
+        $CustomerData['salesReturnTotalMoney']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+        $CustomerData['salesReturnTotalMoney']=$CustomerData['salesReturnTotalMoney']*(-1);
+        $details['sales_return']=SalesReturn::select('auto_serial','invoice_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->get();
+        if($CustomerData['Does_show_items']==1){ 
+        foreach(  $details['sales_return'] as $return){  
+        $return->itemsdetails=get_cols_where(new SalesReturnDetails(),array("*"),array("com_code"=>$com_code,"sales_invoices_auto_serial"=>$return->auto_serial));
+        if(!empty($return->itemsdetails)){
+        foreach($return->itemsdetails as $info){
+        $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+        $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+        }
+        }
+        }
+        }
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
-    $supplierData['report_type']=$request->report_type;
-    return view('admin.financialReport.print_supplier_account_mirrorBurchaseReturn',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
-    //المشتريات خلال الفترة
+    $CustomerData['report_type']=$request->report_type;
+    return view('admin.financialReport.customer.print_customer_account_mirrorSalesReturn',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
+    //حركة النقدية خلال الفترة
     }else{
-    $supplierData['from_date']=$request->from_date;
-    $supplierData['to_date']=$request->to_date;
-    $supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
-    $supplierData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
-    $supplierData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
-    $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();
+        $CustomerData['from_date']=$request->from_date;
+        $CustomerData['to_date']=$request->to_date;
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+    $CustomerData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+    $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->where('account_number','=',$CustomerData['account_number'])->get();
     if(!empty( $details['Treasuries_transactions'])){
     foreach( $details['Treasuries_transactions'] as $info){
     if($info->money_for_account<0) {
@@ -312,8 +314,8 @@ public function customer_account_mirror(Request $request){
     }
     }
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
-    $supplierData['report_type']=$request->report_type;
-    return view('admin.financialReport.print_supplier_account_mirrorMoney',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
+    $CustomerData['report_type']=$request->report_type;
+    return view('admin.financialReport.customer.print_customer_account_mirrorMoney',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
     }
     }else{
     $com_code=auth()->user()->com_code;
