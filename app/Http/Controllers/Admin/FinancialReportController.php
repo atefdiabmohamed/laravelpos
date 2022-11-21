@@ -337,4 +337,131 @@ public function customer_account_mirror(Request $request){
         }
 
 
-}
+
+
+
+
+        public function delegate_account_mirror(Request $request){
+            if($_POST){
+            $com_code=auth()->user()->com_code;
+            $delegateData=get_cols_where_row(new Delegate(),array("account_number","start_balance","name","phones","date","delegate_code"),array("com_code"=>$com_code,'delegate_code'=>$request->delegate_code));
+            if(empty($delegateData)){
+            return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي بيانات هذا العميل !!']);
+            }
+            //General Report لو تقرير اجمالي
+            if($request->report_type==1){
+            $delegateData['the_final_Balance']=refresh_account_blance_delegate($delegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+            $delegateData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->count();
+            $delegateData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->sum('total_cost');
+            $delegateData['total_delegate_commission_value']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->sum('delegate_commission_value');
+
+            $delegateData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->sum('money_for_account');
+            $delegateData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->sum('money_for_account');
+            $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+            $delegateData['report_type']=$request->report_type;
+            return view('admin.financialReport.delegate.print_delegate_account_mirror',['data'=>$delegateData,'systemData'=>$systemData]);
+            //تفصيلي
+            }elseif($request->report_type==2){
+            $delegateData['from_date']=$request->from_date;
+            $delegateData['to_date']=$request->to_date;
+            $delegateData['Does_show_items']=$request->Does_show_items;
+            $delegateData['the_final_Balance']=refresh_account_blance_delegate($delegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+            $delegateData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->count();
+            $delegateData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->sum('money_for_account');
+            $delegateData['total_delegate_commission_value']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->sum('delegate_commission_value');
+
+            $delegateData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->sum('money_for_account');
+            $delegateData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->sum('money_for_account');
+            $details['sales']=Sales_invoices::select('auto_serial','invoice_date','is_approved','total_cost','pill_type','what_paid','what_remain','delegate_commission_value')->where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->get();
+            if($delegateData['Does_show_items']==1){
+            foreach( $details['sales'] as $Bur){
+            $Bur->itemsdetails=get_cols_where(new Sales_invoices_details(),array("*"),array("com_code"=>$com_code,"sales_invoices_auto_serial"=>$Bur->auto_serial));
+            if(!empty($Bur->itemsdetails)){
+            foreach($Bur->itemsdetails as $info){
+            $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+            $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+            }
+            }
+            }
+            }
+     
+            $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->where('account_number','=',$delegateData['account_number'])->get();
+            if(!empty( $details['Treasuries_transactions'])){
+            foreach( $details['Treasuries_transactions'] as $info){
+            if($info->money_for_account<0) {
+            $info->money_for_account=$info->money_for_account*(-1);
+            }
+            $info->mov_type_name=get_field_value(new Mov_type(),'name',array('id'=>$info->mov_type));
+            }
+            
+            $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+            $delegateData['report_type']=$request->report_type;
+            if($delegateData['Does_show_items']==1){
+            return view('admin.financialReport.delegate.print_delegate_account_mirrorIndetails_items',['data'=>$delegateData,'systemData'=>$systemData,'details'=>$details]);
+            }else{
+            return view('admin.financialReport.delegate.print_delegate_account_mirrorIndetails',['data'=>$delegateData,'systemData'=>$systemData,'details'=>$details]);
+            }
+            //المبيعات خلال الفترة
+            }
+
+        }
+            elseif($request->report_type==3){
+                $delegateData['from_date']=$request->from_date;
+                $delegateData['to_date']=$request->to_date;
+                $delegateData['Does_show_items']=$request->Does_show_items;
+                $delegateData['the_final_Balance']=refresh_account_blance_delegate($delegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+                $delegateData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->count();
+                $delegateData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->sum('money_for_account');
+                $delegateData['total_delegate_commission_value']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->sum('delegate_commission_value');
+    
+                $details['sales']=Sales_invoices::select('auto_serial','invoice_date','is_approved','total_cost','pill_type','what_paid','what_remain','delegate_commission_value')->where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->get();
+                if($delegateData['Does_show_items']==1){
+                foreach( $details['sales'] as $Bur){
+                $Bur->itemsdetails=get_cols_where(new Sales_invoices_details(),array("*"),array("com_code"=>$com_code,"sales_invoices_auto_serial"=>$Bur->auto_serial));
+                if(!empty($Bur->itemsdetails)){
+                foreach($Bur->itemsdetails as $info){
+                $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+                $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+                }
+                }
+                }
+                }
+         
+                $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+                $delegateData['report_type']=$request->report_type;
+                return view('admin.financialReport.delegate.print_delegate_account_mirrorsales',['data'=>$delegateData,'systemData'=>$systemData,'details'=>$details]);
+          
+                
+            }else{
+                $delegateData['from_date']=$request->from_date;
+                $delegateData['to_date']=$request->to_date;
+                $delegateData['the_final_Balance']=refresh_account_blance_delegate($delegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+             $delegateData['total_delegate_commission_value']=Sales_invoices::where(["com_code"=>$com_code,'delegate_code'=>$request->delegate_code])->where('invoice_date','>=',$delegateData['from_date'])->where('invoice_date','<=',$delegateData['to_date'])->sum('delegate_commission_value');
+            $delegateData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->sum('money_for_account');
+            $delegateData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$delegateData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->sum('money_for_account');
+            $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$delegateData['from_date'])->where('move_date','<=',$delegateData['to_date'])->where('account_number','=',$delegateData['account_number'])->get();
+            if(!empty( $details['Treasuries_transactions'])){
+            foreach( $details['Treasuries_transactions'] as $info){
+            if($info->money_for_account<0) {
+            $info->money_for_account=$info->money_for_account*(-1);
+            }
+            $info->mov_type_name=get_field_value(new Mov_type(),'name',array('id'=>$info->mov_type));
+            }
+            }
+            $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+            $delegateData['report_type']=$request->report_type;
+            return view('admin.financialReport.delegate.print_delegate_account_mirrorMoney',['data'=>$delegateData,'systemData'=>$systemData,'details'=>$details]);
+            }
+            }else{
+            $com_code=auth()->user()->com_code;
+            $delegates=get_cols_where(new Delegate(),array('delegate_code','name','date'),array('com_code'=>$com_code));
+            return view('admin.financialReport.delegate.index',['delegates'=>$delegates]);
+            }
+            } 
+      
+        
+        
+        
+
+
+    }

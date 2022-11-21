@@ -44,6 +44,21 @@ $(document).on('change','#customer_code',function(e){
   
   });
 
+  $(document).on('change','#delegate_code',function(e){
+    if($(this).val()!=''){
+    var startdate=$("#delegate_code option:selected").data('startdate');
+    $("#from_date").val(startdate);
+    $("#to_date").val($("#todaydate").val());
+    }else{
+      $("#from_date").val('');
+      $("#to_date").val('');
+    
+    
+    }
+    
+    
+    });
+
 $(document).on('input', '#searchbytextforcustomer', function (e) {
   var searchtext=$(this).val();
   var token = $("#token_search").val();

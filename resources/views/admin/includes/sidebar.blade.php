@@ -264,8 +264,8 @@
                  </li>
               </ul>
            </li>
-           <li class="nav-item has-treeview {{ (request()->is('admin/FinancialReport*')  )?'menu-open':'' }}     ">
-              <a href="#" class="nav-link {{ (request()->is('admin/FinancialReport*') || request()->is('admin/customeraccountmirror*')  )?'active':'' }}">
+           <li class="nav-item has-treeview {{ (request()->is('admin/FinancialReport*') || request()->is('admin/customeraccountmirror*') ||request()->is('admin/FinancialReport/delegateaccountmirror') )?'menu-open':'' }}     ">
+              <a href="#" class="nav-link {{ (request()->is('admin/FinancialReport*') || request()->is('admin/customeraccountmirror*') ||request()->is('admin/FinancialReport/delegateaccountmirror') )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                     التقارير
@@ -285,6 +285,15 @@
                   <a href="{{ route('admin.FinancialReport.customeraccountmirror') }}" class="nav-link {{ (request()->is('admin/FinancialReport/customeraccountmirror') )?'active':'' }}">
                      <p>
                         كشف حساب عميل        
+                     </p>
+                  </a>
+               </li>
+
+
+               <li class="nav-item">
+                  <a href="{{ route('admin.FinancialReport.delegateaccountmirror') }}" class="nav-link {{ (request()->is('admin/FinancialReport/delegateaccountmirror') )?'active':'' }}">
+                     <p>
+                        كشف حساب مندوب        
                      </p>
                   </a>
                </li>
