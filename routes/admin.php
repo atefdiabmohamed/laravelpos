@@ -26,9 +26,6 @@ use App\Http\Controllers\Admin\ItemcardBalanceController;
 use App\Http\Controllers\Admin\SalesReturnInvoicesController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\ServicesController;
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,7 +36,7 @@ use App\Http\Controllers\Admin\ServicesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-define('PAGINATION_COUNT', 5);
+define('PAGINATION_COUNT', 6);
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
@@ -161,9 +158,6 @@ Route::post('/suppliers_orders/do_approve/{id}', [Suppliers_with_ordersControlle
 Route::post('/suppliers_orders/load_modal_approve_invoice', [Suppliers_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.suppliers_orders.load_modal_approve_invoice');
 Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersController::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 Route::get('/suppliers_orders/printsaleswina4/{id}/{size}', [Suppliers_with_ordersController::class, 'printsaleswina4'])->name('admin.suppliers_orders.printsaleswina4');
-
-
-
 /*           end suppliers_orders               */
 /*         start treasuries                */
 Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
@@ -225,10 +219,6 @@ Route::post('/SalesInvoices/get_last_added_customer', [SalesInvoicesController::
 Route::post('/SalesInvoices/searchforcustomer', [SalesInvoicesController::class, 'searchforcustomer'])->name('admin.SalesInvoices.searchforcustomer');
 Route::post('/SalesInvoices/searchforitems', [SalesInvoicesController::class, 'searchforitems'])->name('admin.SalesInvoices.searchforitems');
 Route::get('/SalesInvoices/printsaleswina4/{id}/{size}', [SalesInvoicesController::class, 'printsaleswina4'])->name('admin.SalesInvoices.printsaleswina4');
-
-
-
-
 /*           sales Invoices   المبيعات                   */
 /*         start  delegates                */
 Route::get('/delegates/index', [DelegatesController::class, 'index'])->name('admin.delegates.index');
@@ -262,8 +252,6 @@ Route::post('/suppliers_orders_general_return/load_modal_approve_invoice', [Supp
 Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_with_ordersGeneralRetuen::class, 'load_usershiftDiv'])->name('admin.suppliers_orders_general_return.load_usershiftDiv');
 Route::post('/suppliers_orders_general_return/get_item_batches', [Suppliers_with_ordersGeneralRetuen::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_item_batches');
 Route::get('/suppliers_orders_general_return/printsaleswina4/{id}/{size}', [Suppliers_with_ordersGeneralRetuen::class, 'printsaleswina4'])->name('admin.suppliers_orders_general_return.printsaleswina4');
-
-
 /*           end  suppliers_orders Gernal Return                */
 /*          start    itemcardBalance               */
 Route::get('/itemcardBalance/index', [ItemcardBalanceController::class, 'index'])->name('admin.itemcardBalance.index');
@@ -298,11 +286,8 @@ Route::post('/SalesReturnInvoices/get_last_added_customer', [SalesReturnInvoices
 Route::post('/SalesReturnInvoices/searchforcustomer', [SalesReturnInvoicesController::class, 'searchforcustomer'])->name('admin.SalesReturnInvoices.searchforcustomer');
 Route::post('/SalesReturnInvoices/searchforitems', [SalesReturnInvoicesController::class, 'searchforitems'])->name('admin.SalesReturnInvoices.searchforitems');
 Route::get('/SalesReturnInvoices/printsaleswina4/{id}/{size}', [SalesReturnInvoicesController::class, 'printsaleswina4'])->name('admin.SalesReturnInvoices.printsaleswina4');
-
 /*         
-  sales Invoices   المبيعات                   */
-
-
+sales Invoices   المبيعات                   */
 /* start  FinancialReportController تقاير الحسابات */
 Route::get('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
 Route::post('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
@@ -311,10 +296,7 @@ Route::post('/FinancialReport/customeraccountmirror', [FinancialReportController
 Route::post('/FinancialReport/searchforcustomer', [FinancialReportController::class, 'searchforcustomer'])->name('admin.FinancialReport.searchforcustomer');
 Route::get('/FinancialReport/delegateaccountmirror', [FinancialReportController::class, 'delegate_account_mirror'])->name('admin.FinancialReport.delegateaccountmirror');
 Route::post('/FinancialReport/delegateaccountmirror', [FinancialReportController::class, 'delegate_account_mirror'])->name('admin.FinancialReport.delegateaccountmirror');
-
-
 /*  end  FinancialReportController */
-
 /*         start  Services                */
 Route::get('/Services/index', [ServicesController::class, 'index'])->name('admin.Services.index');
 Route::get('/Services/create', [ServicesController::class, 'create'])->name('admin.Services.create');
@@ -324,10 +306,6 @@ Route::post('/Services/update/{id}', [ServicesController::class, 'update'])->nam
 Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name('admin.Services.delete');
 Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
 /*           end Services                */
-
-
-
-
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');

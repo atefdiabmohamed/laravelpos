@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 @section('title')
-الوحدات
+الخدمات الداخلية والخارجية
 @endsection
 @section('contentheader')
-الوحدات
+الخدمات
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.uoms.index') }}">  الوحدات </a>
+<a href="{{ route('admin.uoms.index') }}">  الخدمات الداخلية والخارجية </a>
 @endsection
 @section('contentheaderactive')
 تعديل
@@ -17,17 +17,17 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center">تعديل بيانات   وحدة قياس</h3>
+          <h3 class="card-title card_title_center">تعديل بيانات   خدمة  </h3>
         
         </div>
         <!-- /.card-header -->
         <div class="card-body">
         @if (@isset($data) && !@empty($data))
-      <form action="{{ route('admin.uoms.update',$data['id']) }}" method="post" >
+      <form action="{{ route('admin.Services.update',$data['id']) }}" method="post" >
         @csrf
         
       <div class="form-group">
-        <label>اسم  الوحدة</label>
+        <label>اسم  الخدمة</label>
         <input name="name" id="name" class="form-control" value="{{ old('name',$data['name']) }}"   >
         @error('name')
         <span class="text-danger">{{ $message }}</span>
@@ -36,13 +36,13 @@
      
 
         <div class="form-group"> 
-          <label>  نوع الوحدة </label>
-          <select @if($total_counter_used>0) disabled  @endif name="is_master" id="is_master" class="form-control">
+          <label>  نوع الخدمة </label>
+          <select name="type" id="type" class="form-control">
            <option value="">اختر النوع</option>
-          <option   @if(old('is_master')==1) selected="selected"  @endif value="1"> وحدة اب</option>
-           <option   @if(old('is_master')==0) selected="selected"  @endif value="0"> وحدة تجزئة</option>
+          <option  {{  old('type',$data['type'])==1 ? 'selected' : ''}}   value="1">  خدمات مقدمة لنا</option>
+           <option  {{  old('type',$data['type'])==2 ? 'selected' : ''}}    value="2">  خدمات نقدمها للغير</option>
           </select>
-          @error('is_master')
+          @error('type')
           <span class="text-danger">{{ $message }}</span>
           @enderror
           </div>
@@ -59,7 +59,7 @@
             </div>
       <div class="form-group text-center">
 <button type="submit" class="btn btn-primary btn-sm">حفظ التعديلات</button>
-<a href="{{ route('admin.uoms.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
+<a href="{{ route('admin.Services.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
 
       </div>
 

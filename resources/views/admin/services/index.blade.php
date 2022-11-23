@@ -34,7 +34,7 @@
                       <div class="col-md-4">
                       <div class="form-group"> 
                         <label>    بحث بالنوع</label>
-                        <select name="is_master_search" id="is_master_search" class="form-control">
+                        <select name="type_search" id="type_search" class="form-control">
                          <option value="all"> بحث بالكل</option>
                         <option  value="1">  خدمات مقدمة لنا</option>
                          <option value="2">  خدمات نقدمها للغير</option>
@@ -112,7 +112,8 @@
 
 
         <a href="{{ route('admin.Services.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-   
+        <a href="{{ route('admin.Services.delete',$info->id) }}" class="btn are_you_shue btn-sm  btn-danger">حذف</a>   
+
          </td>
            
    
@@ -126,6 +127,7 @@
    
             </tbody>
              </table>
+             
       <br>
            {{ $data->links() }}
        
@@ -152,7 +154,7 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('assets/admin/js/inv_uoms.js') }}"></script>
+<script src="{{ asset('assets/admin/js/services.js') }}"></script>
 
 @endsection
 

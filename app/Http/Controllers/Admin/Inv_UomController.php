@@ -54,6 +54,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function edit($id)
 {
 $com_code = auth()->user()->com_code;
@@ -108,6 +109,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function delete($id)
 {
 try {
@@ -164,4 +166,6 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 return view('admin.inv_uom.ajax_search',['data'=>$data]);
 }
 }
+
+
 }
