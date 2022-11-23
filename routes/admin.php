@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Suppliers_with_ordersGeneralRetuen;
 use App\Http\Controllers\Admin\ItemcardBalanceController;
 use App\Http\Controllers\Admin\SalesReturnInvoicesController;
 use App\Http\Controllers\Admin\FinancialReportController;
+use App\Http\Controllers\Admin\ServicesController;
 
 
 
@@ -312,10 +313,17 @@ Route::get('/FinancialReport/delegateaccountmirror', [FinancialReportController:
 Route::post('/FinancialReport/delegateaccountmirror', [FinancialReportController::class, 'delegate_account_mirror'])->name('admin.FinancialReport.delegateaccountmirror');
 
 
-
-
-
 /*  end  FinancialReportController */
+
+/*         start  Services                */
+Route::get('/Services/index', [ServicesController::class, 'index'])->name('admin.Services.index');
+Route::get('/Services/create', [ServicesController::class, 'create'])->name('admin.Services.create');
+Route::post('/Services/store', [ServicesController::class, 'store'])->name('admin.Services.store');
+Route::get('/Services/edit/{id}', [ServicesController::class, 'edit'])->name('admin.Services.edit');
+Route::post('/Services/update/{id}', [ServicesController::class, 'update'])->name('admin.Services.update');
+Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name('admin.Services.delete');
+Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
+/*           end Services                */
 
 
 
