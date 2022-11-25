@@ -217,8 +217,8 @@
                  </li>
               </ul>
            </li>
-           <li class="nav-item has-treeview  {{ (request()->is('admin/Services*'))?'menu-open':'' }}    ">
-              <a href="#" class="nav-link {{ (request()->is('admin/Services*') )?'active':'' }} ">
+           <li class="nav-item has-treeview  {{ (request()->is('admin/Services*') ||request()->is('admin/Services_orders*'))?'menu-open':'' }}    ">
+              <a href="#" class="nav-link {{ (request()->is('admin/Services*') ||request()->is('admin/Services_orders*') )?'active':'' }} ">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                     خدمات داخلية وخارجية
@@ -227,14 +227,20 @@
               </a>
               <ul class="nav nav-treeview  ">
                <li class="nav-item">
-                  <a href="{{ route('admin.Services.index') }}" class="nav-link {{ (request()->is('admin/Services*') )?'active':'' }}">
+                  <a href="{{ route('admin.Services.index') }}" class="nav-link {{ (request()->is('admin/Services*')  and !request()->is('admin/Services_orders*'))?'active':'' }}">
                      <p>
                   ضبط الخدمات        
                      </p>
                   </a>
                </li>
 
-
+               <li class="nav-item">
+                  <a href="{{ route('admin.Services_orders.index') }}" class="nav-link {{ (request()->is('admin/Services_orders*')  )?'active':'' }}">
+                     <p>
+                  فواتير الخدمات        
+                     </p>
+                  </a>
+               </li>
               </ul>
            </li>
            <li class="nav-item has-treeview {{ (request()->is('admin/admin_shift*'))?'menu-open':'' }}     ">

@@ -26,6 +26,9 @@ use App\Http\Controllers\Admin\ItemcardBalanceController;
 use App\Http\Controllers\Admin\SalesReturnInvoicesController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Admin\Services_with_ordersController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -137,6 +140,7 @@ Route::get('/supplier/delete/{id}', [SuppliersController::class, 'delete'])->nam
 Route::post('/supplier/ajax_search', [SuppliersController::class, 'ajax_search'])->name('admin.supplier.ajax_search');
 Route::get('/supplier/show/{id}', [SuppliersController::class, 'show'])->name('admin.supplier.show');
 /*           end suppliers                */
+
 /*         start  suppliers_orders   المشتريات             */
 Route::get('/suppliers_orders/index', [Suppliers_with_ordersController::class, 'index'])->name('admin.suppliers_orders.index');
 Route::get('/suppliers_orders/create', [Suppliers_with_ordersController::class, 'create'])->name('admin.suppliers_orders.create');
@@ -159,6 +163,8 @@ Route::post('/suppliers_orders/load_modal_approve_invoice', [Suppliers_with_orde
 Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersController::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 Route::get('/suppliers_orders/printsaleswina4/{id}/{size}', [Suppliers_with_ordersController::class, 'printsaleswina4'])->name('admin.suppliers_orders.printsaleswina4');
 /*           end suppliers_orders               */
+
+
 /*         start treasuries                */
 Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
 Route::get('/admins_accounts/create', [AdminController::class, 'create'])->name('admin.admins_accounts.create');
@@ -306,6 +312,32 @@ Route::post('/Services/update/{id}', [ServicesController::class, 'update'])->nam
 Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name('admin.Services.delete');
 Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
 /*           end Services                */
+
+/*         start  suppliers_orders   خدمات مقدمة لنا ونقدمها للغير             */
+Route::get('/Services_orders/index', [Services_with_ordersController::class, 'index'])->name('admin.Services_orders.index');
+Route::get('/Services_orders/create', [Services_with_ordersController::class, 'create'])->name('admin.Services_orders.create');
+Route::post('/Services_orders/store', [Services_with_ordersController::class, 'store'])->name('admin.Services_orders.store');
+Route::get('/Services_orders/edit/{id}', [Services_with_ordersController::class, 'edit'])->name('admin.Services_orders.edit');
+Route::post('/Services_orders/update/{id}', [Services_with_ordersController::class, 'update'])->name('admin.Services_orders.update');
+Route::get('/Services_orders/delete/{id}', [Services_with_ordersController::class, 'delete'])->name('admin.Services_orders.delete');
+Route::post('/Services_orders/ajax_search', [Services_with_ordersController::class, 'ajax_search'])->name('admin.Services_orders.ajax_search');
+Route::get('/Services_orders/show/{id}', [Services_with_ordersController::class, 'show'])->name('admin.Services_orders.show');
+Route::post('/Services_orders/load_modal_add_details', [Services_with_ordersController::class, 'load_modal_add_details'])->name('admin.Services_orders.load_modal_add_details');
+Route::post('/Services_orders/add_new_details', [Services_with_ordersController::class, 'add_new_details'])->name('admin.Services_orders.add_new_details');
+Route::post('/Services_orders/reload_itemsdetials', [Services_with_ordersController::class, 'reload_itemsdetials'])->name('admin.Services_orders.reload_itemsdetials');
+Route::post('/Services_orders/reload_parent_pill', [Services_with_ordersController::class, 'reload_parent_pill'])->name('admin.Services_orders.reload_parent_pill');
+Route::post('/Services_orders/load_edit_item_details', [Services_with_ordersController::class, 'load_edit_item_details'])->name('admin.Services_orders.load_edit_item_details');
+Route::post('/Services_orders/edit_item_details', [Services_with_ordersController::class, 'edit_item_details'])->name('admin.Services_orders.edit_item_details');
+Route::get('/Services_orders/delete_details/{id}/{id_parent}', [Services_with_ordersController::class, 'delete_details'])->name('admin.Services_orders.delete_details');
+Route::post('/Services_orders/do_approve/{id}', [Services_with_ordersController::class, 'do_approve'])->name('admin.Services_orders.do_approve');
+Route::post('/Services_orders/load_modal_approve_invoice', [Services_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.Services_orders.load_modal_approve_invoice');
+Route::post('/Services_orders/load_usershiftDiv', [Services_with_ordersController::class, 'load_usershiftDiv'])->name('admin.Services_orders.load_usershiftDiv');
+Route::get('/Services_orders/printsaleswina4/{id}/{size}', [Services_with_ordersController::class, 'printsaleswina4'])->name('admin.Services_orders.printsaleswina4');
+/*           end suppliers_orders               */
+
+
+
+
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');
