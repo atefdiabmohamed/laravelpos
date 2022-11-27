@@ -794,9 +794,14 @@ $("#account_numberDiv").show();
 $("#entity_nameDiv").hide();
 
 
-       }else{
+       }else if($(this).val()==0){
         $("#account_numberDiv").hide();
         $("#entity_nameDiv").show();
+       }
+       
+       else{
+        $("#account_numberDiv").hide();
+        $("#entity_nameDiv").hide();
         
        }
 

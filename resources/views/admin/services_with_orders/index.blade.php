@@ -78,7 +78,7 @@
             <thead class="custom_thead">
            <th>كود</th>
            <th>  فئة الفاتورة</th>
-           <th> الحساب المالي</th>
+           <th> الحساب المالي /الجهة</th>
            <th> تاريخ الفاتورة</th>
            <th>  نوع الفاتورة</th>
            <th>    اجمالي الفاتورة</th>
@@ -92,7 +92,13 @@
             <tr>
               <td>{{ $info->auto_serial }}</td>  
               <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات مقدمه للغير @endif</td> 
-              <td>{{ $info->account_name }}</td>  
+              <td>
+                @if ($info->is_account_number==1)
+                {{ $info->account_name }}
+              @else
+            جهة <br>  {{ $info->entity_name }}
+              @endif
+              </td>  
               <td>{{ $info->order_date }}</td>  
              <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td> 
              <td>{{ $info->total_cost*(1) }}</td>  

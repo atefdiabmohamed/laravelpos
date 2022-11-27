@@ -51,7 +51,8 @@
           <div class="form-group"> 
             <label>    هل حساب مالي</label>
             <select name="is_account_number" id="is_account_number" class="form-control">
-            <option   @if(old('is_account_number')==1) selected="selected"  @endif value="1">  نعم</option>
+              <option   @if(old('is_account_number')=="") selected="selected"  @endif value="">  اختر الحالة</option>
+              <option   @if(old('is_account_number')==1) selected="selected"  @endif value="1">  نعم</option>
              <option @if(old('is_account_number')==0 and old('is_account_number')!=""  ) selected="selected"   @endif value="0">  لا</option>
             </select>
             @error('is_account_number')
@@ -59,13 +60,13 @@
             @enderror
             </div>
 
-          <div class="form-group" id="account_numberDiv"> 
+          <div class="form-group" id="account_numberDiv" @if( old('is_account_number')!=1) style="display: none;"   @endif > 
             <label>   بيانات الحسابات المالية</label>
             <select name="account_number" id="account_number" class="form-control select2">
-              <option value="all">  اختر الحساب المالي</option>
+              <option value="">  اختر الحساب المالي</option>
               @if (@isset($accounts) && !@empty($accounts))
               @foreach ($accounts as $info )
-                <option value="{{ $info->account_number }}"> {{ $info->name }} </option>
+                <option  @if(old('account_number')==$info->account_number ) selected="selected"  @endif  value="{{ $info->account_number }}"> {{ $info->name }} </option>
               @endforeach
                @endif
             </select>
@@ -74,7 +75,7 @@
             @enderror
             </div>
   
-            <div class="form-group" id="entity_nameDiv" style="display: none;">
+            <div class="form-group" id="entity_nameDiv"   @if( old('is_account_number')==""||old('is_account_number')==1   ) style="display: none;"   @endif >
               <label>   اسم الجهة</label>
               <input name="entity_name" class="form-control" id="entity_name" type="text"  value="{{ old('entity_name') }}"    >
               @error('entity_name')
