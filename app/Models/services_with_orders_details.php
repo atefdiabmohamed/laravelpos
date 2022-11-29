@@ -12,7 +12,7 @@ class services_with_orders_details extends Model
     protected $fillable=[
         'services_with_orders_auto_serial', 'service_id',
          'notes', 'total', 'added_by', 'updated_by',
-          'created_at', 'updated_at', 'com_code', 'date','order_type','total_services'
+          'created_at', 'updated_at', 'com_code', 'date','order_type'
     ];
 
 }
