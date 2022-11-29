@@ -114,6 +114,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function edit($id)
 {
 $com_code = auth()->user()->com_code;
@@ -216,6 +217,7 @@ echo json_encode("done");
 }
 }
 }
+
 }
 public function reload_itemsdetials(Request $request)
 {

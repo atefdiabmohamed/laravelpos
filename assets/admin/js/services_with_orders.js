@@ -54,97 +54,57 @@ $(document).ready(function () {
   $(document).on('input', '#price_add', function (e) {
     recaluclate_Add();
   });
+
+
+
   $(document).on('click', '#AddToBill', function (e) {
-    var item_code_add = $("#item_code_add").val();
-    if (item_code_add == "") {
-      alert("من فضلك  اختر الصنف");
-      $("#item_code_add").focus();
+    var services_id_add = $("#services_id_add").val();
+    if (services_id_add == "") {
+      alert("من فضلك  اختر الخدمة");
+      $("#services_id_add").focus();
       return false;
     }
-    var uom_id_Add = $("#uom_id_Add").val();
-    if (uom_id_Add == "") {
-      alert("من فضلك  اختر الوحدة");
-      $("#uom_id_Add").focus();
-      return false;
-    }
-
-    var isparentuom = $("#uom_id_Add").children('option:selected').data("isparentuom");
-    var quantity_add = $("#quantity_add").val();
-    if (quantity_add == "" || quantity_add == 0) {
-      alert("من فضلك  ادخل الكمية المستلمة");
-      $("#quantity_add").focus();
-      return false;
-    }
-
-
-    var price_add = $("#price_add").val();
-    if (price_add == "") {
-      alert("من فضلك  ادخل سعر الوحدة ");
-      $("#quantity_add").focus();
-      return false;
-    }
-    var type = $("#item_code_add").children('option:selected').data("type");
-    if (type == 2) {
-      var production_date = $("#production_date").val();
-      if (production_date == "") {
-        alert("من فضلك  اختر تاريخ الانتاج  ");
-        $("#production_date").focus();
-        return false;
-      }
-
-      var expire_date = $("#expire_date").val();
-      if (expire_date == "") {
-        alert("من فضلك  اختر تاريخ انتهاء الصلاحية  ");
-        $("#expire_date").focus();
-        return false;
-      }
-
-      if (expire_date < production_date) {
-        alert("عفوا لايمكن ان يكون تاريخ الانتهاء اقل من تاريخ الانتاج !!!");
-        $("#expire_date").focus();
-        return false;
-      }
-
-
-    } else {
-      var production_date = $("#production_date").val();
-      var expire_date = $("#expire_date").val();
-    }
-
+    
+     
     var total_add = $("#total_add").val();
     if (total_add == "") {
-      alert("من فضلك  ادخل اجمالي   الاصناف  ");
+      alert("من فضلك  ادخل اجمالي   الخدمة  ");
       $("#total_add").focus();
       return false;
     }
+    var notes_add = $("#notes_add").val();
 
-    var autoserailparent = $("#autoserailparent").val();
+    var id_parent_pill = $("#id_parent_pill").val();
     var token_search = $("#token_search").val();
-    var ajax_search_url = $("#ajax_add_new_details").val();
+    var ajax_url = $("#ajax_add_new_details").val();
 
     jQuery.ajax({
-      url: ajax_search_url,
+      url: ajax_url,
       type: 'post',
       dataType: 'json',
       cache: false,
       data: {
-        autoserailparent: autoserailparent, "_token": token_search, item_code_add: item_code_add, uom_id_Add: uom_id_Add, isparentuom: isparentuom,
-        quantity_add: quantity_add, price_add: price_add, production_date: production_date, expire_date: expire_date, total_add: total_add, type: type
+        id_parent_pill: id_parent_pill, "_token": token_search, 
+        services_id_add: services_id_add, total_add: total_add,notes_add:notes_add
       },
       success: function (data) {
         alert("تم الاضافة بنجاح");
-        reload_parent_pill();
-        reload_itemsdetials();
+      //  reload_parent_pill();
+       // reload_itemsdetials();
+       location.reload();
 
       },
       error: function () {
-
+alert("عفوا لقد حدث خطأ ما  من فضلك حاول مرة اخري !");
       }
     });
 
 
 
   });
+
+
+
 
   function recaluclate_Add() {
     var quantity_add = $("#quantity_add").val();
@@ -227,7 +187,7 @@ $(document).ready(function () {
 
   $(document).on('click', '#load_modal_add_detailsBtn', function (e) {
     var id = $(this).data("id");
-    var autoserailparent = $("#autoserailparent").val();
+    var id_parent_pill = $("#id_parent_pill").val();
     var token_search = $("#token_search").val();
     var ajax_search_url = $("#ajax_load_modal_add_details").val();
 
@@ -236,7 +196,7 @@ $(document).ready(function () {
       type: 'post',
       dataType: 'html',
       cache: false,
-      data: { autoserailparent: autoserailparent, "_token": token_search, id: id },
+      data: { id_parent_pill: id_parent_pill, "_token": token_search, id: id },
       success: function (data) {
         $("#Add_item_Modal_body").html(data);
         $("#Add_item_Modal").modal("show");
