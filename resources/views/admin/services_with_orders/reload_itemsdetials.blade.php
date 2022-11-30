@@ -6,60 +6,66 @@
       
       <table id="example2" class="table table-bordered table-hover">
         <thead class="custom_thead">
-       <th>مسلسل</th>
-       <th>الصنف </th>
-       <th> الوحده</th>
-       <th> الكمية</th>
-       <th> السعر</th>
-       <th> الاجمالي</th>
-
-       <th></th>
+           <th>مسلسل</th>
+           <th>اسم الخدمة </th>
+           <th> الاجمالي</th>
+           <th> ملاحظات</th>
+           <th> الاضافة</th>
+           <th> التحديث</th>
+           <th></th>
         </thead>
         <tbody>
-     @foreach ($details as $info )
-        <tr>
-         <td>{{ $i }}</td>  
-       <td>{{ $info->item_card_name }}
-      @if($info->item_card_type==2)
-      <br>
-      تاريخ انتاج  {{ $info->production_date }} <br>
-
-      تاريخ انتهاء  {{ $info->expire_date }} <br>
-
-      @endif
-      
-      
-      </td>
-       <td>{{ $info->uom_name }}</td>
-       <td>{{ $info->deliverd_quantity*(1) }}</td>
-       <td>{{ $info->unit_price*(1) }}</td>
-       <td>{{ $info->total_price*(1) }}</td>
-  
-       <td>
-     @if($data['is_approved']==0)
-
-     <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-     <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
-   
-
-
-     @endif
-
-       </td>
-
-       
-
-       </tr> 
-  @php
-     $i++; 
-  @endphp
-     @endforeach
-
-
-
+           @foreach ($details as $info )
+           <tr>
+              <td>{{ $i }}</td>
+              <td>{{ $info->service_name }}</td>
+              <td>{{ $info->total*(1) }}</td>
+              <td>{{ $info->notes }}</td>
+              <td > 
+                 @php
+                 $dt=new DateTime($info->created_at);
+                 $date=$dt->format("Y-m-d");
+                 $time=$dt->format("h:i");
+                 $newDateTime=date("A",strtotime($time));
+                 $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
+                 @endphp
+                 {{ $date }} <br>
+                 {{ $time }}
+                 {{ $newDateTimeType }}  <br>
+                 بواسطة 
+                 {{ $info->added_by_admin}}
+              </td>
+              <td > 
+                 @if($info->updated_by>0 and $info->updated_by!=null )
+                 @php
+                 $dt=new DateTime($info->updated_at);
+                 $date=$dt->format("Y-m-d");
+                 $time=$dt->format("h:i");
+                 $newDateTime=date("A",strtotime($time));
+                 $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
+                 @endphp
+                 {{ $date }}  <br>
+                 {{ $time }}
+                 {{ $newDateTimeType }}  <br>
+                 بواسطة 
+                 {{ $data['updated_by_admin'] }}
+                 @else
+                 لايوجد تحديث
+                 @endif
+              </td>
+              <td>
+                 @if($data['is_approved']==0)
+                 <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
+                 <a href="{{ route('admin.Services_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
+                 @endif
+              </td>
+           </tr>
+           @php
+           $i++; 
+           @endphp
+           @endforeach
         </tbody>
-         </table>
-   
+     </table>
      
          @else
          <div class="alert alert-danger">

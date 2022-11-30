@@ -330,6 +330,7 @@ echo json_encode("done");
 }
 }
 }
+
 public function delete($id)
 {
 try {
@@ -397,6 +398,8 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
+
 public function load_modal_approve_invoice(Request $request)
 {
 if ($request->ajax()) {

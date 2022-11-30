@@ -38,6 +38,7 @@ class Services_orders_request extends FormRequest
         return [
         'order_date.required'=>'  تاريخ الفاتورة مطلوب',
         'pill_type.required'=>'نوع الفاتورة مطلوب',
+        'order_type.required'=>'فئة الفاتورة مطلوب',
         'is_account_number.required'=>'  هل حساب مالي مطلوب',
         'account_number.required_if'=>'    رقم الحساب المالي مطلوب',
         'entity_name.required_if'=>'     اسم الجهة  مطلوب',

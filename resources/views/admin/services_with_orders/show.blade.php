@@ -30,7 +30,7 @@
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
                      <td class="width30">   فئة الفاتورة</td>
-                     <td > @if($data['order_type']==1) خدمات مقدمة لنا	  @else خدمات مقدمه للغير	  @endif</td>
+                     <td > @if($data['order_type']==1) خدمات مقدمة لنا	  @else خدمات نقدمها للغير	  @endif</td>
                   </tr>
                   <tr>
                      <td class="width30"> كود الفاتورة الالي</td>
@@ -131,6 +131,7 @@
                      </td>
                   </tr>
                </table>
+               
             </div>
             <!--  treasuries_delivery   -->
             <div class="card-header">
@@ -159,6 +160,7 @@
                @php
                $i=1;   
                @endphp
+
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>مسلسل</th>
@@ -211,7 +213,7 @@
                         <td>
                            @if($data['is_approved']==0)
                            <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-                           <a href="{{ route('admin.suppliers_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
+                           <a href="{{ route('admin.Services_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
                            @endif
                         </td>
                      </tr>
@@ -260,7 +262,7 @@
    <div class="modal-dialog modal-xl" >
       <div class="modal-content bg-info">
          <div class="modal-header">
-            <h4 class="modal-title text-center">تحديث صنف  بالفاتورة</h4>
+            <h4 class="modal-title text-center">تحديث خدمة  بالفاتورة</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
          </div>
@@ -291,6 +293,21 @@
       <!-- /.modal-content -->
    </div>
    <!-- /.modal-dialog -->
+</div>
+<div class="modal modal-info" id="alert_message_modal">
+   <div class="modal-dialog">
+      <div class="modal-content modal-info  bg-info">
+         <div class="modal-header">
+            <div class="modal-body " style="color: black !important;    background: white !important;
+               text-align: center;
+               font-size: 1.3vw;" >
+               تمت العملية بنجاح<span class="glyphicon glyphicon-ok" ></span>
+            </div>
+         </div>
+         <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+   </div>
 </div>
 @endsection
 @section("script")

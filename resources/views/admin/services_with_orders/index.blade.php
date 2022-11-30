@@ -91,7 +91,7 @@
          @foreach ($data as $info )
             <tr>
               <td>{{ $info->auto_serial }}</td>  
-              <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات مقدمه للغير @endif</td> 
+              <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات نقدمها للغير @endif</td> 
               <td>
                 @if ($info->is_account_number==1)
                 {{ $info->account_name }}
@@ -108,7 +108,7 @@
          <td>
 
           @if($info->is_approved==0)
-        <a href="{{ route('admin.Services_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.Services_orders.edit',$info->id) }}" class="btn btn-sm  btn-success">تعديل</a>   
         <a href="{{ route('admin.Services_orders.delete',$info->id) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
         @endif
         <a href="{{ route('admin.Services_orders.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
