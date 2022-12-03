@@ -21,6 +21,8 @@ use App\Models\Supplier;
 use App\Models\Suppliers_with_orders;
 use App\Models\Admin_panel_setting;
 use App\Models\Sales_invoices;
+use App\Models\services_with_orders;
+
 class SalesReturnInvoicesController extends Controller
 {
 public function index()
@@ -645,7 +647,7 @@ update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "
 }
 if ($invoice_data['is_has_customer'] == 1) {
 //Affect on Customer Finanical Account Balance
-refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), false);
+refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), false);
 }
 echo json_encode("done");
 }

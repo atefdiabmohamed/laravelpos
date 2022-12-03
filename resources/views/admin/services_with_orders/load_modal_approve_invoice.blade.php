@@ -3,16 +3,17 @@
 @if($counterDetails>0)
 
 
-<form action="{{ route("admin.suppliers_orders.do_approve",$data['auto_serial']) }}" method="post">
+<form action="{{ route("admin.Services_orders.do_approve",$data['id']) }}" method="post">
      @csrf
      
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-      <label>اجمالي الاصناف بالفاتورة </label>
+      <label>اجمالي الخدمات بالفاتورة </label>
       <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="total_cost_items"  id="total_cost_items" 
-      class="form-control"  value="{{ $data['total_cost_items']*1 }}"  >
- </div>
+      class="form-control"  value="{{ $data['total_services']*1 }}"  >
+      <input type="hidden" id="parentordertype" value="{{ $data['order_type'] }}" >
+     </div>
 </div>
 <div class="col-md-6">
  <div class="form-group">
@@ -64,6 +65,7 @@
 </div>
 </div>
 
+@if($data['order_type']==1) 
 <div class="row" id="shiftDiv">
      <div class="col-md-6">
           <div class="form-group">
@@ -79,6 +81,25 @@
      
           </div>
          </div>
+@else
+
+<div class="col-md-6">
+     <div class="form-group">
+          <label>    خزنة التحصيل  </label>
+      <select id="treasuries_id" name="treasuries_id" class="form-control">
+    @if(!@empty($user_shift))
+    <option selected value="{{ $user_shift['treasuries_id']  }}"> {{ $user_shift['name'] }} </option>
+    @else
+    <option value=""> عفوا لاتوجد خزنة لديك الان</option>
+    @endif
+
+      </select>
+
+     </div>
+    </div>
+@endif
+
+
          <div class="col-md-6 > 
           <div class="form-group">
             <label>  الرصيد المتاح بالخزنة   </label>
@@ -104,13 +125,13 @@
          </div>
          <div class="col-md-6 > 
           <div class="form-group">
-            <label>    المدفوع للمورد الان   </label>
+            <label>    المدفوع  الان   </label>
             <input   name="what_paid" id="what_paid" class="form-control"  @if($data['pill_type']==2)  value="0" @else readonly value="{{ $data['total_cost']*1 }}"   @endif  >
             </div>
 
             <div class="col-md-6 > 
                <div class="form-group">
-                 <label>    المتبقي للمورد    </label>
+                 <label>    المتبقي     </label>
                  <input readonly   name="what_remain" id="what_remain" class="form-control"  @if($data['pill_type']==2)  value="{{ $data['total_cost']*1 }}" @else value="0"   @endif  >
                  </div>
                  <div class="col-md-12 text-center" > 

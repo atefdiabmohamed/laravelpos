@@ -58,24 +58,35 @@ table{margin: 0 auto;}
    <body style="padding-top: 10px;font-family: tahoma;">
       <div class="row">
       <table class="mainheadtable"  cellspacing="0"   dir="rtl">
+        
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود المورد 
-               <span style="margin-right: 10px;">/ {{ $data["suuplier_code"] }}</span>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">  نوع الفاتورة 
+               <span style="margin-right: 10px;">/ @if($data["order_type"] ==1) خدمات مقدمة لنا @else خدمات نقدمها للغير @endif</span>
+           
+            </td>
+         </tr>
+         @if($data["is_account_number"] ==1)
+        
+         <tr>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود الحساب المالي 
+               <span style="margin-right: 10px;">/ {{ $data["account_number"] }}</span>
            
             </td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم المورد  <span style="margin-right: 10px;">/ {{ $data['supplier_name'] }}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الحساب المالي  <span style="margin-right: 10px;">/ {{ $data['account_name'] }}</span></td>
          </tr>
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['supplier_phone']}}</span></td>
-         </tr>
+       @else
+       <tr>
+         <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الجهة الخارجية   <span style="margin-right: 10px;">/ {{ $data['entity_name'] }}</span></td>
+      </tr>
+       @endif
+
+
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الفاتورة  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
-         </tr>
+       
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
          </tr>
@@ -97,47 +108,40 @@ table{margin: 0 auto;}
  
       
       <table  class="tableDetails" dir="rtl" border="1" style="width: 98%;   auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
+      
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
-            <td style="font-weight: bold;">كود</td>
-            <td  style="font-weight: bold;">الصنف</td>
-            <td  style="font-weight: bold;">الوحدة </td>
-            <td style="font-weight: bold;">الكمية</td>
-            <td  style="font-weight: bold;">السعر</td>
+            <td  style="font-weight: bold;">الخدمة</td>
             <td style="font-weight: bold;">اجمالي</td>
+            <td style="font-weight: bold;">ملاحظات</td>
+
          </tr>
-         @if(!@empty($sales_invoices_details) and count($sales_invoices_details)>0)
-         @php $i=1; $totalItems=0; @endphp
-         @foreach($sales_invoices_details as $info)
+         @if(!@empty($invoices_details) and count($invoices_details)>0)
+         @php $i=1;  @endphp
+         @foreach($invoices_details as $info)
          <tr>
             <td>
                {{ $i }}
             </td>
+           
             <td>
-               {{ $info->item_code }}
-            </td>
-            <td>
-               {{ $info->item_card_name }}
+               {{ $info->service_name }}
            
             </td>
             <td>
-               {{$info->uom_name  }}
+               {{$info->total*1  }}
             </td>
+         
+           
             <td>
-               {{$info->deliverd_quantity*1  }}
-            </td>
-            <td>
-               {{$info->unit_price*1  }}
-            </td>
-            <td>
-               {{$info->total_price*1  }}                                  
+               {{$info->notes }}                                  
             </td>
          
          </tr>
          <?php $i++; endforeach;?>
          <tr>
-            <td colspan="8" style="color:brown !important"><br>  اجمالي الاصناف  
-               <?=$data['total_cost_items']*1?> جنيه فقط لاغير 
+            <td colspan="4" style="color:brown !important"><br>  اجمالي الخدمات  
+               <?=$data['total_services']*1?> جنيه فقط لاغير 
             </td>
          </tr>
          @endif

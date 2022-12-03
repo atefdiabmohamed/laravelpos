@@ -16,6 +16,7 @@ use App\Models\Account;
 use App\Models\Supplier;
 use App\Models\Admin_panel_setting;
 use App\Models\Inv_itemcard_batches;
+use App\Models\services_with_orders;
 use App\Http\Requests\Suppliers_orders_general_returnRequest;
 use App\Http\Requests\Suppliers_orders_general_returnEditRequest;
 class Suppliers_with_ordersGeneralRetuen extends Controller
@@ -649,7 +650,7 @@ $dataUpdateTreasuries['last_isal_collect'] = $dataInsert_treasuries_transactions
 update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
 }
 }
-refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
+refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(),new services_with_orders(), false);
 return redirect()->route("admin.suppliers_orders_general_return.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
 }
 }

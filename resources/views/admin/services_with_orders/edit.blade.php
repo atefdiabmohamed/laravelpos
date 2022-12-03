@@ -86,8 +86,8 @@
                @enderror
          </div>
          <div class="form-group" id="entity_nameDiv" @if( old('is_account_number',$data['is_account_number'])==1) style="display: none;"   @endif >
-         <label>   اسم الجهة</label>
-         <input name="entity_name" class="form-control" id="entity_name" type="text"  value="{{ old('entity_name',$data['entity_name']) }}"    >
+            <label>   اسم الجهة ( طياري )</label>
+            <input name="entity_name" class="form-control" id="entity_name" type="text"  value="{{ old('entity_name',$data['entity_name']) }}"    >
          @error('entity_name')
          <span class="text-danger">{{ $message }}</span>
          @enderror

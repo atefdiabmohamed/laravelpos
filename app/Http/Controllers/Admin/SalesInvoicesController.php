@@ -22,6 +22,8 @@ use App\Models\Supplier;
 use App\Models\Suppliers_with_orders;
 use App\Models\SalesReturn;
 use App\Models\Admin_panel_setting;
+use App\Models\services_with_orders;
+
 class SalesInvoicesController extends Controller
 {
 public function index()
@@ -583,7 +585,7 @@ $flag = update(new Sales_invoices(), $dataUpdateParent, array("com_code" => $com
 if ($flag) {
 $DelegateData = get_cols_where_row(new Delegate(), array("account_number"), array("com_code" => $com_code, "delegate_code" => $invoice_data['delegate_code']));
 if(!empty($DelegateData )){
-refresh_account_blance_delegate($DelegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),false);
+refresh_account_blance_delegate($DelegateData['account_number'],new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),new services_with_orders(),false);
 }
 if ($request->what_paid > 0) {
 $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuries_transactions());
@@ -622,7 +624,7 @@ update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "
 }
 if ($invoice_data['is_has_customer'] == 1) {
 //Affect on Customer Finanical Account Balance
-refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), false);
+refresh_account_blance_customer($customerData["account_number"], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), false);
 }
 echo json_encode("done");
 }

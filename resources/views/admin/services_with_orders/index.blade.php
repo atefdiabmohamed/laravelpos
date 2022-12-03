@@ -31,9 +31,10 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-4">
-              <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود الآلي
+              <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود 
               <input  type="radio" name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب   
-  
+              <input  type="radio" name="searchbyradio" id="searchbyradio" value="entity_name">  اسم الجهة   
+
               <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
               
                         </div>
@@ -50,8 +51,28 @@
                             </select>
                             </div>
                           </div>
-
-                        
+                          <div class="col-md-4"> 
+                          <div class="form-group"> 
+                            <label>   فئة الفاتورة</label>
+                            <select name="order_type_search" id="order_type_search" class="form-control">
+                              <option value="all">بحث بكل الفئات</option>
+                              <option   value="1">  خدمات مقدمة لنا</option>
+                             <option value="2">  خدمات نقدمها للغير</option>
+                            </select>
+                       
+                          </div>
+                        </div>
+                          <div class="col-md-4"> 
+                          <div class="form-group"> 
+                            <label>    هل  حساب مالي</label>
+                            <select name="is_account_number_search" id="is_account_number_search" class="form-control">
+                              <option  value="all">   بحث بالكل</option>
+                              <option    value="1">  نعم</option>
+                             <option  value="0">  لا</option>
+                            </select>
+                           
+                          </div>
+                        </div>
                           <div class="col-md-4"> 
                             <div class="form-group">
                               <label>   بحث  من تاريخ</label>

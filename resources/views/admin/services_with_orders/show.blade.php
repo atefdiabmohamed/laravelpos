@@ -280,7 +280,7 @@
    <div class="modal-dialog modal-xl" >
       <div class="modal-content bg-info">
          <div class="modal-header">
-            <h4 class="modal-title" style="text-align: center">  اعتماد وترحيل فاتورة المشتريات</h4>
+            <h4 class="modal-title" style="text-align: center">  اعتماد وترحيل فاتورة خدمات</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
          </div>

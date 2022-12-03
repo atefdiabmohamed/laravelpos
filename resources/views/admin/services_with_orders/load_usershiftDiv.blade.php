@@ -1,6 +1,15 @@
 <div class="col-md-6">
     <div class="form-group">
-         <label>    خزنة الصرف  </label>
+         <label>    
+       @if($parentordertype==1)   
+          
+          خزنة الصرف 
+
+          @else
+          خزنة التحصيل 
+          @endif
+          
+        </label>
      <select id="treasuries_id" class="form-control">
    @if(!@empty($user_shift))
    <option selected value="{{ $user_shift['treasuries_id']  }}"> {{ $user_shift['name'] }} </option>

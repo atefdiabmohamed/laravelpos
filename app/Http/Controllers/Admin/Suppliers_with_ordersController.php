@@ -18,6 +18,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Suppliers_with_ordersRequest;
 use App\Http\Requests\SupplierWithOrdersApproveBursahseRequst;
+use App\Models\services_with_orders;
+
 class Suppliers_with_ordersController extends Controller
 {
 public function index()
@@ -420,6 +422,7 @@ $user_shift = get_user_shift(new Admins_Shifts(), new Treasuries(), new Treasuri
 }
 return view("admin.suppliers_with_orders.load_usershiftDiv", ['user_shift' => $user_shift]);
 }
+
 //اعتماد وترحيل فاتورة المشتريات 
 function do_approve($auto_serial, Request $request)
 {
@@ -522,7 +525,7 @@ $dataUpdateTreasuries['last_isal_exhcange'] = $dataInsert_treasuries_transaction
 update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
 }
 }
-refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
+refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(),new services_with_orders(), false);
 //store move حركة المخزن
 //first Get item card data جنجيب الاصناف اللي علي الفاتورة
 $items = get_cols_where(new Suppliers_with_orders_details(), array("*"), array("suppliers_with_orders_auto_serial" => $auto_serial, "com_code" => $com_code, "order_type" => 1), "id", "ASC");
@@ -636,6 +639,9 @@ do_update_itemCardQuantity(new Inv_itemCard(), $info->item_code, new Inv_itemcar
 return redirect()->route("admin.suppliers_orders.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
 }
 }
+
+
+
 public function ajax_search(Request $request)
 {
 if ($request->ajax()) {

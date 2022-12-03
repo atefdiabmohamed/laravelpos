@@ -15,9 +15,13 @@ use App\Models\Customer;
 use App\Models\Sales_invoices;
 use App\Models\SalesReturn;
 use App\Models\Delegate;
+use App\Models\Services;
+
 
 
 use App\Http\Requests\Collect_transactionRequest;
+use App\Models\services_with_orders;
+
 class CollectController extends Controller
 {
 public function index()
@@ -102,13 +106,22 @@ if ($flag) {
 $dataUpdateTreasuries['last_isal_collect'] = $dataInsert['isal_number'];
 update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $request->treasuries_id));
 $account_type = Account::where(["account_number" => $request->account_number])->value("account_type");
-if ($account_type == 2) {
-refresh_account_blance_supplier($request->account_number, new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(), false);
-} elseif ($account_type == 3) {
-refresh_account_blance_customer($request->account_number, new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), false);
-} else {
-//لاحقا
-}
+
+if($account_type==2){
+    $the_final_Balance=refresh_account_blance_supplier($request->account_number,new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,false);
+    }elseif($account_type==3){
+    $the_final_Balance=refresh_account_blance_customer($request->account_number,new Account(),new Customer(),new Treasuries_transactions(),new Sales_invoices(),new SalesReturn(),new services_with_orders(),false);
+    }elseif ($account_type == 4) {
+        $the_final_Balance =  refresh_account_blance_delegate($request->account_number,new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),new services_with_orders(),false);
+    }
+    else{
+    $the_final_Balance=refresh_account_blance_General($request->account_number,new Account(),new Treasuries_transactions(),new services_with_orders(),false);
+    }
+
+
+
+
+
 return redirect()->route('admin.collect_transaction.index')->with(['success' => "لقد تم اضافة البيانات بنجاح "]);
 } else {
 return redirect()->back()->with(['error' => " عفوا حدث خطأ م من فضلك حاول مرة اخري !"])->withInput();
@@ -124,19 +137,19 @@ $account_number=$request->account_number;
 $AccountData=  Account::select("account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
 if(!empty($AccountData)){
 if($AccountData['account_type']==2){
-$the_final_Balance=refresh_account_blance_supplier($account_number,new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$the_final_Balance=refresh_account_blance_supplier($account_number,new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
 }elseif($AccountData['account_type']==3){
-$the_final_Balance=refresh_account_blance_customer($account_number,new Account(),new Customer(),new Treasuries_transactions(),new Sales_invoices(),new SalesReturn(),true);
+$the_final_Balance=refresh_account_blance_customer($account_number,new Account(),new Customer(),new Treasuries_transactions(),new Sales_invoices(),new SalesReturn(),new services_with_orders(),true);
 return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
 }elseif ($AccountData['account_type'] == 4) {
-    $the_final_Balance =  refresh_account_blance_delegate($account_number,new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),true);
+    $the_final_Balance =  refresh_account_blance_delegate($account_number,new Account(),new Delegate(),new Treasuries_transactions(),new Sales_invoices(),new services_with_orders(),true);
     return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
 
 }
 
 else{
-$the_final_Balance=refresh_account_blance_General($account_number,new Account(),new Treasuries_transactions(),true);
+$the_final_Balance=refresh_account_blance_General($account_number,new Account(),new Treasuries_transactions(),new services_with_orders(),true);
 return view('admin.collect_transactions.get_account_blance',['the_final_Balance'=>$the_final_Balance]);
 }
 }
