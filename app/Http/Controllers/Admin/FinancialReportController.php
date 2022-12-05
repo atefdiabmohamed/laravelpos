@@ -26,6 +26,7 @@ class FinancialReportController extends Controller
 public function index(){
 //تقارير احصائية 
 }
+
 public function supplier_account_mirror(Request $request){
 if($_POST){
 $com_code=auth()->user()->com_code;
@@ -41,6 +42,11 @@ $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=
 $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->sum('money_for_account');
 $supplierData['BurchaseTotalMoney']= $supplierData['BurchaseTotalMoney']*(-1);
 $supplierData['BurchaseReturnTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->sum('money_for_account');
+$supplierData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->count();
+$supplierData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->count();
+$supplierData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->sum('money_for_account');
+$supplierData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->sum('money_for_account');
+$supplierData['ServicesForUsMoney']=$supplierData['ServicesForUsMoney']*(-1);
 $supplierData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->sum('money_for_account');
 $supplierData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->sum('money_for_account');
 $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
@@ -254,28 +260,45 @@ public function customer_account_mirror(Request $request){
     }
     //General Report لو تقرير اجمالي
     if($request->report_type==1){
-    $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+    $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
     $CustomerData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->count();
     $CustomerData['SalesReturnCounter']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->count();
     $CustomerData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->sum('money_for_account');
     $CustomerData['salesReturnTotalMoney']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->sum('money_for_account');
     $CustomerData['salesReturnTotalMoney']=$CustomerData['salesReturnTotalMoney']*(-1);
+    $CustomerData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->count();
+    $CustomerData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->count();
+    $CustomerData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->sum('money_for_account');
+   $CustomerData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->sum('money_for_account');
+    $CustomerData['ServicesForUsMoney']=$CustomerData['ServicesForUsMoney']*(-1);
+    
     $CustomerData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->sum('money_for_account');
     $CustomerData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->sum('money_for_account');
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
     $CustomerData['report_type']=$request->report_type;
+   
+   
+   
     return view('admin.financialReport.customer.print_customer_account_mirror',['data'=>$CustomerData,'systemData'=>$systemData]);
     //تفصيلي
     }elseif($request->report_type==2){
     $CustomerData['from_date']=$request->from_date;
     $CustomerData['to_date']=$request->to_date;
     $CustomerData['Does_show_items']=$request->Does_show_items;
-    $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+    $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
     $CustomerData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
     $CustomerData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
     $CustomerData['SalesReturnCounter']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
     $CustomerData['salesReturnTotalMoney']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
     $CustomerData['salesReturnTotalMoney']=$CustomerData['salesReturnTotalMoney']*(-1);
+    $CustomerData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->count();
+    $CustomerData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->count();
+    $CustomerData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+    $CustomerData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+    $CustomerData['ServicesForUsMoney']=$CustomerData['ServicesForUsMoney']*(-1);
+    
+    
+
 
     $CustomerData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
     $CustomerData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
@@ -313,6 +336,25 @@ public function customer_account_mirror(Request $request){
     $info->mov_type_name=get_field_value(new Mov_type(),'name',array('id'=>$info->mov_type));
     }
     }
+
+    $details['services_orders']=services_with_orders::select("*")->where(["com_code"=>$com_code,"is_account_number"=>1,'account_number'=>$CustomerData['account_number'] ])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->orderby('order_date','ASC')->orderby('order_type','ASC')->get();
+    if($CustomerData['Does_show_items']==1){ 
+        if (!empty($details['services_orders'])) {
+            foreach ($details['services_orders'] as $info) {
+          $info->ServicesDetails=get_cols_where(new services_with_orders_details(),array("*"),array("com_code"=>$com_code,'services_with_orders_auto_serial'=>$info->auto_serial,'order_type'=>$info->order_type));
+             if(!empty( $info->ServicesDetails)){
+                foreach ($info->ServicesDetails as $serv) {
+                    $serv->service_name = Services::where('id', $serv->service_id)->value('name');
+    
+                } 
+             }
+            
+            }
+            }
+        
+    }
+
+
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
     $CustomerData['report_type']=$request->report_type;
     if($CustomerData['Does_show_items']==1){
@@ -320,12 +362,13 @@ public function customer_account_mirror(Request $request){
     }else{
     return view('admin.financialReport.customer.print_customer_account_mirrorIndetails',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
     }
+
     //المبيعات خلال الفترة
     }elseif($request->report_type==3){
         $CustomerData['from_date']=$request->from_date;
         $CustomerData['to_date']=$request->to_date;
         $CustomerData['Does_show_items']=$request->Does_show_items;
-        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
         $CustomerData['SalesCounter']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
         $CustomerData['SalesTotalMoney']=Sales_invoices::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
         $details['sales']=Sales_invoices::select('auto_serial','invoice_date','is_approved','total_cost','pill_type','what_paid','what_remain')->where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->get();
@@ -350,7 +393,7 @@ public function customer_account_mirror(Request $request){
         $CustomerData['from_date']=$request->from_date;
         $CustomerData['to_date']=$request->to_date;
         $CustomerData['Does_show_items']=$request->Does_show_items;
-        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
         $CustomerData['SalesReturnCounter']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->count();
         $CustomerData['salesReturnTotalMoney']=SalesReturn::where(["com_code"=>$com_code,'customer_code'=>$request->customer_code,'account_number'=>$CustomerData['account_number']])->where('invoice_date','>=',$CustomerData['from_date'])->where('invoice_date','<=',$CustomerData['to_date'])->sum('money_for_account');
         $CustomerData['salesReturnTotalMoney']=$CustomerData['salesReturnTotalMoney']*(-1);
@@ -369,11 +412,57 @@ public function customer_account_mirror(Request $request){
     $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
     $CustomerData['report_type']=$request->report_type;
     return view('admin.financialReport.customer.print_customer_account_mirrorSalesReturn',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
-    //حركة النقدية خلال الفترة
-    }else{
+    //حركة الخدمات خلال الفترة
+    }elseif($request->report_type==6){
+
+
         $CustomerData['from_date']=$request->from_date;
         $CustomerData['to_date']=$request->to_date;
-        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(), true);
+        $CustomerData['Does_show_items']=$request->Does_show_items;
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
+  $CustomerData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->count();
+        $CustomerData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->count();
+        $CustomerData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>1])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+        $CustomerData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$CustomerData['account_number'],'order_type'=>2])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->sum('money_for_account');
+        $CustomerData['ServicesForUsMoney']=$CustomerData['ServicesForUsMoney']*(-1);
+        
+        
+    
+        $details['services_orders']=services_with_orders::select("*")->where(["com_code"=>$com_code,"is_account_number"=>1,'account_number'=>$CustomerData['account_number'] ])->where('order_date','>=',$CustomerData['from_date'])->where('order_date','<=',$CustomerData['to_date'])->orderby('order_date','ASC')->orderby('order_type','ASC')->get();
+        if($CustomerData['Does_show_items']==1){ 
+            if (!empty($details['services_orders'])) {
+                foreach ($details['services_orders'] as $info) {
+              $info->ServicesDetails=get_cols_where(new services_with_orders_details(),array("*"),array("com_code"=>$com_code,'services_with_orders_auto_serial'=>$info->auto_serial,'order_type'=>$info->order_type));
+                 if(!empty( $info->ServicesDetails)){
+                    foreach ($info->ServicesDetails as $serv) {
+                        $serv->service_name = Services::where('id', $serv->service_id)->value('name');
+        
+                    } 
+                 }
+                
+                }
+                }
+            
+        }
+    
+    
+        $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+        $CustomerData['report_type']=$request->report_type;
+        return view('admin.financialReport.customer.print_customer_account_Services',['data'=>$CustomerData,'systemData'=>$systemData,'details'=>$details]);
+    
+        
+
+
+
+
+    }
+    
+        //حركة النقدية خلال الفترة
+
+    else{
+        $CustomerData['from_date']=$request->from_date;
+        $CustomerData['to_date']=$request->to_date;
+        $CustomerData['the_final_Balance']=refresh_account_blance_customer($CustomerData['account_number'], new Account(), new Customer(), new Treasuries_transactions(), new Sales_invoices(),new SalesReturn(),new services_with_orders(), true);
         $CustomerData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
     $CustomerData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$CustomerData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->sum('money_for_account');
     $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$CustomerData['from_date'])->where('move_date','<=',$CustomerData['to_date'])->where('account_number','=',$CustomerData['account_number'])->get();

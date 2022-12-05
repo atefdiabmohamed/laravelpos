@@ -228,6 +228,7 @@
          عفوا لاتوجد بيانات لعرضها !!
       </div>
       @endif
+      
       <!--  حركة الخدمات-->
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة الخدمات الداخلية والخارجية علي حساب  المورد خلال الفترة</h3>
       @if (@isset($details['services_orders']) && !@empty($details['services_orders']) && count($details['services_orders'])>0)

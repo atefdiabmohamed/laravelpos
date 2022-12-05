@@ -113,6 +113,20 @@
                عدد  ({{ $data['SalesReturnCounter']*1 }}) فاتورة مرتجع مبيعات بقيمة ({{ $data['salesReturnTotalMoney']*1 }}) جنيه
             </td>
          </tr>
+
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    فواتير مقدمة لنا من العميل</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+               عدد  ({{ $data['ServicesForUsCounter']*1 }}) فاتورة خدمات قدمها لنا  بقيمة ({{ $data['ServicesForUsMoney']*1 }}) جنيه
+            </td>
+         </tr>
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    فواتير قدمناها   للعميل</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+               عدد  ({{ $data['ServicesForotherCounter']*1 }}) فاتورة خدمات قدمناها للعميل   بقيمة ({{ $data['ServicesForothermoney']*1 }}) جنيه
+            </td>
+         </tr>
+
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للعميل</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
