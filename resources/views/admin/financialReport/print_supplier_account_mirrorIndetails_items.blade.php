@@ -101,6 +101,18 @@
             </td>
          </tr>
          <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    فواتير مقدمة لنا من المورد</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+               عدد  ({{ $data['ServicesForUsCounter']*1 }}) فاتورة خدمات قدمها لنا  بقيمة ({{ $data['ServicesForUsMoney']*1 }}) جنيه
+            </td>
+         </tr>
+         <tr>
+            <td style="width: 25%; text-align: right; font-weight: bold">    فواتير قدمناها   للمورد</td>
+            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+               عدد  ({{ $data['ServicesForotherCounter']*1 }}) فاتورة خدمات قدمناها للمورد   بقيمة ({{ $data['ServicesForothermoney']*1 }}) جنيه
+            </td>
+         </tr>
+         <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للمورد</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
                ({{ $data['treasuries_transactionsExchange']*1 }}) جنيه
@@ -251,6 +263,73 @@
             @endforeach
          </tbody>
       </table>
+      @else
+      <div class="alert alert-danger">
+         عفوا لاتوجد بيانات لعرضها !!
+      </div>
+      @endif
+      <!--  حركة الخدمات-->
+      <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة الخدمات الداخلية والخارجية علي حساب  المورد خلال الفترة</h3>
+      @if (@isset($details['services_orders']) && !@empty($details['services_orders']) && count($details['services_orders'])>0)
+      @foreach ($details['services_orders'] as $info )
+      <table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
+         <thead style="background-color: lightgrey">
+            <th>كود</th>
+            <th>  فئة الفاتورة</th>
+            <th> الحساب المالي /الجهة</th>
+            <th> تاريخ الفاتورة</th>
+            <th>  نوع الفاتورة</th>
+            <th>    اجمالي الفاتورة</th>
+            <th>حالة الفاتورة</th>
+         </thead>
+         <tbody>
+            <tr >
+               <td>{{ $info->auto_serial }}</td>
+               <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات نقدمها للغير @endif</td>
+               <td>
+                  @if ($info->is_account_number==1)
+                  {{ $info->account_name }}
+                  @else
+                  جهة <br>  {{ $info->entity_name }}
+                  @endif
+               </td>
+               <td>{{ $info->order_date }}</td>
+               <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
+               <td>{{ $info->total_cost*(1) }}</td>
+               <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
+            </tr>
+            <!---  هل طلبت عرض التفاصيل للخدمات-->
+            @if($data['Does_show_items']==1)
+            <tr>
+               <td colspan="7">
+                  @if (@isset( $info->ServicesDetails) && !@empty(  $info->ServicesDetails) && count( $info->ServicesDetails)>0)
+                  <table dir="rtl" id="example2" class="table table-bordered table-hover">
+                     <thead >
+                        <th>اسم الخدمة </th>
+                        <th> الاجمالي</th>
+                        <th> ملاحظات</th>
+                     </thead>
+                     <tbody>
+                        @foreach ( $info->ServicesDetails as $serv )
+                        <tr>
+                           <td>{{ $serv->service_name }}</td>
+                           <td>{{ $serv->total*(1) }}</td>
+                           <td>{{ $serv->notes }}</td>
+                        </tr>
+                        @endforeach
+                     </tbody>
+                  </table>
+                  @else
+                  <div class="alert alert-danger">
+                     عفوا لاتوجد بيانات لعرضها !!
+                  </div>
+                  @endif
+               </td>
+            </tr>
+            @endif
+         </tbody>
+      </table>
+      @endforeach
       @else
       <div class="alert alert-danger">
          عفوا لاتوجد بيانات لعرضها !!

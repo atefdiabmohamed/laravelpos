@@ -17,6 +17,9 @@ use App\Models\SalesReturnDetails;
 use App\Models\Inv_itemCard;
 use App\Models\Inv_uom;
 use App\Models\Mov_type;
+use App\Models\services_with_orders;
+use App\Models\Services;
+use App\Models\services_with_orders_details;
 use Illuminate\Http\Request;
 class FinancialReportController extends Controller
 {
@@ -32,7 +35,7 @@ return redirect()->back()->with(['error'=>'عفوا غير قادر علي ال�
 }
 //General Report
 if($request->report_type==1){
-$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 $supplierData['BurchaseCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->count();
 $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->count();
 $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->sum('money_for_account');
@@ -48,11 +51,19 @@ return view('admin.financialReport.print_supplier_account_mirror',['data'=>$supp
 $supplierData['from_date']=$request->from_date;
 $supplierData['to_date']=$request->to_date;
 $supplierData['Does_show_items']=$request->Does_show_items;
-$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 $supplierData['BurchaseCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
 $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
 $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['BurchaseTotalMoney']= $supplierData['BurchaseTotalMoney']*(-1);
+$supplierData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
+$supplierData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
+$supplierData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
+$supplierData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
+$supplierData['ServicesForUsMoney']=$supplierData['ServicesForUsMoney']*(-1);
+
+
+
 $supplierData['BurchaseReturnTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
@@ -90,6 +101,27 @@ $info->money_for_account=$info->money_for_account*(-1);
 $info->mov_type_name=get_field_value(new Mov_type(),'name',array('id'=>$info->mov_type));
 }
 }
+
+$details['services_orders']=services_with_orders::select("*")->where(["com_code"=>$com_code,"is_account_number"=>1,'account_number'=>$supplierData['account_number'] ])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->orderby('order_date','ASC')->orderby('order_type','ASC')->get();
+if($supplierData['Does_show_items']==1){ 
+    if (!empty($details['services_orders'])) {
+        foreach ($details['services_orders'] as $info) {
+      $info->ServicesDetails=get_cols_where(new services_with_orders_details(),array("*"),array("com_code"=>$com_code,'services_with_orders_auto_serial'=>$info->auto_serial,'order_type'=>$info->order_type));
+         if(!empty( $info->ServicesDetails)){
+            foreach ($info->ServicesDetails as $serv) {
+                $serv->service_name = Services::where('id', $serv->service_id)->value('name');
+
+            } 
+         }
+        
+        }
+        }
+    
+}
+
+
+
+
 $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
 $supplierData['report_type']=$request->report_type;
 if($supplierData['Does_show_items']==1){
@@ -102,7 +134,7 @@ return view('admin.financialReport.print_supplier_account_mirrorIndetails',['dat
 $supplierData['from_date']=$request->from_date;
 $supplierData['to_date']=$request->to_date;
 $supplierData['Does_show_items']=$request->Does_show_items;
-$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 $supplierData['BurchaseCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
 $supplierData['BurchaseTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['BurchaseTotalMoney']= $supplierData['BurchaseTotalMoney']*(-1);
@@ -126,7 +158,7 @@ return view('admin.financialReport.print_supplier_account_mirrorBurchases',['dat
 $supplierData['from_date']=$request->from_date;
 $supplierData['to_date']=$request->to_date;
 $supplierData['Does_show_items']=$request->Does_show_items;
-$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 $supplierData['BurchaseReturnCounter']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
 $supplierData['BurchaseReturnTotalMoney']=Suppliers_with_orders::where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_type','>',1)->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $details['BurchasesReturn']=Suppliers_with_orders::select('auto_serial','order_date','is_approved','total_cost','pill_type','what_paid','what_remain','order_type')->where(["com_code"=>$com_code,'suuplier_code'=>$request->suuplier_code,'account_number'=>$supplierData['account_number']])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->where('order_type','>',1)->get();
@@ -144,11 +176,51 @@ $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uo
 $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
 $supplierData['report_type']=$request->report_type;
 return view('admin.financialReport.print_supplier_account_mirrorBurchaseReturn',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
-//المشتريات خلال الفترة
-}else{
+//حركة الخدمات خلال الفترة
+}elseif($request->report_type==6){
+    $supplierData['from_date']=$request->from_date;
+    $supplierData['to_date']=$request->to_date;
+    $supplierData['Does_show_items']=$request->Does_show_items;
+       $supplierData['ServicesForUsCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
+    $supplierData['ServicesForotherCounter']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->count();
+    $supplierData['ServicesForUsMoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>1])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
+    $supplierData['ServicesForothermoney']=services_with_orders::where(["com_code"=>$com_code,'is_account_number'=>1,'account_number'=>$supplierData['account_number'],'order_type'=>2])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->sum('money_for_account');
+    $supplierData['ServicesForUsMoney']=$supplierData['ServicesForUsMoney']*(-1);
+    
+    
+    
+    $details['services_orders']=services_with_orders::select("*")->where(["com_code"=>$com_code,"is_account_number"=>1,'account_number'=>$supplierData['account_number'] ])->where('order_date','>=',$supplierData['from_date'])->where('order_date','<=',$supplierData['to_date'])->orderby('order_date','ASC')->orderby('order_type','ASC')->get();
+    if($supplierData['Does_show_items']==1){ 
+        if (!empty($details['services_orders'])) {
+            foreach ($details['services_orders'] as $info) {
+          $info->ServicesDetails=get_cols_where(new services_with_orders_details(),array("*"),array("com_code"=>$com_code,'services_with_orders_auto_serial'=>$info->auto_serial,'order_type'=>$info->order_type));
+             if(!empty( $info->ServicesDetails)){
+                foreach ($info->ServicesDetails as $serv) {
+                    $serv->service_name = Services::where('id', $serv->service_id)->value('name');
+    
+                } 
+             }
+            
+            }
+            }
+        
+    }
+    
+    
+    
+    
+    $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+    $supplierData['report_type']=$request->report_type;
+    return view('admin.financialReport.print_supplier_account_mirrorServices',['data'=>$supplierData,'systemData'=>$systemData,'details'=>$details]);
+  
+
+    }
+
+//حركة النقدية خلال الفترة
+else{
 $supplierData['from_date']=$request->from_date;
 $supplierData['to_date']=$request->to_date;
-$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),true);
+$supplierData['the_final_Balance']=refresh_account_blance_supplier($supplierData['account_number'],new Account(),new Supplier(),new Treasuries_transactions(),new Suppliers_with_orders(),new services_with_orders() ,true);
 $supplierData['treasuries_transactionsExchange']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','>',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $supplierData['treasuries_transactionsCollect']=Treasuries_transactions::where(["com_code"=>$com_code,'account_number'=>$supplierData['account_number'],'is_account'=>1])->where('money_for_account','<',0)->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->sum('money_for_account');
 $details['Treasuries_transactions']=Treasuries_transactions::select('auto_serial','money_for_account','byan','mov_type','move_date','treasuries_id')->where('move_date','>=',$supplierData['from_date'])->where('move_date','<=',$supplierData['to_date'])->where('account_number','=',$supplierData['account_number'])->get();

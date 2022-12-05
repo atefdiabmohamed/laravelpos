@@ -54,6 +54,8 @@
                   <option  selected value="2"> كشف حساب تفصيلي خلال فترة</option>
                   <option  value="3"> كشف حساب المشتريات خلال فترة</option>
                   <option  value="4"> كشف حساب مرتجع المشتريات خلال فترة</option>
+                  <option  value="6"> كشف حساب حركة الخدمات خلال فترة</option>
+
                   <option  value="5"> كشف حساب حركة النقدية خلال فترة</option>
 
                </select>

@@ -156,6 +156,7 @@
                <input type="hidden" id="id_parent_pill" value="{{ $data['id'] }}">
             </div>
             <div id="ajax_responce_serarchDivDetails">
+
                @if (@isset($details) && !@empty($details) && count($details)>0)
                @php
                $i=1;   
@@ -228,6 +229,8 @@
                   عفوا لاتوجد بيانات لعرضها !!
                </div>
                @endif
+
+               
             </div>
             <!--  End treasuries_delivery   -->
             @else
