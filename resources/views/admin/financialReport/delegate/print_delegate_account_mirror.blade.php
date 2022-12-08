@@ -114,6 +114,20 @@
             </td>
          </tr>
          <tr>
+            <tr>
+               <td style="width: 25%; text-align: right; font-weight: bold">    فواتير خدمات مقدمة لنا من المندوب</td>
+               <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+                  عدد  ({{ $data['ServicesForUsCounter']*1 }}) فاتورة خدمات قدمها لنا  بقيمة ({{ $data['ServicesForUsMoney']*1 }}) جنيه
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 25%; text-align: right; font-weight: bold">    فواتير خدمات قدمناها   للمندوب</td>
+               <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+                  عدد  ({{ $data['ServicesForotherCounter']*1 }}) فاتورة خدمات قدمناها للمندوب   بقيمة ({{ $data['ServicesForothermoney']*1 }}) جنيه
+               </td>
+            </tr>
+
+
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للمندوب</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
                ({{ $data['treasuries_transactionsExchange']*1 }}) جنيه
