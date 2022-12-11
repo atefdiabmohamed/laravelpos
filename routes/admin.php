@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\SalesReturnInvoicesController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\Services_with_ordersController;
+use App\Http\Controllers\Admin\Inv_stores_inventoryController;
 
 
 /*
@@ -313,7 +314,7 @@ Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name
 Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
 /*           end Services                */
 
-/*         start  suppliers_orders   خدمات مقدمة لنا ونقدمها للغير             */
+/*         start  sservices_orders   خدمات مقدمة لنا ونقدمها للغير             */
 Route::get('/Services_orders/index', [Services_with_ordersController::class, 'index'])->name('admin.Services_orders.index');
 Route::get('/Services_orders/create', [Services_with_ordersController::class, 'create'])->name('admin.Services_orders.create');
 Route::post('/Services_orders/store', [Services_with_ordersController::class, 'store'])->name('admin.Services_orders.store');
@@ -333,7 +334,33 @@ Route::post('/Services_orders/do_approve/{id}', [Services_with_ordersController:
 Route::post('/Services_orders/load_modal_approve_invoice', [Services_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.Services_orders.load_modal_approve_invoice');
 Route::post('/Services_orders/load_usershiftDiv', [Services_with_ordersController::class, 'load_usershiftDiv'])->name('admin.Services_orders.load_usershiftDiv');
 Route::get('/Services_orders/printsaleswina4/{id}/{size}', [Services_with_ordersController::class, 'printsaleswina4'])->name('admin.Services_orders.printsaleswina4');
-/*           end suppliers_orders               */
+/*           end services_orders               */
+
+
+
+/*         start  inv_stores_inventory  جرد المخازن            */
+Route::get('/stores_inventory/index', [Inv_stores_inventoryController::class, 'index'])->name('admin.stores_inventory.index');
+Route::get('/stores_inventory/create', [Inv_stores_inventoryController::class, 'create'])->name('admin.stores_inventory.create');
+Route::post('/stores_inventory/store', [Inv_stores_inventoryController::class, 'store'])->name('admin.stores_inventory.store');
+Route::get('/stores_inventory/edit/{id}', [Inv_stores_inventoryController::class, 'edit'])->name('admin.stores_inventory.edit');
+Route::post('/stores_inventory/update/{id}', [Inv_stores_inventoryController::class, 'update'])->name('admin.stores_inventory.update');
+Route::get('/stores_inventory/delete/{id}', [Inv_stores_inventoryController::class, 'delete'])->name('admin.stores_inventory.delete');
+Route::post('/stores_inventory/ajax_search', [Inv_stores_inventoryController::class, 'ajax_search'])->name('admin.stores_inventory.ajax_search');
+Route::get('/stores_inventory/show/{id}', [Inv_stores_inventoryController::class, 'show'])->name('admin.stores_inventory.show');
+Route::post('/stores_inventory/load_modal_add_details', [Inv_stores_inventoryController::class, 'load_modal_add_details'])->name('admin.stores_inventory.load_modal_add_details');
+Route::post('/stores_inventory/add_new_details', [Inv_stores_inventoryController::class, 'add_new_details'])->name('admin.stores_inventory.add_new_details');
+Route::post('/stores_inventory/reload_itemsdetials', [Inv_stores_inventoryController::class, 'reload_itemsdetials'])->name('admin.stores_inventory.reload_itemsdetials');
+Route::post('/stores_inventory/reload_parent_pill', [Inv_stores_inventoryController::class, 'reload_parent_pill'])->name('admin.stores_inventory.reload_parent_pill');
+Route::post('/stores_inventory/load_edit_item_details', [Inv_stores_inventoryController::class, 'load_edit_item_details'])->name('admin.stores_inventory.load_edit_item_details');
+Route::post('/stores_inventory/edit_item_details', [Inv_stores_inventoryController::class, 'edit_item_details'])->name('admin.stores_inventory.edit_item_details');
+Route::get('/stores_inventory/delete_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'delete_details'])->name('admin.stores_inventory.delete_details');
+Route::post('/stores_inventory/do_approve/{id}', [Inv_stores_inventoryController::class, 'do_approve'])->name('admin.stores_inventory.do_approve');
+Route::post('/stores_inventory/load_modal_approve_invoice', [Inv_stores_inventoryController::class, 'load_modal_approve_invoice'])->name('admin.stores_inventory.load_modal_approve_invoice');
+Route::post('/stores_inventory/load_usershiftDiv', [Inv_stores_inventoryController::class, 'load_usershiftDiv'])->name('admin.stores_inventory.load_usershiftDiv');
+Route::get('/stores_inventory/printsaleswina4/{id}/{size}', [Inv_stores_inventoryController::class, 'printsaleswina4'])->name('admin.stores_inventory.printsaleswina4');
+/*           end sservices_orders               */
+
+
 
 
 

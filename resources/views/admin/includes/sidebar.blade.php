@@ -160,8 +160,8 @@
                  </li>
               </ul>
            </li>
-           <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*'))?'menu-open':'' }}     ">
-              <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') )?'active':'' }}">
+           <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') ||request()->is('admin/stores_inventory*'))?'menu-open':'' }}     ">
+              <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*')  ||request()->is('admin/stores_inventory*') )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                     حركات مخزنية
@@ -183,6 +183,15 @@
                        </p>
                     </a>
                  </li>
+                 <li class="nav-item">
+                  <a href="{{ route('admin.stores_inventory.index') }}" class="nav-link {{ (request()->is('admin/stores_inventory*')  )?'active':'' }}">
+                     <p>
+                  جرد المخازن       
+                     </p>
+                  </a>
+               </li>
+
+
                  <li class="nav-item">
                     <a href="{{ route('admin.itemcardBalance.index') }}" class="nav-link {{ (request()->is('admin/itemcardBalance*')  )?'active':'' }}">
                        <p>

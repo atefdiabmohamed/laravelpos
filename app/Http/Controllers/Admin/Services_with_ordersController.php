@@ -20,6 +20,7 @@ use App\Models\Delegate;
 use App\Models\services_with_orders;
 class Services_with_ordersController extends Controller
 {
+
 public function index()
 {
 $com_code = auth()->user()->com_code;
@@ -89,6 +90,8 @@ return redirect()->back()
 ->withInput();
 }
 }
+
+
 public function show($id)
 {
 try {
