@@ -171,6 +171,7 @@ echo json_encode("done");
 }
 }
 }
+
 public function delete($id)
 {
 try {
