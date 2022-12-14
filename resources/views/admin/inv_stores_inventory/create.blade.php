@@ -56,6 +56,7 @@
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
                </div>
+               
                <div class="form-group">
                   <label>  ملاحظات</label>
                   <input name="notes" id="notes" class="form-control" value="{{ old('notes') }}"    >

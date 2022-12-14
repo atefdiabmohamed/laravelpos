@@ -12,6 +12,7 @@ class ItemcardBalanceController extends Controller
 public function index(){
 //get all itemscars ordery by quantity
 $com_code=auth()->user()->com_code;
+
 $allitemscardData=get_cols_where_p(new Inv_itemCard(),array("id","name","item_code","item_type","does_has_retailunit","retail_uom_id","uom_id","retail_uom_quntToParent","All_QUENTITY"),array("com_code"=>$com_code),"id","ASC",PAGINATION_COUNT);
 if (!empty($allitemscardData)) {
 foreach ($allitemscardData as $info) {

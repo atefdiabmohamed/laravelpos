@@ -1,27 +1,26 @@
 @extends('layouts.admin')
 @section('title')
-خدمات 
+جرد المخازن
 @endsection
 @section("css")
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 @section('contentheader')
-خدمات داخلية وخارجية
+حركات مخزنية
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.Services_orders.index') }}">  فواتير الخدمات </a>
+<a href="{{ route('admin.stores_inventory.index') }}">   جرد المخازن </a>
 @endsection
 @section('contentheaderactive')
-عرض التفاصيل
+عرض الباتشات
 @endsection
-@section('content')
 @section('content')
 <div class="row">
    <div class="col-12">
       <div class="card">
          <div class="card-header">
-            <h3 class="card-title card_title_center">تفاصيل فاتورة خدمات    </h3>
+            <h3 class="card-title card_title_center">تفاصيل أمر  جرد    </h3>
          </div>
          <!-- /.card-header -->
          <div class="card-body">
@@ -29,63 +28,31 @@
                @if (@isset($data) && !@empty($data))
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
-                     <td class="width30">   فئة الفاتورة</td>
-                     <td > @if($data['order_type']==1) خدمات مقدمة لنا	  @else خدمات نقدمها للغير	  @endif</td>
-                  </tr>
-                  <tr>
-                     <td class="width30"> كود الفاتورة الالي</td>
+                     <td class="width30"> كود الجرد الالي</td>
                      <td > {{ $data['auto_serial'] }}</td>
                   </tr>
                   <tr>
-                     <td class="width30">   تاريخ الفاتورة </td>
-                     <td > {{ $data['order_date'] }}</td>
+                     <td class="width30">   تاريخ الجرد </td>
+                     <td > {{ $data['inventory_date'] }}</td>
                   </tr>
                   <tr>
-                     <td class="width30">    هل حساب مالي</td>
-                     <td > @if($data['is_account_number']==1)   نعم حساب مالي	  @else   لا	  @endif</td>
-                  </tr>
-                  <tr>
-                     <td class="width30">  اسم الحساب / الجهة </td>
-                     <td > @if($data['is_account_number']==1) {{ $data['account_name'] }}  كود {{ $data['account_number']  }}   @else  {{  $data['entity_name']  }}  @endif</td>
-                  </tr>
-                  <tr>
-                     <td class="width30"> نوع الفاتورة</td>
-                     <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
-                  </tr>
-                  <tr>
-                     <td class="width30">   اجمالي الفاتورة </td>
-                     <td > {{ $data['total_befor_discount']*(1) }}</td>
-                  </tr>
-                  @if ($data['discount_type']!=null)
-                  <tr>
-                     <td class="width30">   الخصم علي الفاتورة </td>
-                     <td> 
-                        @if ($data['discount_type']==1)
-                        خصم نسبة ( {{ $data['discount_percent']*1 }} ) وقيمتها ( {{ $data["discount_value"]*1 }} )
-                        @else
-                        خصم يدوي وقيمته( {{ $data["discount_value"]*1 }} )
-                        @endif
-                     </td>
-                  </tr>
-                  @else
-                  <tr>
-                     <td class="width30">   الخصم علي الفاتورة </td>
-                     <td > لايوجد</td>
-                  </tr>
-                  @endif
-                  <tr>
-                     <td class="width30">    نسبة القيمة المضافة </td>
+                     <td class="width30"> نوع الجرد</td>
                      <td > 
-                        @if($data['tax_percent']>0)
-                        لايوجد
-                        @else
-                        بنسبة ({{ $data["tax_percent"]*1 }}) %  وقيمتها ( {{ $data['tax_value']*1 }} )
-                        @endif
+                        @if($data['inventory_type']==1)جرد يومي 
+                        @elseif($data['inventory_type']==2)جرد اسبوعي  
+                        @elseif($data['inventory_type']==3)جرد شهري  
+                        @elseif($data['inventory_type']==4)جرد سنوي  
+                        @else     لم يحدد @endif
                      </td>
                   </tr>
                   <tr>
-                     <td class="width30">       حالة الفاتورة </td>
-                     <td > @if($data['is_approved']==1)  مغلق ومؤرشف @else مفتوحة  @endif</td>
+                     <td class="width30">   اجمالي باتشات الجرد </td>
+                     <td > {{ $data['total_cost_batches']*(1) }}</td>
+                  </tr>
+                  =
+                  <tr>
+                     <td class="width30">       حالة الجرد </td>
+                     <td > @if($data['is_closed']==1)  مغلق ومؤرشف @else مازال مفتوح  @endif</td>
                   </tr>
                   <tr>
                      <td class="width30">  تاريخ  الاضافة</td>
@@ -123,61 +90,67 @@
                         @else
                         لايوجد تحديث
                         @endif
-                        @if($data['is_approved']==0)
-                        <a href="{{ route('admin.Services_orders.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-                        <a href="{{ route('admin.Services_orders.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+                        @if($data['is_closed']==0)
+                        <a href="{{ route('admin.stores_inventory.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+                        <a href="{{ route('admin.stores_inventory.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
                         <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
                         @endif
                      </td>
                   </tr>
                </table>
-               
             </div>
             <!--  treasuries_delivery   -->
             <div class="card-header">
                <h3 class="card-title card_title_center">
-                  الخدمات المضافة للفاتورة
-                  @if($data['is_approved']==0)
-                  <button type="button" class="btn btn-info" id="load_modal_add_detailsBtn">
-                  اضافة خدمة للفاتورة
+                  باتشات الاصناف المضافة علي امر الجرد
+                  @if($data['is_closed']==0)
+                  <button type="button" class="btn btn-info"  data-target="#AddDetailsModal" data-toggle="modal">
+                  اضافة باتش صنف جديد للجرد
                   </button>
                   @endif
                </h3>
                <input type="hidden" id="token_search" value="{{csrf_token() }}">
-               <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.Services_orders.add_new_details') }}">
-               <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.Services_orders.reload_itemsdetials') }}">
-               <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.Services_orders.reload_parent_pill') }}">
-               <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.Services_orders.load_edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.Services_orders.load_modal_add_details') }}">
-               <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.Services_orders.edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.Services_orders.load_modal_approve_invoice') }}">
-               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.Services_orders.load_usershiftDiv') }}">
+               <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.stores_inventory.reload_itemsdetials') }}">
+               <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.stores_inventory.reload_parent_pill') }}">
+               <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.stores_inventory.load_edit_item_details') }}">
+               <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.stores_inventory.edit_item_details') }}">
+               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.stores_inventory.load_modal_approve_invoice') }}">
+               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.stores_inventory.load_usershiftDiv') }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
                <input type="hidden" id="id_parent_pill" value="{{ $data['id'] }}">
             </div>
             <div id="ajax_responce_serarchDivDetails">
-
                @if (@isset($details) && !@empty($details) && count($details)>0)
                @php
                $i=1;   
                @endphp
-
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>مسلسل</th>
-                     <th>اسم الخدمة </th>
-                     <th> الاجمالي</th>
-                     <th> ملاحظات</th>
-                     <th> الاضافة</th>
-                     <th> التحديث</th>
+                     <th>كود الباتش</th>
+                     <th>اسم الصنف </th>
+                     <th> الكمية بالباتش</th>
+                     <th> الكمية الدفترية</th>
+                     <th> الفرق</th>
+                     <th> تكلفة الوحدة</th>
+                     <th> اجمالي التكلفة</th>
+                     <th>  سبب النقص / الزيادة</th>
                      <th></th>
+                     @if($data['is_closed']==0)
+                     <th></th>
+                     @endif
                   </thead>
                   <tbody>
                      @foreach ($details as $info )
                      <tr>
                         <td>{{ $i }}</td>
-                        <td>{{ $info->service_name }}</td>
-                        <td>{{ $info->total*(1) }}</td>
+                        <td>{{ $info->batch_auto_serial }}</td>
+                        <td>{{ $info->item_name }}</td>
+                        <td>{{ $info->old_quantity*(1) }}</td>
+                        <td>{{ $info->new_quantity*(1) }}</td>
+                        <td>{{ $info->diffrent_quantity*(1) }}</td>
+                        <td>{{ $info->unit_cost_price*(1) }}</td>
+                        <td>{{ $info->total_cost_price*(1) }}</td>
                         <td>{{ $info->notes }}</td>
                         <td > 
                            @php
@@ -192,9 +165,8 @@
                            {{ $newDateTimeType }}  <br>
                            بواسطة 
                            {{ $info->added_by_admin}}
-                        </td>
-                        <td > 
                            @if($info->updated_by>0 and $info->updated_by!=null )
+                           <br>
                            @php
                            $dt=new DateTime($info->updated_at);
                            $date=$dt->format("Y-m-d");
@@ -211,12 +183,13 @@
                            لايوجد تحديث
                            @endif
                         </td>
+                        @if($data['is_closed']==0)
                         <td>
                            @if($data['is_approved']==0)
                            <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-                           <a href="{{ route('admin.Services_orders.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
                            @endif
                         </td>
+                        @endif
                      </tr>
                      @php
                      $i++; 
@@ -229,8 +202,6 @@
                   عفوا لاتوجد بيانات لعرضها !!
                </div>
                @endif
-
-               
             </div>
             <!--  End treasuries_delivery   -->
             @else
@@ -242,15 +213,45 @@
       </div>
    </div>
 </div>
-<div class="modal fade " id="Add_item_Modal">
+<div class="modal fade " id="AddDetailsModal">
    <div class="modal-dialog modal-xl" >
       <div class="modal-content bg-info">
          <div class="modal-header">
-            <h4 class="modal-title">اضافة خدمة  للفاتورة</h4>
+            <h4 class="modal-title">اضافة باتش اصناف  للفاتورة</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body" id="Add_item_Modal_body" style="background-color: white !important; color:black;">
+            <form action="{{ route('admin.stores_inventory.add_new_details',$data['id']) }}" method="post" >
+            @csrf
+            <div class="form-group">
+               <label>   ادخال الباتشات الفارغة بالجرد</label>
+               <select name="dose_enter_empty_batch" id="dose_enter_empty_batch" class="form-control">
+                  <option   value="1">    نعم</option>
+                  <option   value="0">    لا</option>
+               </select>
+            </div>
+            <div class="form-group">
+               <label>  اضافة كل الاصناف بالمخزن</label>
+               <select name="does_add_all_items" id="does_add_all_items" class="form-control">
+                  <option   value="1">    نعم</option>
+                  <option   value="0">    لا</option>
+               </select>
+            </div>
+            <div class="form-group"  id="ItemsDiv" style="display: none;"  >
+               <label>     بيانات الاصناف بالمخزن</label>
+               <select style="color:black" name="items_in_store" id="items_in_store" class="form-control select2">
+                  <option value="">  اختر الصنف للجرد</option>
+                  @if (@isset($items_in_store) && !@empty($items_in_store))
+                  @foreach ($items_in_store as $info )
+                  <option  value="{{ $info->item_code }}"> {{ $info->name }} </option>
+                  @endforeach
+                  @endif
+               </select>
+            </div>
+            <div class="form-group text-center">
+               <button type="submit" name="submit" id="do_add_itmes" class="btn btn-sm btn-success">أضف للجرد </button>
+            </div>
          </div>
          <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
@@ -321,5 +322,5 @@
      theme: 'bootstrap4'
    });
 </script>
-<script  src="{{ asset('assets/admin/js/services_with_orders.js') }}"> </script>
+<script src="{{ asset('assets/admin/js/inv_stores_inventory.js') }}"></script>
 @endsection

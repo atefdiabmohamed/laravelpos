@@ -99,7 +99,8 @@
                      <tr>
                         <td>{{ $info->auto_serial }}</td>
                         <td>{{ $info->inventory_date }}</td>
-                        <td>@if($info->inventory_type==1)جرد يومي 
+                        <td>
+                           @if($info->inventory_type==1)جرد يومي 
                            @elseif($info->inventory_type==2)جرد اسبوعي  
                            @elseif($info->inventory_type==3)جرد شهري  
                            @elseif($info->inventory_type==4)جرد سنوي  

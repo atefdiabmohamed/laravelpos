@@ -125,6 +125,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function load_modal_add_details(Request $request)
 {
 if ($request->ajax()) {
@@ -138,6 +139,7 @@ return view("admin.services_with_orders.load_add_new_itemdetails", ['parent_pill
 }
 }
 }
+
 public function add_new_details(Request $request)
 {
 if ($request->ajax()) {

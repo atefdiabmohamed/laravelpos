@@ -10,6 +10,7 @@ use App\Models\Inv_stores_inventory_details;
 use App\Models\Store;
 use App\Models\Inv_itemCard;
 use App\Http\Requests\Inv_stores_inventoryRequest;
+use App\Models\Inv_itemcard_batches;
 class Inv_stores_inventoryController extends Controller
 {
 public function index()
@@ -142,5 +143,91 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
 ->withInput();
 }
+}
+public function show($id)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_stores_inventory(), array("*"), array("id" => $id, "com_code" => $com_code));
+if (empty($data)) {
+return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+$data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
+$data['updated_by_admin'] = Admin::where('id', $data['updated_by'])->value('name');
+}
+$details = get_cols_where(new inv_stores_inventory_details(), array("*"), array('inv_stores_inventory_auto_serial' => $data['auto_serial'], 'com_code' => $com_code), 'id', 'DESC');
+if (!empty($details)) {
+foreach ($details as $info) {
+$info->item_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+$data['added_by_admin'] = Admin::where('id', $info->added_by)->value('name');
+if ($info->updated_by> 0 and $info->updated_by != null) {
+$data['updated_by_admin'] = Admin::where('id', $info->updated_by)->value('name');
+}
+}
+}
+if($data['is_closed']==0){
+$items_in_store=Inv_itemcard_batches::where("com_code","=",$com_code)->where("store_id","=",$data['store_id'])->orderby('item_code','ASC')->distinct()->get(['item_code']);
+if (!empty($items_in_store)) {
+foreach ($items_in_store as $info) {
+$info->name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+}
+}
+}
+return view("admin.inv_stores_inventory.show", ['data' => $data, 'details' => $details,'items_in_store'=>$items_in_store]);
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+public function add_new_details($id,Request $request)
+{
+if ($_POST) {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_stores_inventory(), array("*"), array("id" => $id, "com_code" => $com_code));
+if (empty($data)) {
+return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data['is_closed']==1) {
+return redirect()->route('admin.stores_inventory.show',$id)->with(['error' => 'عفوا لايمكن الاضافة علي امر جرد مغلق ومرحل !']);
+}
+if($_POST['does_add_all_items']==1){
+$items_in_store=Inv_itemcard_batches::where("com_code","=",$com_code)->where("store_id","=",$data['store_id'])->orderby('item_code','ASC')->distinct()->get(['item_code']);
+}else{
+$items_in_store=Inv_itemcard_batches::where("com_code","=",$com_code)->where("store_id","=",$data['store_id'])->where('item_code','=',$_POST['items_in_store'])->orderby('item_code','ASC')->distinct()->get(['item_code']);
+}
+if(!empty($items_in_store)){
+foreach($items_in_store as $info){
+if($_POST['dose_enter_empty_batch']==1){
+$info->Batches=Inv_itemcard_batches::select("*")->where("com_code",'=',$com_code)->where('item_code','=',$info->item_code)->where('store_id','=',$data['store_id'])->get();
+}else{
+$info->Batches=Inv_itemcard_batches::select("*")->where("com_code",'=',$com_code)->where('item_code','=',$info->item_code)->where('store_id','=',$data['store_id'])->where('quantity','>',0);
+}
+if(!empty( $info->Batches)){
+foreach( $info->Batches as $batch){
+$counter=get_count_where(new Inv_stores_inventory_details(),array("com_code"=>$com_code,"inv_stores_inventory_auto_serial"=>$data['auto_serial'],'batch_auto_serial'=>$batch->auto_serial,'item_code'=>$batch->item_code));
+if($counter==0){
+$data_insert['inv_stores_inventory_auto_serial'] = $data['auto_serial'];
+$data_insert['batch_auto_serial'] = $batch->auto_serial;
+$data_insert['item_code'] = $batch->item_code;
+$data_insert['inv_uoms_id'] = $batch->inv_uoms_id;
+$data_insert['unit_cost_price'] = $batch->unit_cost_price;
+$data_insert['old_quantity'] = $batch->quantity;
+$data_insert['new_quantity'] = $batch->quantity;
+$data_insert['total_cost_price'] = $batch->total_cost_price;
+$data_insert['production_date'] = $batch->production_date;
+$data_insert['expired_date'] = $batch->expired_date;
+$data_insert['added_by'] = auth()->user()->id;
+$data_insert['created_at'] = date("Y-m-d H:i:s");
+$data_insert['date'] = date("Y-m-d");
+$data_insert['com_code'] = $com_code;
+$flag = insert(new Inv_stores_inventory_details(), $data_insert);
+}
+}
+}
+}
+}
+}
+return redirect()->route('admin.stores_inventory.show',$id)->with(['success' => 'تم اضافة البيانات بنجاح']);
 }
 }

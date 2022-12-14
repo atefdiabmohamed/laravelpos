@@ -347,8 +347,7 @@ Route::post('/stores_inventory/update/{id}', [Inv_stores_inventoryController::cl
 Route::get('/stores_inventory/delete/{id}', [Inv_stores_inventoryController::class, 'delete'])->name('admin.stores_inventory.delete');
 Route::post('/stores_inventory/ajax_search', [Inv_stores_inventoryController::class, 'ajax_search'])->name('admin.stores_inventory.ajax_search');
 Route::get('/stores_inventory/show/{id}', [Inv_stores_inventoryController::class, 'show'])->name('admin.stores_inventory.show');
-Route::post('/stores_inventory/load_modal_add_details', [Inv_stores_inventoryController::class, 'load_modal_add_details'])->name('admin.stores_inventory.load_modal_add_details');
-Route::post('/stores_inventory/add_new_details', [Inv_stores_inventoryController::class, 'add_new_details'])->name('admin.stores_inventory.add_new_details');
+Route::post('/stores_inventory/add_new_details/{id}', [Inv_stores_inventoryController::class, 'add_new_details'])->name('admin.stores_inventory.add_new_details');
 Route::post('/stores_inventory/reload_itemsdetials', [Inv_stores_inventoryController::class, 'reload_itemsdetials'])->name('admin.stores_inventory.reload_itemsdetials');
 Route::post('/stores_inventory/reload_parent_pill', [Inv_stores_inventoryController::class, 'reload_parent_pill'])->name('admin.stores_inventory.reload_parent_pill');
 Route::post('/stores_inventory/load_edit_item_details', [Inv_stores_inventoryController::class, 'load_edit_item_details'])->name('admin.stores_inventory.load_edit_item_details');
