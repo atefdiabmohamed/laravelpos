@@ -1,46 +1,41 @@
 @if(!@empty($parent_pill_data) )
 
-@if($parent_pill_data['is_approved']==0)
+@if($parent_pill_data['is_closed']==0)
 @if(!@empty($item_data_detials))
-<div class="row">
-    <div class="col-md-4">
-      <div class="form-group"> 
-        <label>   بيانات الخدمات</label>
-        <select  id="services_id_add" class="form-control select2" style="width: 100%;">
-          <option value="">اختر الخدمة</option>
-          @if (@isset($services) && !@empty($services))
-         @foreach ($services as $info )
-           <option  @if($item_data_detials['service_id']==$info->id) selected @endif  value="{{ $info->id }}"> {{ $info->name }} </option>
-         @endforeach
-          @endif
-        </select>
-       
-        </div>
-    </div>
- 
+
+  <form action="{{ route('admin.stores_inventory.edit_item_details',['id'=>$item_data_detials['id'],'id_parent'=>$parent_pill_data['id']]) }}" method="post" >
+    @csrf
+    <div class="row">
     <div class="col-md-4 " >
      <div class="form-group">
-      <label>   الاجمالي</label>
-      <input     id="total_add" class="form-control"  value="{{ $item_data_detials['total']*1 }}"  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+      <label>   الكمية الفعلية بالباتش</label>
+      <input   readonly   id="old_quantity_edit" class="form-control"  value="{{ $item_data_detials['old_quantity']*1 }}"    >
       </div>
     </div>
  
-
+    <div class="col-md-4 " >
+      <div class="form-group">
+       <label>   الكمية الفعلية الدفترية بالجرد</label>
+       <input   oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="new_quantity_edit"   id="new_quantity_edit" class="form-control"  value="{{ $item_data_detials['new_quantity']*1 }}"    >
+       </div>
+     </div>
+  
     <div class="col-md-4 ">
       <div class="form-group">
-       <label>   ملاحظات</label>
+       <label>   ملاحظات - سبب النقص او الزيادة</label>
   
-       <textarea   id="notes_add" class="form-control"   >{{ $item_data_detials['notes']}}</textarea>
+       <textarea   id="notes_edit" name="notes_edit" class="form-control"   >{{ $item_data_detials['notes']}}</textarea>
        </div>
      </div>
 
     <div class="col-md-12">
      <div class="form-group text-center">
-     <button  data-id="{{ $item_data_detials['id'] }}" type="button" class="btn btn-sm btn-danger" id="EditDetailsItem">تعديل الخدمة</button>
+     <button   type="submit" class="btn btn-sm btn-danger" id="EditDetailsItem">تعديل الباتش</button>
    </div>
     </div>
- 
-       </div>
+  </div>
+  </form>
+  
  
  
 

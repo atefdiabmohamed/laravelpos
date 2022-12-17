@@ -328,7 +328,7 @@ Route::post('/Services_orders/add_new_details', [Services_with_ordersController:
 Route::post('/Services_orders/reload_itemsdetials', [Services_with_ordersController::class, 'reload_itemsdetials'])->name('admin.Services_orders.reload_itemsdetials');
 Route::post('/Services_orders/reload_parent_pill', [Services_with_ordersController::class, 'reload_parent_pill'])->name('admin.Services_orders.reload_parent_pill');
 Route::post('/Services_orders/load_edit_item_details', [Services_with_ordersController::class, 'load_edit_item_details'])->name('admin.Services_orders.load_edit_item_details');
-Route::post('/Services_orders/edit_item_details', [Services_with_ordersController::class, 'edit_item_details'])->name('admin.Services_orders.edit_item_details');
+Route::post('/Services_orders/edit_item_details/{id}/{id_parent}', [Services_with_ordersController::class, 'edit_item_details'])->name('admin.Services_orders.edit_item_details');
 Route::get('/Services_orders/delete_details/{id}/{id_parent}', [Services_with_ordersController::class, 'delete_details'])->name('admin.Services_orders.delete_details');
 Route::post('/Services_orders/do_approve/{id}', [Services_with_ordersController::class, 'do_approve'])->name('admin.Services_orders.do_approve');
 Route::post('/Services_orders/load_modal_approve_invoice', [Services_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.Services_orders.load_modal_approve_invoice');
@@ -351,7 +351,7 @@ Route::post('/stores_inventory/add_new_details/{id}', [Inv_stores_inventoryContr
 Route::post('/stores_inventory/reload_itemsdetials', [Inv_stores_inventoryController::class, 'reload_itemsdetials'])->name('admin.stores_inventory.reload_itemsdetials');
 Route::post('/stores_inventory/reload_parent_pill', [Inv_stores_inventoryController::class, 'reload_parent_pill'])->name('admin.stores_inventory.reload_parent_pill');
 Route::post('/stores_inventory/load_edit_item_details', [Inv_stores_inventoryController::class, 'load_edit_item_details'])->name('admin.stores_inventory.load_edit_item_details');
-Route::post('/stores_inventory/edit_item_details', [Inv_stores_inventoryController::class, 'edit_item_details'])->name('admin.stores_inventory.edit_item_details');
+Route::post('/stores_inventory/edit_item_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'edit_item_details'])->name('admin.stores_inventory.edit_item_details');
 Route::get('/stores_inventory/delete_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'delete_details'])->name('admin.stores_inventory.delete_details');
 Route::post('/stores_inventory/do_approve/{id}', [Inv_stores_inventoryController::class, 'do_approve'])->name('admin.stores_inventory.do_approve');
 Route::post('/stores_inventory/load_modal_approve_invoice', [Inv_stores_inventoryController::class, 'load_modal_approve_invoice'])->name('admin.stores_inventory.load_modal_approve_invoice');

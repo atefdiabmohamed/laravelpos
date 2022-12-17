@@ -146,7 +146,8 @@ $("#ItemsDiv").hide();
           }
           
         });
-        $(document).on('click', '#do_add_itmes', function (e) {
+
+  $(document).on('click', '#do_add_itmes', function (e) {
 var does_add_all_items=$("#does_add_all_items").val();
 if(does_add_all_items==0){
   var items_in_store=$("#items_in_store").val();
@@ -156,8 +157,45 @@ if(does_add_all_items==0){
     $("#items_in_store").focus();
     return false;
   }
-
 }
-        
       });
+
+
+      $(document).on('click', '.load_edit_item_details', function (e) {
+        var id = $(this).data("id");
+        var id_parent_pill = $("#id_parent_pill").val();
+        var token_search = $("#token_search").val();
+        var ajax_search_url = $("#ajax_load_edit_item_details").val();
+    
+        jQuery.ajax({
+          url: ajax_search_url,
+          type: 'post',
+          dataType: 'html',
+          cache: false,
+          data: { id_parent_pill: id_parent_pill, "_token": token_search, id: id },
+          success: function (data) {
+            $("#edit_item_Modal_body").html(data);
+            $("#edit_item_Modal").modal("show");
+            $("#Add_item_Modal_body").html("");
+            $("#Add_item_Modal").modal("hide");
+    
+          },
+          error: function () {
+    
+          }
+        });
+    
+      });
+
+      
+ $(document).on('click', '#EditDetailsItem', function (e) {
+   var new_quantity_edit=$("#new_quantity_edit").val();
+   if(new_quantity_edit==""){
+    alert("عفوا من فضلك ادخل الكمية الدفترية الجديده");
+    e.preventDefault();
+    $("#new_quantity_edit").focus();
+    return false;
+   }  
+ });
+
 });

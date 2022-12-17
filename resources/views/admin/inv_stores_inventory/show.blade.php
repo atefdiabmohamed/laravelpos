@@ -113,7 +113,6 @@
                <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.stores_inventory.reload_itemsdetials') }}">
                <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.stores_inventory.reload_parent_pill') }}">
                <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.stores_inventory.load_edit_item_details') }}">
-               <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.stores_inventory.edit_item_details') }}">
                <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.stores_inventory.load_modal_approve_invoice') }}">
                <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.stores_inventory.load_usershiftDiv') }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
@@ -127,7 +126,7 @@
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>مسلسل</th>
-                     <th>كود الباتش</th>
+                     <th style="width:15%;">كود الباتش</th>
                      <th>اسم الصنف </th>
                      <th> الكمية بالباتش</th>
                      <th> الكمية الدفترية</th>
@@ -144,7 +143,14 @@
                      @foreach ($details as $info )
                      <tr>
                         <td>{{ $i }}</td>
-                        <td>{{ $info->batch_auto_serial }}</td>
+                        <td>
+                           {{ $info->batch_auto_serial }} <br>
+                          @if($info->item_type==2)
+                         تاريخ انتاج <br>{{ $info->production_date }} <br>
+                         تاريخ انتهاء <br>{{ $info->expired_date }} 
+
+                          @endif
+                        </td>
                         <td>{{ $info->item_name }}</td>
                         <td>{{ $info->old_quantity*(1) }}</td>
                         <td>{{ $info->new_quantity*(1) }}</td>
@@ -187,6 +193,8 @@
                         <td>
                            @if($data['is_approved']==0)
                            <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
+                           <button data-id="{{ $info->id }}" class="btn btn-sm do_close_item  btn-danger">ترحيل</button>   
+                        
                            @endif
                         </td>
                         @endif

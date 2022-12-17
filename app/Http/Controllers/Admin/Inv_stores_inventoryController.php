@@ -160,6 +160,8 @@ $details = get_cols_where(new inv_stores_inventory_details(), array("*"), array(
 if (!empty($details)) {
 foreach ($details as $info) {
 $info->item_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+$info->item_type = Inv_itemCard::where('item_code', $info->item_code)->value('item_type');
+
 $data['added_by_admin'] = Admin::where('id', $info->added_by)->value('name');
 if ($info->updated_by> 0 and $info->updated_by != null) {
 $data['updated_by_admin'] = Admin::where('id', $info->updated_by)->value('name');
@@ -225,9 +227,67 @@ $flag = insert(new Inv_stores_inventory_details(), $data_insert);
 }
 }
 }
+
 }
 }
+$data_to_update_parent['total_cost_batches']=get_sum_where(new Inv_stores_inventory_details(),'total_cost_price',array("com_code"=>$com_code,'inv_stores_inventory_auto_serial'=>$data['auto_serial']));
+update(new Inv_stores_inventory(),$data_to_update_parent,array("com_code"=>$com_code,"id" => $id,'is_closed'=>0));
+
 }
+
 return redirect()->route('admin.stores_inventory.show',$id)->with(['success' => 'تم اضافة البيانات بنجاح']);
 }
+
+public function load_edit_item_details(Request $request)
+{
+if ($request->ajax()) {
+$com_code = auth()->user()->com_code;
+$parent_pill_data = get_cols_where_row(new Inv_stores_inventory(), array("*"), array("id" => $request->id_parent_pill, "com_code" => $com_code));
+if (!empty($parent_pill_data)) {
+if ($parent_pill_data['is_closed'] == 0) {
+$item_data_detials = get_cols_where_row(new Inv_stores_inventory_details(), array("*"), array("inv_stores_inventory_auto_serial" => $parent_pill_data['auto_serial'], "com_code" => $com_code, 'id' => $request->id));
+return view("admin.inv_stores_inventory.load_edit_item_details", ['parent_pill_data' => $parent_pill_data, 'item_data_detials' => $item_data_detials]);
+}
+}
+}
+}
+
+
+public function edit_item_details($id,$parent_pill_id,Request $request)
+{
+if ($_POST) {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_stores_inventory(), array("*"), array("id" => $parent_pill_id, "com_code" => $com_code));
+if (empty($data)) {
+return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data['is_closed']==1) {
+return redirect()->route('admin.stores_inventory.show',$parent_pill_id)->with(['error' => 'عفوا لايمكن الاضافة علي امر جرد مغلق ومرحل !']);
+}
+
+$dataDetails = get_cols_where_row(new Inv_stores_inventory_details(), array("*"), array("id" => $id, "com_code" => $com_code,'inv_stores_inventory_auto_serial'=>$data['auto_serial']));
+if (empty($dataDetails)) {
+return redirect()->route('admin.stores_inventory.show',$parent_pill_id)->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($dataDetails['is_closed']==1) {
+return redirect()->route('admin.stores_inventory.show',$parent_pill_id)->with(['error' => 'عفوا لايمكن تحديث علي صنف جرد مغلق ومرحل !']);
+}
+$dataUpdateDetails['new_quantity']=$request->new_quantity_edit;
+$dataUpdateDetails['diffrent_quantity']=($request->new_quantity_edit-$dataDetails['old_quantity']);
+$dataUpdateDetails['total_cost_price']=($request->new_quantity_edit*$dataDetails['unit_cost_price']);
+
+$dataUpdateDetails['notes']=$request->notes_edit;
+$dataUpdateDetails['updated_by'] = auth()->user()->id;
+$dataUpdateDetails['updated_at'] = date("Y-m-d H:i:s");
+update(new Inv_stores_inventory_details(),$dataUpdateDetails,array("com_code"=>$com_code,"id" => $id,'is_closed'=>0,'inv_stores_inventory_auto_serial'=>$data['auto_serial']));
+$data_to_update_parent['total_cost_batches']=get_sum_where(new Inv_stores_inventory_details(),'total_cost_price',array("com_code"=>$com_code,'inv_stores_inventory_auto_serial'=>$data['auto_serial']));
+update(new Inv_stores_inventory(),$data_to_update_parent,array("com_code"=>$com_code,"id" => $parent_pill_id,'is_closed'=>0));
+
+
+}
+
+return redirect()->route('admin.stores_inventory.show',$parent_pill_id)->with(['success' => 'تم تحديث البيانات بنجاح']);
+}
+
+
 }
