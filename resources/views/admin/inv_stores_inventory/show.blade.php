@@ -134,7 +134,7 @@
                      <th> تكلفة الوحدة</th>
                      <th> اجمالي التكلفة</th>
                      <th>  سبب النقص / الزيادة</th>
-                     <th></th>
+               
                      @if($data['is_closed']==0)
                      <th></th>
                      @endif
@@ -158,43 +158,15 @@
                         <td>{{ $info->unit_cost_price*(1) }}</td>
                         <td>{{ $info->total_cost_price*(1) }}</td>
                         <td>{{ $info->notes }}</td>
-                        <td > 
-                           @php
-                           $dt=new DateTime($info->created_at);
-                           $date=$dt->format("Y-m-d");
-                           $time=$dt->format("h:i");
-                           $newDateTime=date("A",strtotime($time));
-                           $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
-                           @endphp
-                           {{ $date }} <br>
-                           {{ $time }}
-                           {{ $newDateTimeType }}  <br>
-                           بواسطة 
-                           {{ $info->added_by_admin}}
-                           @if($info->updated_by>0 and $info->updated_by!=null )
-                           <br>
-                           @php
-                           $dt=new DateTime($info->updated_at);
-                           $date=$dt->format("Y-m-d");
-                           $time=$dt->format("h:i");
-                           $newDateTime=date("A",strtotime($time));
-                           $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
-                           @endphp
-                           {{ $date }}  <br>
-                           {{ $time }}
-                           {{ $newDateTimeType }}  <br>
-                           بواسطة 
-                           {{ $data['updated_by_admin'] }}
-                           @else
-                           لايوجد تحديث
-                           @endif
-                        </td>
+           
                         @if($data['is_closed']==0)
                         <td>
-                           @if($data['is_approved']==0)
+                           @if($info->is_closed==0)
                            <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
-                           <button data-id="{{ $info->id }}" class="btn btn-sm do_close_item  btn-danger">ترحيل</button>   
-                        
+                           <a href="{{ route('admin.stores_inventory.close_one_details',['id'=>$info->id,'id_parent'=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-success">ترحيل</a>   
+                           <a href="{{ route('admin.stores_inventory.delete_details',['id'=>$info->id,'id_parent'=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+                          @else
+                          مغلق ومرحل
                            @endif
                         </td>
                         @endif

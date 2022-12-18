@@ -353,6 +353,8 @@ Route::post('/stores_inventory/reload_parent_pill', [Inv_stores_inventoryControl
 Route::post('/stores_inventory/load_edit_item_details', [Inv_stores_inventoryController::class, 'load_edit_item_details'])->name('admin.stores_inventory.load_edit_item_details');
 Route::post('/stores_inventory/edit_item_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'edit_item_details'])->name('admin.stores_inventory.edit_item_details');
 Route::get('/stores_inventory/delete_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'delete_details'])->name('admin.stores_inventory.delete_details');
+Route::get('/stores_inventory/close_one_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'close_one_details'])->name('admin.stores_inventory.close_one_details');
+
 Route::post('/stores_inventory/do_approve/{id}', [Inv_stores_inventoryController::class, 'do_approve'])->name('admin.stores_inventory.do_approve');
 Route::post('/stores_inventory/load_modal_approve_invoice', [Inv_stores_inventoryController::class, 'load_modal_approve_invoice'])->name('admin.stores_inventory.load_modal_approve_invoice');
 Route::post('/stores_inventory/load_usershiftDiv', [Inv_stores_inventoryController::class, 'load_usershiftDiv'])->name('admin.stores_inventory.load_usershiftDiv');

@@ -11,6 +11,12 @@ use App\Models\Store;
 use App\Models\Inv_itemCard;
 use App\Http\Requests\Inv_stores_inventoryRequest;
 use App\Models\Inv_itemcard_batches;
+use App\Models\Inv_uom;
+use App\Models\Inv_itemcard_movements;
+
+
+
+
 class Inv_stores_inventoryController extends Controller
 {
 public function index()
@@ -287,6 +293,172 @@ update(new Inv_stores_inventory(),$data_to_update_parent,array("com_code"=>$com_
 }
 
 return redirect()->route('admin.stores_inventory.show',$parent_pill_id)->with(['success' => 'تم تحديث البيانات بنجاح']);
+}
+
+public function delete_details($id,$id_parent)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data_parent = get_cols_where_row(new Inv_stores_inventory(), array("is_closed","auto_serial"), array("id" => $id_parent, "com_code" => $com_code));
+if (empty($data_parent)) {
+return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data_parent['is_closed'] == 1) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا لايمكن التحديث علي امر جرد مغلق ومرحل  ']);
+}
+$Data_item_details=get_cols_where_row(new Inv_stores_inventory_details(),array("is_closed"),array("id"=>$id,'com_code'=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial']));
+if (empty($Data_item_details)) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($Data_item_details['is_closed'] == 1) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا لايمكن التحديث علي امر جرد لصنف مغلق ومرحل  ']);
+}
+
+$flag = delete(new Inv_stores_inventory_details(), array("id"=>$id,'com_code'=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial'],'is_closed'=>0));
+if ($flag) {
+    $data_to_update_parent['total_cost_batches']=get_sum_where(new Inv_stores_inventory_details(),'total_cost_price',array("com_code"=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial']));
+update(new Inv_stores_inventory(),$data_to_update_parent,array("com_code"=>$com_code,"id" => $id_parent,'is_closed'=>0));
+
+return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['success' => 'لقد تم حذف  البيانات بنجاح']);
+}
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+
+
+public function close_one_details($id,$id_parent)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data_parent = get_cols_where_row(new Inv_stores_inventory(), array("is_closed","auto_serial","store_id"), array("id" => $id_parent, "com_code" => $com_code));
+if (empty($data_parent)) {
+return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data_parent['is_closed'] == 1) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا لايمكن التحديث علي امر جرد مغلق ومرحل  ']);
+}
+$Data_item_details=get_cols_where_row(new Inv_stores_inventory_details(),array("*"),array("id"=>$id,'com_code'=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial']));
+if (empty($Data_item_details)) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($Data_item_details['is_closed'] == 1) {
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا لايمكن التحديث علي امر جرد لصنف مغلق ومرحل  ']);
+}
+//first we update Old pathc with new quantity
+
+//كمية الصنف بكل المخازن قبل الحركة
+$quantityBeforMove = get_sum_where(
+    new Inv_itemcard_batches(),
+    "quantity",
+    array(
+        "item_code" => $Data_item_details['item_code'], "com_code" => $com_code
+    )
+    );
+//get Quantity Befor any Action  حنجيب كمية الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+$quantityBeforMoveCurrntStore = get_sum_where(
+    new Inv_itemcard_batches(),
+    "quantity",
+    array(
+    "item_code" => $Data_item_details['item_code'], "com_code" => $com_code,
+    'store_id' => $data_parent['store_id']
+    )
+    );
+
+
+    $dataUpdateBatch['quantity']=$Data_item_details['new_quantity'];
+    $dataUpdateBatch['total_cost_price']=$Data_item_details['total_cost_price'];
+    $dataUpdateBatch['updated_by'] = auth()->user()->id;
+    $dataUpdateBatch['updated_at'] = date("Y-m-d H:i:s");
+    $flag=update(new Inv_itemcard_batches(),$dataUpdateBatch,array("com_code" => $com_code,'auto_serial'=>$Data_item_details['batch_auto_serial'],'item_code'=>$Data_item_details['item_code']));
+    if( $flag){
+        $dataUpdatedetails['is_closed']=1;
+        $dataUpdatedetails['cloased_by'] = auth()->user()->id;
+        $dataUpdatedetails['closed_at'] = date("Y-m-d H:i:s");
+        $flag= update(new Inv_stores_inventory_details(),$dataUpdatedetails,array("id"=>$id,'com_code'=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial']));
+       if($flag){
+   
+//كمية الصنف بكل المخازن بعد الحركة
+$quantityAfterMove = get_sum_where(
+    new Inv_itemcard_batches(),
+    "quantity",
+    array(
+        "item_code" => $Data_item_details['item_code'], "com_code" => $com_code
+    )
+    );
+//كمية الصنف  بالمخزن الحالي بعد الحركة
+$quantityAfterMoveCurrentStore = get_sum_where(
+    new Inv_itemcard_batches(),
+    "quantity",
+    array(
+    "item_code" => $Data_item_details['item_code'], "com_code" => $com_code,
+    'store_id' => $data_parent['store_id']
+    )
+    );
+
+    $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $Data_item_details['inv_uoms_id']));
+
+    $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit"), array("com_code" => $com_code, "item_code" => $Data_item_details['item_code']));
+
+//التاثير في حركة كارت الصنف
+$dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 3;
+$dataInsert_inv_itemcard_movements['items_movements_types'] = 6;
+$dataInsert_inv_itemcard_movements['item_code'] = $Data_item_details['item_code'];
+//كود الفاتورة الاب
+$dataInsert_inv_itemcard_movements['FK_table'] = $data_parent['auto_serial'];
+//كود صف الابن بتفاصيل الفاتورة
+$dataInsert_inv_itemcard_movements['FK_table_details'] = $Data_item_details['id'];
+
+$dataInsert_inv_itemcard_movements['byan'] = "جرد بالمخازن للباتش رقم" . " " . $Data_item_details['batch_auto_serial'] . " جرد رقم" . " " . $data_parent['auto_serial'];
+//كمية الصنف بكل المخازن قبل الحركة
+$dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+// كمية الصنف بكل المخازن بعد  الحركة
+$dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+//كمية الصنف  المخزن الحالي قبل الحركة
+$dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+// كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+$dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+$dataInsert_inv_itemcard_movements["store_id"] = $data_parent['store_id'];
+$dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+$dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+$dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+$dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+$flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+if ($flag) {
+//update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+do_update_itemCardQuantity(
+new Inv_itemCard(),
+$Data_item_details['item_code'],
+new Inv_itemcard_batches(),
+$itemCard_Data['does_has_retailunit'],
+$itemCard_Data['retail_uom_quntToParent']
+);
+
+}
+
+
+
+
+
+
+
+       }
+
+    }
+
+
+
+
+    return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['success' => 'لقد تم ترحيل الباتش بنجاح']);
+
+
+
+
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
 }
 
 
