@@ -49,7 +49,6 @@
                      <td class="width30">   اجمالي باتشات الجرد </td>
                      <td > {{ $data['total_cost_batches']*(1) }}</td>
                   </tr>
-                  =
                   <tr>
                      <td class="width30">       حالة الجرد </td>
                      <td > @if($data['is_closed']==1)  مغلق ومؤرشف @else مازال مفتوح  @endif</td>
@@ -93,7 +92,7 @@
                         @if($data['is_closed']==0)
                         <a href="{{ route('admin.stores_inventory.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
                         <a href="{{ route('admin.stores_inventory.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
-                        <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
+                        <a href="{{ route('admin.stores_inventory.do_close_parent',$data['id']) }}" class="btn btn-sm are_you_shue  btn-primary">اغلاق وترحيل أمر الجرد</a>   
                         @endif
                      </td>
                   </tr>
@@ -110,11 +109,7 @@
                   @endif
                </h3>
                <input type="hidden" id="token_search" value="{{csrf_token() }}">
-               <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.stores_inventory.reload_itemsdetials') }}">
-               <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.stores_inventory.reload_parent_pill') }}">
                <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.stores_inventory.load_edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.stores_inventory.load_modal_approve_invoice') }}">
-               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.stores_inventory.load_usershiftDiv') }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
                <input type="hidden" id="id_parent_pill" value="{{ $data['id'] }}">
             </div>
@@ -134,7 +129,6 @@
                      <th> تكلفة الوحدة</th>
                      <th> اجمالي التكلفة</th>
                      <th>  سبب النقص / الزيادة</th>
-               
                      @if($data['is_closed']==0)
                      <th></th>
                      @endif
@@ -145,11 +139,10 @@
                         <td>{{ $i }}</td>
                         <td>
                            {{ $info->batch_auto_serial }} <br>
-                          @if($info->item_type==2)
-                         تاريخ انتاج <br>{{ $info->production_date }} <br>
-                         تاريخ انتهاء <br>{{ $info->expired_date }} 
-
-                          @endif
+                           @if($info->item_type==2)
+                           تاريخ انتاج <br>{{ $info->production_date }} <br>
+                           تاريخ انتهاء <br>{{ $info->expired_date }} 
+                           @endif
                         </td>
                         <td>{{ $info->item_name }}</td>
                         <td>{{ $info->old_quantity*(1) }}</td>
@@ -158,15 +151,14 @@
                         <td>{{ $info->unit_cost_price*(1) }}</td>
                         <td>{{ $info->total_cost_price*(1) }}</td>
                         <td>{{ $info->notes }}</td>
-           
                         @if($data['is_closed']==0)
                         <td>
                            @if($info->is_closed==0)
                            <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>   
                            <a href="{{ route('admin.stores_inventory.close_one_details',['id'=>$info->id,'id_parent'=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-success">ترحيل</a>   
                            <a href="{{ route('admin.stores_inventory.delete_details',['id'=>$info->id,'id_parent'=>$data['id']]) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-                          @else
-                          مغلق ومرحل
+                           @else
+                           مغلق ومرحل
                            @endif
                         </td>
                         @endif
