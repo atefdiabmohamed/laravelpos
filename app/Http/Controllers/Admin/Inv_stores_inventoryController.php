@@ -155,6 +155,8 @@ if (empty($data)) {
 return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
 }
 $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+$data['store_name'] = Store::where('id', $data['store_id'])->value('name');
+
 if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
 $data['updated_by_admin'] = Admin::where('id', $data['updated_by'])->value('name');
 }
@@ -528,4 +530,144 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
+public function ajax_search(Request $request)
+{
+if ($request->ajax()) {
+
+ $search_by_text = $request->search_by_text;
+$is_closed_search = $request->is_closed_search;
+$store_id_search = $request->store_id_search;
+$order_date_form = $request->order_date_form;
+$order_date_to = $request->order_date_to;
+$is_closed_search= $request->is_closed_search;
+$inventory_type_search= $request->inventory_type_search;
+
+
+if ($search_by_text == '') {
+//دائما  true
+$field1 = "id";
+$operator1 = ">";
+$value1 = 0;
+} else {
+$field1 = "auto_serial";
+$operator1 = "=";
+$value1 = $search_by_text;
+}
+
+
+if ($is_closed_search == 'all') {
+//دائما  true
+$field2 = "id";
+$operator2 = ">";
+$value2 = 0;
+} else {
+$field2 = "is_closed";
+$operator2 = "=";
+$value2 = $is_closed_search;
+}
+if ($store_id_search == 'all') {
+    //دائما  true
+    $field3 = "id";
+    $operator3 = ">";
+    $value3 = 0;
+    } else {
+    $field3 = "store_id";
+    $operator3 = "=";
+    $value3 = $store_id_search;
+    }
+    
+
+
+if ($order_date_form == '') {
+//دائما  true
+$field4 = "id";
+$operator4 = ">";
+$value4 = 0;
+} else {
+$field4 = "inventory_date";
+$operator4 = ">=";
+$value4 = $order_date_form;
+}
+if ($order_date_to == '') {
+//دائما  true
+$field5 = "id";
+$operator5 = ">";
+$value5 = 0;
+} else {
+$field5 = "inventory_date";
+$operator5 = "<=";
+$value5 = $order_date_to;
+}
+
+if ($inventory_type_search == 'all') {
+    //دائما  true
+    $field6 = "id";
+    $operator6 = ">";
+    $value6 = 0;
+    } else {
+    $field6 = "inventory_type";
+    $operator6 = "=";
+    $value6 = $inventory_type_search;
+    }
+$data = Inv_stores_inventory::where($field1, $operator1, $value1)->
+where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->
+where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->where($field6, $operator6, $value6)->
+orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+if (!empty($data)) {
+    foreach ($data as $info) {
+    $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+    if ($info->updated_by > 0 and $info->updated_by != null) {
+    $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+    $info->store_name = Store::where('id', $info->store_id)->value('name');
+    }
+    }
+    }
+return view('admin.inv_stores_inventory.ajax_search', ['data' => $data]);
+}
+}
+
+
+public function printsaleswina4($id,$size){
+
+    try {
+    $com_code = auth()->user()->com_code;
+    $invoice_data = get_cols_where_row(new Inv_stores_inventory(), array("*"), array("id" => $id, "com_code" => $com_code));
+    if (empty($invoice_data)) {
+    return redirect()->route('admin.inv_stores_inventory.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+    }
+    $invoice_data['store_name'] = Store::where('id', $invoice_data['store_id'])->value('name');
+
+    $invoice_data['added_by_admin'] = Admin::where('id', $invoice_data['added_by'])->value('name');
+    $invoices_details = get_cols_where(new Inv_stores_inventory_details(), array("*"), array('inv_stores_inventory_auto_serial' => $invoice_data['auto_serial'], 'com_code' => $com_code), 'id', 'ASC');
+    if (!empty($invoices_details)) {
+        foreach ($invoices_details as $info) {
+            $info->item_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+            $info->item_type = Inv_itemCard::where('item_code', $info->item_code)->value('item_type');
+            $data['added_by_admin'] = Admin::where('id', $info->added_by)->value('name');
+            if ($info->updated_by> 0 and $info->updated_by != null) {
+            $data['updated_by_admin'] = Admin::where('id', $info->updated_by)->value('name');
+            }
+
+        }
+        }
+
+
+   
+    $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+    
+    if($size=="A4"){
+        return view('admin.inv_stores_inventory.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'invoices_details'=>$invoices_details]);
+    }else{
+        return view('admin.inv_stores_inventory.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'invoices_details'=>$invoices_details]);
+    
+    }
+    } catch (\Exception $ex) {
+    return redirect()->back()
+    ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+    }
+    
+
+
 }

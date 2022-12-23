@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة خدمات </title>
+      <title> طباعة أمر جرد مخازن  </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
@@ -13,37 +13,35 @@
 
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
-        
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">  نوع الفاتورة 
-               <span style="margin-right: 10px;">/ @if($data["order_type"] ==1) خدمات مقدمة لنا @else خدمات نقدمها للغير @endif</span>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ امر الجرد  <span style="margin-right: 10px;">/ {{ $data['inventory_date']}}</span></td>
+         </tr>
+     
+         <tr>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">    مخزن الجرد  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
+         </tr>
+         <tr>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">  نوع الجرد 
+               <span style="margin-right: 10px;">/
+                  @if($data['inventory_type']==1)جرد يومي 
+                  @elseif($data['inventory_type']==2)جرد اسبوعي  
+                  @elseif($data['inventory_type']==3)جرد شهري  
+                  @elseif($data['inventory_type']==4)جرد سنوي  
+                  @else     لم يحدد @endif
+                  
+                  
+                  
+                  </span>
            
             </td>
          </tr>
-         @if($data["is_account_number"] ==1)
-        
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود الحساب المالي 
-               <span style="margin-right: 10px;">/ {{ $data["account_number"] }}</span>
-           
-            </td>
-         </tr>
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الحساب المالي  <span style="margin-right: 10px;">/ {{ $data['account_name'] }}</span></td>
-         </tr>
-       @else
-       <tr>
-         <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الجهة الخارجية   <span style="margin-right: 10px;">/ {{ $data['entity_name'] }}</span></td>
-      </tr>
-       @endif
+    
 
 
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
-         </tr>
+       
        
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة امر الجرد  <span style="margin-right: 10px;">/ @if($data['is_closed']==1) مغلق ومرحل @else  مفتوح @endif</span></td>
          </tr>
       </table>
       <br>
@@ -54,7 +52,7 @@
                height: 30px;
                text-align: center;
                background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة خدمات  </span></td>
+               border: 1px solid black; border-radius: 15px;font-weight: bold;"> امر جرد  </span></td>
          </tr>
          <tr>
             <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;
@@ -64,14 +62,7 @@
                color: red;
                border: 1px solid black; "> رقم : {{ $data['auto_serial'] }} </span></td>
          </tr>
-         <tr>
-            <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               color: blue;
-               border: 1px solid blue;font-weight: bold; "> @if($data['pill_type']==1) كاش @else آجل @endif</span></td>
-         </tr>
+     
       </table>
       <table style="width: 35%;float: right; margin-left: 5px; " dir="rtl">
          <tr>
@@ -83,65 +74,47 @@
       </table>
  <div class="clearfix"></div>
  <p></p>
-      <table  dir="rtl" border="1" style="width: 98%;  auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
+ @if(!@empty($invoices_details) and count($invoices_details)>0)
+      <table  dir="rtl" border="1" style="width: 98%;  margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
-            <td  style="font-weight: bold;">الخدمة</td>
-            <td style="font-weight: bold;">اجمالي</td>
-            <td style="font-weight: bold;">ملاحظات</td>
+            <td  style="font-weight: bold;">كود باتش</td>
+            <td  style="font-weight: bold;">اسم الصنف </td>
+               <td  style="font-weight: bold;"> الكمية بالباتش</td>
+                  <td  style="font-weight: bold;"> الكمية الدفترية</td>
+                     <td  style="font-weight: bold;"> الفرق</td>
+                        <td  style="font-weight: bold;"> تكلفة الوحدة</td>
+                           <td  style="font-weight: bold;"> اجمالي التكلفة</td>
+                              <td  style="font-weight: bold;">  سبب النقص / الزيادة</td>
 
          </tr>
-         @if(!@empty($invoices_details) and count($invoices_details)>0)
+       
          @php $i=1;  @endphp
          @foreach($invoices_details as $info)
          <tr>
+            <td>{{ $i }}</td>
             <td>
-               {{ $i }}
+               {{ $info->batch_auto_serial }} <br>
+               @if($info->item_type==2)
+               تاريخ انتاج <br>{{ $info->production_date }} <br>
+               تاريخ انتهاء <br>{{ $info->expired_date }} 
+               @endif
             </td>
-           
-            <td>
-               {{ $info->service_name }}
-           
-            </td>
-            <td>
-               {{$info->total*1  }}
-            </td>
-         
-           
-            <td>
-               {{$info->notes }}                                  
-            </td>
+            <td>{{ $info->item_name }}</td>
+            <td>{{ $info->old_quantity*(1) }}</td>
+            <td>{{ $info->new_quantity*(1) }}</td>
+            <td>{{ $info->diffrent_quantity*(1) }}</td>
+            <td>{{ $info->unit_cost_price*(1) }}</td>
+            <td>{{ $info->total_cost_price*(1) }}</td>
+            <td>{{ $info->notes }}</td>
          
          </tr>
          <?php $i++; endforeach;?>
-         <tr>
-            <td colspan="4" style="color:brown !important"><br>  اجمالي الخدمات  
-               <?=$data['total_services']*1?> جنيه فقط لاغير 
-            </td>
-         </tr>
-         @endif
+        
+     
       </table>
-      
-      <br>
-      <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
-         <tr >
-            <td style="font-weight: bold;">اجمالي الفاتورة</td>
-            <td style="font-weight: bold;">خصم</td>
-            <td style="font-weight: bold;">قيمة مضافة</td>
-            <td style="font-weight: bold;">صافي الفاتورة </td>
-            <td style="font-weight: bold;">مدفوع</td>
-            <td  style="font-weight: bold;">متبقي</td>
-         </tr>
-         <tr>
-            <td>{{ $data["total_befor_discount"]*(1)}}</td>
-            <td>{{$data['discount_value']*(1)}}</td>
-            <td>{{$data['tax_value']*(1)}}</td>
-            <td>{{$data['total_cost']*(1)}}</td>
-            <td>{{$data['what_paid']*(1)}}</td>
-            <td>{{$data['what_remain']*(1)}}</td>
-         </tr>
-      </table>
+      @endif
       <p style="position: fixed;
          padding: 10px 10px 0px 10px;
          bottom: 0;

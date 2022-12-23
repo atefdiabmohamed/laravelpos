@@ -36,6 +36,10 @@
                      <td > {{ $data['inventory_date'] }}</td>
                   </tr>
                   <tr>
+                     <td class="width30">   مخزن الجرد </td>
+                     <td > {{ $data['store_name'] }}</td>
+                  </tr>
+                  <tr>
                      <td class="width30"> نوع الجرد</td>
                      <td > 
                         @if($data['inventory_type']==1)جرد يومي 
@@ -118,6 +122,7 @@
                @php
                $i=1;   
                @endphp
+               
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>مسلسل</th>

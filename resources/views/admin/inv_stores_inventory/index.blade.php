@@ -20,51 +20,54 @@
    <div class="card-header">
       <h3 class="card-title card_title_center">  أوامر جرد المخازن </h3>
       <input type="hidden" id="token_search" value="{{csrf_token() }}">
-      <input type="hidden" id="ajax_search_url" value="{{ route('admin.Services_orders.ajax_search') }}">
+      <input type="hidden" id="ajax_search_url" value="{{ route('admin.stores_inventory.ajax_search') }}">
       <a href="{{ route('admin.stores_inventory.create') }}" class="btn btn-sm btn-success" >اضافة جديد</a>
    </div>
    <!-- /.card-header -->
    <div class="card-body">
       <div class="row">
          <div class="col-md-4">
-            <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود 
-            <input  type="radio" name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب   
-            <input  type="radio" name="searchbyradio" id="searchbyradio" value="entity_name">  اسم الجهة   
-            <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
+            <label>بحث بكود الجرد</label>
+            <input style="margin-top: 6px !important;" type="text" id="search_by_text"  class="form-control"> <br>
          </div>
          <div class="col-md-4">
-            <div class="form-group">
-               <label>  بحث  بالحسابات المالية</label>
-               <select name="account_number_search" id="account_number_search" class="form-control select2">
-                  <option value="all">بحث بكل الحسابات</option>
-                  @if (@isset($accounts) && !@empty($accounts))
-                  @foreach ($accounts as $info )
-                  <option value="{{ $info->account_number }}"> {{ $info->name }} </option>
+            <div class="form-group"   >
+               <label>      بحث بالمخازن</label>
+               <select name="store_id_search" id="store_id_search" class="form-control ">
+                  <option value="all">  بحث بالكل</option>
+                  @if (@isset($stores) && !@empty($stores))
+                  @foreach ($stores as $info )
+                  <option  value="{{ $info->id }}"> {{ $info->name }} </option>
                   @endforeach
                   @endif
                </select>
+            
             </div>
          </div>
          <div class="col-md-4">
-            <div class="form-group">
-               <label>   فئة الفاتورة</label>
-               <select name="order_type_search" id="order_type_search" class="form-control">
-                  <option value="all">بحث بكل الفئات</option>
-                  <option   value="1">  خدمات مقدمة لنا</option>
-                  <option value="2">  خدمات نقدمها للغير</option>
-               </select>
-            </div>
+         <div class="form-group">
+            <label>    بحث بنوع الجرد</label>
+            <select name="inventory_type_search" id="inventory_type_search" class="form-control">
+               <option value="all">   بحث بالكل </option>
+               <option value="1">   جرد يومي</option>
+               <option value="2">   جرد اسبوعي</option>
+               <option value="3">   جرد شهري</option>
+               <option  value="4">   جرد سنوي</option>
+            </select>
+     
          </div>
+      </div>
          <div class="col-md-4">
             <div class="form-group">
-               <label>    هل  حساب مالي</label>
-               <select name="is_account_number_search" id="is_account_number_search" class="form-control">
-                  <option  value="all">   بحث بالكل</option>
-                  <option    value="1">  نعم</option>
-                  <option  value="0">  لا</option>
+               <label>    حالة امر الجرد</label>
+               <select name="is_closed_search" id="is_closed_search" class="form-control">
+                  <option value="all">بحث بكل الحالات</option>
+                  <option   value="1"> مغلق</option>
+                  <option value="0"> غير مغلق</option>
                </select>
             </div>
          </div>
+     
          <div class="col-md-4">
             <div class="form-group">
                <label>   بحث  من تاريخ</label>
@@ -84,6 +87,7 @@
                @php
                $i=1;   
                @endphp
+
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>كود</th>
@@ -129,7 +133,6 @@
                            @endif
                            <a href="{{ route('admin.stores_inventory.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
                            <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.stores_inventory.printsaleswina4',[$info->id,'A4']) }}" class="btn btn-primary btn-xs"> WA4</a>
-                           <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.stores_inventory.printsaleswina4',[$info->id,'A6']) }}" class="btn btn-warning btn-xs"> WA6</a>
                         </td>
                      </tr>
                      @php
