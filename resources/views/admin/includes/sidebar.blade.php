@@ -160,6 +160,7 @@
                  </li>
               </ul>
            </li>
+
            <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') ||request()->is('admin/stores_inventory*'))?'menu-open':'' }}     ">
               <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*')  ||request()->is('admin/stores_inventory*') )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -201,6 +202,30 @@
                  </li>
               </ul>
            </li>
+
+
+           <li class="nav-item has-treeview  {{ (request()->is('admin/inv_production_order*'))?'menu-open':'' }}    ">
+            <a href="#" class="nav-link {{ (request()->is('admin/inv_production_order*') )?'active':'' }} ">
+               <i class="nav-icon fas fa-tachometer-alt"></i>
+               <p>
+             حركات خطوط الانتاج
+                  <i class="right fas fa-angle-left"></i>
+               </p>
+            </a>
+            <ul class="nav nav-treeview  ">
+             <li class="nav-item">
+                <a href="{{ route('admin.inv_production_order.index') }}" class="nav-link {{ (request()->is('admin/inv_production_order*')  )?'active':'' }}">
+                   <p>
+               أوامر التشغيل       
+                   </p>
+                </a>
+             </li>
+
+           
+            </ul>
+         </li>
+
+
            <li class="nav-item has-treeview {{ (request()->is('admin/SalesInvoices*') || request()->is('admin/SalesReturnInvoices*'))?'menu-open':'' }}     ">
               <a href="#" class="nav-link {{ (request()->is('admin/SalesInvoices*') || request()->is('admin/SalesReturnInvoices*') )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>

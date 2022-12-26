@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\Services_with_ordersController;
 use App\Http\Controllers\Admin\Inv_stores_inventoryController;
+use App\Http\Controllers\Admin\Inv_production_orderController;
 
 
 /*
@@ -357,7 +358,15 @@ Route::get('/stores_inventory/printsaleswina4/{id}/{size}', [Inv_stores_inventor
 /*           end sservices_orders               */
 
 
-
+/*         start  inv_production_order                */
+Route::get('/inv_production_order/index', [Inv_production_orderController::class, 'index'])->name('admin.inv_production_order.index');
+Route::get('/inv_production_order/create', [Inv_production_orderController::class, 'create'])->name('admin.inv_production_order.create');
+Route::post('/inv_production_order/store', [Inv_production_orderController::class, 'store'])->name('admin.inv_production_order.store');
+Route::get('/inv_production_order/edit/{id}', [Inv_production_orderController::class, 'edit'])->name('admin.inv_production_order.edit');
+Route::post('/inv_production_order/update/{id}', [Inv_production_orderController::class, 'update'])->name('admin.inv_production_order.update');
+Route::get('/inv_production_order/delete/{id}', [Inv_production_orderController::class, 'delete'])->name('admin.inv_production_order.delete');
+Route::post('/inv_production_order/ajax_search', [Inv_production_orderController::class, 'ajax_search'])->name('admin.inv_production_order.ajax_search');
+/*           end inv_production_order                */
 
 
 
