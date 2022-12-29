@@ -17,6 +17,7 @@
       <h3 class="card-title card_title_center">بيانات   أوامر التشغيل لخطوط الانتاج</h3>
       <input type="hidden" id="token_search" value="{{csrf_token() }}">
       <input type="hidden" id="ajax_search_url" value="{{ route('admin.inv_production_order.ajax_search') }}">
+      <input type="hidden" id="ajax_show_more_detials_url" value="{{ route('admin.inv_production_order.show_more_detials') }}">
       <a href="{{ route('admin.inv_production_order.create') }}" class="btn btn-sm btn-success" >اضافة جديد</a>
    </div>
    <!-- /.card-header -->
@@ -86,9 +87,11 @@
                            {{ $info->added_by_admin}}
                         </td>
                         <td>
+                          @if($info->is_closed==0) 
                            <a href="{{ route('admin.inv_production_order.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
                            <a href="{{ route('admin.inv_production_order.delete',$info->id) }}" class="btn are_you_shue btn-sm  btn-danger">حذف</a>   
-                           <button data-id="{{ $info->id }}" class="btn are_you_shue btn-sm  btn-info">عرض</button>   
+                        @endif
+                           <button data-id="{{ $info->id }}" class="btn show_more_detials btn-sm  btn-info">عرض</button>   
                         </td>
                      </tr>
                      @php
@@ -109,7 +112,25 @@
       </div>
    </div>
 </div>
+<div class="modal modal-info" id="show_more_detialsModal">
+   <div class="modal-dialog modal-xl" >
+      <div class="modal-content modal-info  bg-info">
+         <div class="modal-header">
+            <div class="modal-body " id="show_more_detialsModalBody" id style="color: black !important;    background: white !important;
+               text-align: center;
+               font-size: 1.2vw;" >
+            
+
+
+
+            </div>
+         </div>
+         <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+   </div>
+</div>
 @endsection
 @section('script')
-<script src="{{ asset('assets/admin/js/services.js') }}"></script>
+<script src="{{ asset('assets/admin/js/inv_production_order.js') }}"></script>
 @endsection

@@ -366,6 +366,8 @@ Route::get('/inv_production_order/edit/{id}', [Inv_production_orderController::c
 Route::post('/inv_production_order/update/{id}', [Inv_production_orderController::class, 'update'])->name('admin.inv_production_order.update');
 Route::get('/inv_production_order/delete/{id}', [Inv_production_orderController::class, 'delete'])->name('admin.inv_production_order.delete');
 Route::post('/inv_production_order/ajax_search', [Inv_production_orderController::class, 'ajax_search'])->name('admin.inv_production_order.ajax_search');
+Route::post('/inv_production_order/show_more_detials', [Inv_production_orderController::class, 'show_more_detials'])->name('admin.inv_production_order.show_more_detials');
+
 /*           end inv_production_order                */
 
 
