@@ -269,6 +269,7 @@ return redirect()->back()
 }
 }
 
+
 public function reload_parent_pill(Request $request)
 {
 if ($request->ajax()) {
