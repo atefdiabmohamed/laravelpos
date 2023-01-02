@@ -1,4 +1,6 @@
 <?php
+// لاتنسونا من صالح دعائكم 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -29,8 +31,6 @@ use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\Services_with_ordersController;
 use App\Http\Controllers\Admin\Inv_stores_inventoryController;
 use App\Http\Controllers\Admin\Inv_production_orderController;
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +41,7 @@ use App\Http\Controllers\Admin\Inv_production_orderController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-define('PAGINATION_COUNT', 6);
+define('PAGINATION_COUNT', 11);
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
@@ -142,7 +142,6 @@ Route::get('/supplier/delete/{id}', [SuppliersController::class, 'delete'])->nam
 Route::post('/supplier/ajax_search', [SuppliersController::class, 'ajax_search'])->name('admin.supplier.ajax_search');
 Route::get('/supplier/show/{id}', [SuppliersController::class, 'show'])->name('admin.supplier.show');
 /*           end suppliers                */
-
 /*         start  suppliers_orders   المشتريات             */
 Route::get('/suppliers_orders/index', [Suppliers_with_ordersController::class, 'index'])->name('admin.suppliers_orders.index');
 Route::get('/suppliers_orders/create', [Suppliers_with_ordersController::class, 'create'])->name('admin.suppliers_orders.create');
@@ -165,8 +164,6 @@ Route::post('/suppliers_orders/load_modal_approve_invoice', [Suppliers_with_orde
 Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersController::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 Route::get('/suppliers_orders/printsaleswina4/{id}/{size}', [Suppliers_with_ordersController::class, 'printsaleswina4'])->name('admin.suppliers_orders.printsaleswina4');
 /*           end suppliers_orders               */
-
-
 /*         start treasuries                */
 Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
 Route::get('/admins_accounts/create', [AdminController::class, 'create'])->name('admin.admins_accounts.create');
@@ -314,7 +311,6 @@ Route::post('/Services/update/{id}', [ServicesController::class, 'update'])->nam
 Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name('admin.Services.delete');
 Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
 /*           end Services                */
-
 /*         start  sservices_orders   خدمات مقدمة لنا ونقدمها للغير             */
 Route::get('/Services_orders/index', [Services_with_ordersController::class, 'index'])->name('admin.Services_orders.index');
 Route::get('/Services_orders/create', [Services_with_ordersController::class, 'create'])->name('admin.Services_orders.create');
@@ -336,9 +332,6 @@ Route::post('/Services_orders/load_modal_approve_invoice', [Services_with_orders
 Route::post('/Services_orders/load_usershiftDiv', [Services_with_ordersController::class, 'load_usershiftDiv'])->name('admin.Services_orders.load_usershiftDiv');
 Route::get('/Services_orders/printsaleswina4/{id}/{size}', [Services_with_ordersController::class, 'printsaleswina4'])->name('admin.Services_orders.printsaleswina4');
 /*           end services_orders               */
-
-
-
 /*         start  inv_stores_inventory  جرد المخازن            */
 Route::get('/stores_inventory/index', [Inv_stores_inventoryController::class, 'index'])->name('admin.stores_inventory.index');
 Route::get('/stores_inventory/create', [Inv_stores_inventoryController::class, 'create'])->name('admin.stores_inventory.create');
@@ -356,8 +349,6 @@ Route::get('/stores_inventory/close_one_details/{id}/{id_parent}', [Inv_stores_i
 Route::get('/stores_inventory/do_close_parent/{id}', [Inv_stores_inventoryController::class, 'do_close_parent'])->name('admin.stores_inventory.do_close_parent');
 Route::get('/stores_inventory/printsaleswina4/{id}/{size}', [Inv_stores_inventoryController::class, 'printsaleswina4'])->name('admin.stores_inventory.printsaleswina4');
 /*           end sservices_orders               */
-
-
 /*         start  inv_production_order                */
 Route::get('/inv_production_order/index', [Inv_production_orderController::class, 'index'])->name('admin.inv_production_order.index');
 Route::get('/inv_production_order/create', [Inv_production_orderController::class, 'create'])->name('admin.inv_production_order.create');
@@ -367,11 +358,9 @@ Route::post('/inv_production_order/update/{id}', [Inv_production_orderController
 Route::get('/inv_production_order/delete/{id}', [Inv_production_orderController::class, 'delete'])->name('admin.inv_production_order.delete');
 Route::post('/inv_production_order/ajax_search', [Inv_production_orderController::class, 'ajax_search'])->name('admin.inv_production_order.ajax_search');
 Route::post('/inv_production_order/show_more_detials', [Inv_production_orderController::class, 'show_more_detials'])->name('admin.inv_production_order.show_more_detials');
-
+Route::get('/inv_production_order/do_approve/{id}', [Inv_production_orderController::class, 'do_approve'])->name('admin.inv_production_order.do_approve');
+Route::get('/inv_production_order/do_closes_archive/{id}', [Inv_production_orderController::class, 'do_closes_archive'])->name('admin.inv_production_order.do_closes_archive');
 /*           end inv_production_order                */
-
-
-
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');
