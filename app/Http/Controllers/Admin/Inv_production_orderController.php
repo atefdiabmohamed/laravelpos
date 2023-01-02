@@ -20,6 +20,14 @@ $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
 if ($info->updated_by > 0 and $info->updated_by != null) {
 $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 }
+if ($info->is_approved==1) {
+    $info->approved_by_admin = Admin::where('id', $info->approved_by)->value('name');
+    }
+    if ($info->is_closed==1) {
+        $info->closed_by_admin = Admin::where('id', $info->closed_by)->value('name');
+        }
+    
+
 }
 }
 return view('admin.inv_production_order.index',['data'=>$data]);
@@ -137,5 +145,161 @@ return view('admin.inv_production_order.show_more_detials', ['data' => $data]);
 
 }
 }
+
+public function do_approve($id)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_production_order(), array("is_approved"), array("id" => $id, "com_code" => $com_code));
+if (empty($data)) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما']);
+}
+if ($data['is_closed'] == 1) {
+return redirect()->back()
+->with(['error' => 'عفوا  لايمكن حذف  أمر  تشغيل معتمد ومؤرشف ']);
+}
+if ($data['is_approved'] == 1) {
+    return redirect()->back()
+    ->with(['error' => 'عفوا  هذا الامر بالفعل معتمد من قبل ! ']);
+    }
+    
+    $data_to_update['is_approved'] = 1;
+    $data_to_update['approved_by'] = auth()->user()->id;
+    $data_to_update['approved_at'] = date("Y-m-d H:i:s");
+    $flag=update(new Inv_production_order(), $data_to_update, array("id" => $id, "com_code" => $com_code));
+
+if ($flag) {
+return redirect()->route('admin.inv_production_order.index')->with(['success' => 'لقد تم اعتماد  امر التشغيل   بنجاح']);
+}else{
+    return redirect()->back()
+->with(['error' => '  عفوا لم يتم العملية من فضلك حاول مرةأخري ']);
+}
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+
+public function do_closes_archive($id)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_production_order(), array("is_approved","is_closed"), array("id" => $id, "com_code" => $com_code));
+if (empty($data)) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما']);
+}
+if ($data['is_approved'] == 0) {
+return redirect()->back()
+->with(['error' => 'عفوا  لايمكن اغلاق  أمر  تشغيل غير معتمد  ']);
+}
+if ($data['is_closed'] == 1) {
+    return redirect()->back()
+    ->with(['error' => 'عفوا  هذا الامر بالفعل مغلق  من قبل ! ']);
+    }
+    //مستقبلا حنشيك علي استخدامه بالفعل داخل حركات ورش الانتاج
+    $data_to_update['is_closed'] = 1;
+    $data_to_update['closed_by'] = auth()->user()->id;
+    $data_to_update['closed_at'] = date("Y-m-d H:i:s");
+    $flag=update(new Inv_production_order(), $data_to_update, array("id" => $id, "com_code" => $com_code));
+
+if ($flag) {
+return redirect()->route('admin.inv_production_order.index')->with(['success' => 'لقد تم اعتماد  امر التشغيل   بنجاح']);
+}else{
+    return redirect()->back()
+->with(['error' => '  عفوا لم يتم العملية من فضلك حاول مرةأخري ']);
+}
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+
+public function ajax_search(Request $request)
+{
+if ($request->ajax()) {
+    $com_code = auth()->user()->com_code;
+
+$search_by_text = $request->search_by_text;
+$close_search = $request->close_search;
+$approve_search = $request->approve_search;
+$from_date_search = $request->from_date_search;
+$to_date_search = $request->to_date_search;
+if ($search_by_text == '') {
+//دائما  true
+$field1 = "id";
+$operator1 = ">";
+$value1 = 0;
+} else {
+$field1 = "auto_serial";
+$operator1 = "=";
+$value1 = $search_by_text;
+}
+if ($close_search == 'all') {
+//دائما  true
+$field2 = "id";
+$operator2 = ">";
+$value2 = 0;
+} else {
+$field2 = "is_closed";
+$operator2 = "=";
+$value2 = $close_search;
+}
+
+if ($approve_search == 'all') {
+    //دائما  true
+    $field3 = "id";
+    $operator3 = ">";
+    $value3 = 0;
+    } else {
+    $field3 = "is_approved";
+    $operator3 = "=";
+    $value3 = $approve_search;
+    }
+
+if ($from_date_search == '') {
+//دائما  true
+$field4 = "id";
+$operator4 = ">";
+$value4= 0;
+} else {
+$field4 = "production_plan_date";
+$operator4 = ">=";
+$value4 = $from_date_search;
+}
+
+if ($to_date_search == '') {
+    //دائما  true
+    $field5 = "id";
+    $operator5 = ">";
+    $value5= 0;
+    } else {
+    $field5 = "production_plan_date";
+    $operator5 = "<=";
+    $value5 = $to_date_search;
+    }
+
+$data = inv_production_order::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->where('com_code','=',$com_code)->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+if (!empty($data)) {
+    foreach ($data as $info) {
+    $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+    if ($info->updated_by > 0 and $info->updated_by != null) {
+    $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+    }
+    if ($info->is_approved==1) {
+        $info->approved_by_admin = Admin::where('id', $info->approved_by)->value('name');
+        }
+        if ($info->is_closed==1) {
+            $info->closed_by_admin = Admin::where('id', $info->closed_by)->value('name');
+            }
+        
+    
+    }
+    }
+return view('admin.inv_production_order.ajax_search', ['data' => $data]);
+}
+}
+
 
 }

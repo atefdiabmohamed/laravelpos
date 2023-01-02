@@ -1,3 +1,4 @@
+<!-- لاتنسونا من صالح دعائكم -->
 @extends('layouts.admin')
 @section('title')
 حركات خط الاإنتاج
@@ -47,6 +48,18 @@
                </select>
             </div>
          </div>
+         <div class="col-md-3">
+            <div class="form-group">
+               <label>      من تاريخ </label>
+               <input name="from_date_search" id="from_date_search" class="form-control" type="date" value=""    >
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="form-group">
+               <label>     الي تاريخ  </label>
+               <input name="to_date_search" id="to_date_search" class="form-control" type="date" value=""    >
+            </div>
+         </div>
          <div class="clearfix"></div>
          <div class="col-md-12">
             <div id="ajax_responce_serarchDiv">
@@ -70,8 +83,43 @@
                         <td>{{ $i }}</td>
                         <td>{{ $info->auto_serial }}</td>
                         <td>{{ $info->production_plan_date }}</td>
-                        <td>@if($info->is_approved==1)  معتمد@else    غير معتمد @endif</td>
-                        <td>@if($info->is_closed==1) مغلق ومرحل @else مفتوح @endif</td>
+                        <td>@if($info->is_approved==1)  معتمد
+                           <br>
+                           @php   $dt=new DateTime($info->approved_at);
+                           $date=$dt->format("Y-m-d");
+                           $time=$dt->format("h:i");
+                           $newDateTime=date("A",strtotime($time));
+                           $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
+                           @endphp
+                           {{ $date }} <br>
+                           {{ $time }}
+                           {{ $newDateTimeType }}  <br>
+                           بواسطة 
+                           {{ $info->approved_by_admin}}
+                           @else  
+                           غير معتمد 
+                           <a href="{{ route('admin.inv_production_order.do_approve',$info->id) }}" class="btn are_you_shue btn-sm  btn-success">اعتماد</a>   
+                           @endif
+                        </td>
+                        <td>@if($info->is_closed==1) مغلق ومرحل 
+                           <br>
+                           @php   $dt=new DateTime($info->closed_at);
+                           $date=$dt->format("Y-m-d");
+                           $time=$dt->format("h:i");
+                           $newDateTime=date("A",strtotime($time));
+                           $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء'); 
+                           @endphp
+                           {{ $date }} <br>
+                           {{ $time }}
+                           {{ $newDateTimeType }}  <br>
+                           بواسطة 
+                           {{ $info->closed_by_admin}}
+                           @else مفتوح 
+                           @if($info->is_approved==1)
+                           <a href="{{ route('admin.inv_production_order.do_closes_archive',$info->id) }}" class="btn are_you_shue btn-sm  btn-success">اغلاق وترحيل</a>   
+                           @endif
+                           @endif
+                        </td>
                         <td > 
                            @php
                            $dt=new DateTime($info->created_at);
@@ -87,10 +135,10 @@
                            {{ $info->added_by_admin}}
                         </td>
                         <td>
-                          @if($info->is_closed==0) 
+                           @if($info->is_closed==0) 
                            <a href="{{ route('admin.inv_production_order.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
                            <a href="{{ route('admin.inv_production_order.delete',$info->id) }}" class="btn are_you_shue btn-sm  btn-danger">حذف</a>   
-                        @endif
+                           @endif
                            <button data-id="{{ $info->id }}" class="btn show_more_detials btn-sm  btn-info">عرض</button>   
                         </td>
                      </tr>
@@ -119,10 +167,6 @@
             <div class="modal-body " id="show_more_detialsModalBody" id style="color: black !important;    background: white !important;
                text-align: center;
                font-size: 1.2vw;" >
-            
-
-
-
             </div>
          </div>
          <!-- /.modal-content -->
