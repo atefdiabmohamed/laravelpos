@@ -126,6 +126,24 @@
                         </div>
                       </div>
 
+                      <div class="col-md-4">
+                        <div class="form-group"> 
+                          <label>    الحساب الاب لخطوط الانتاج بالشجرة المحاسبية</label>
+                          <select name="production_lines_parent_account" id="production_lines_parent_account" class="form-control select2">
+                            <option value="">اختر الحساب </option>
+                            @if (@isset($parent_accounts) && !@empty($parent_accounts))
+                           @foreach ($parent_accounts as $info )
+                             <option  @if(old('production_lines_parent_account',$data['production_lines_parent_account'])==$info->account_number) selected="selected" @endif  value="{{ $info->account_number }}"> {{ $info->name }} </option>
+                           @endforeach
+                            @endif
+                          </select>
+                          @error('production_lines_parent_account')
+                          <span class="text-danger">{{ $message }}</span>
+                          @enderror
+                          </div>
+                        </div>
+
+
                     <div class="col-md-12">
               <div class="form-group">
                 <label>رسالة تنبية اعلي الشاشة </label>

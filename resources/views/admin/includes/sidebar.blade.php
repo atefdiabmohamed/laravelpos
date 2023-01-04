@@ -204,8 +204,8 @@
            </li>
 
 
-           <li class="nav-item has-treeview  {{ (request()->is('admin/inv_production_order*'))?'menu-open':'' }}    ">
-            <a href="#" class="nav-link {{ (request()->is('admin/inv_production_order*') )?'active':'' }} ">
+           <li class="nav-item has-treeview  {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') )?'menu-open':'' }}    ">
+            <a href="#" class="nav-link {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') )?'active':'' }} ">
                <i class="nav-icon fas fa-tachometer-alt"></i>
                <p>
              حركات خطوط الانتاج
@@ -213,13 +213,23 @@
                </p>
             </a>
             <ul class="nav nav-treeview  ">
-             <li class="nav-item">
+               <li class="nav-item">
+                  <a href="{{ route('admin.inv_production_lines.index') }}" class="nav-link {{ (request()->is('admin/inv_production_lines*')  )?'active':'' }}">
+                     <p>
+             خطوط الانتاج      
+                     </p>
+                  </a>
+               </li>
+             
+               <li class="nav-item">
                 <a href="{{ route('admin.inv_production_order.index') }}" class="nav-link {{ (request()->is('admin/inv_production_order*')  )?'active':'' }}">
                    <p>
                أوامر التشغيل       
                    </p>
                 </a>
              </li>
+          
+
 
            
             </ul>

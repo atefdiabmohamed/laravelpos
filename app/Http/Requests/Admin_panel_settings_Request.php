@@ -31,7 +31,7 @@ class Admin_panel_settings_Request extends FormRequest
             'suppliers_parent_account_number' => 'required',
             'delegate_parent_account_number' => 'required',
             'employees_parent_account_number' => 'required',
-
+            'production_lines_parent_account' => 'required',
 
 
         ];
@@ -46,7 +46,8 @@ class Admin_panel_settings_Request extends FormRequest
             'customer_parent_account_number.required' => ' رقم الحساب المالي للعملاء الاب مطلوب',
             'suppliers_parent_account_number.required' => ' رقم الحساب المالي للموردين الاب مطلوب',
             'delegate_parent_account_number.required' => ' رقم الحساب المالي للمناديب الاب مطلوب',
-            'employees_parent_account_number.required' => ' رقم الحساب المالي للموظفين الاب مطلوب'
+            'employees_parent_account_number.required' => ' رقم الحساب المالي للموظفين الاب مطلوب',
+            'production_lines_parent_account.required' => ' رقم الحساب المالي لخطوط الانتاج الاب مطلوب'
 
         ];
     }
