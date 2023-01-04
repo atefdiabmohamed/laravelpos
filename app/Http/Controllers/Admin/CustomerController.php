@@ -24,6 +24,7 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 }
 return view('admin.customers.index', ['data' => $data]);
 }
+
 public function create()
 {
 return view('admin.customers.create');

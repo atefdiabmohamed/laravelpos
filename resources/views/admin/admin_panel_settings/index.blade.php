@@ -56,26 +56,30 @@
             </tr>
 
             <tr>
-                <td class="width30">  اسم الحساب المالي للعملاء الاب</td> 
+                <td class="width30">  اسم الحساب المالي  الاب للعملاء الاب</td> 
                 <td > {{ $data['customer_parent_account_name'] }} رقم حساب مالي ( {{ $data["customer_parent_account_number"] }} )</td>
             </tr>
             <tr>
-                <td class="width30">  اسم الحساب المالي للموردين الاب</td> 
+                <td class="width30">  اسم الحساب المالي  الاب للموردين الاب</td> 
                 <td > {{ $data['supplier_parent_account_name'] }} رقم حساب مالي ( {{ $data["suppliers_parent_account_number"] }} )</td>
             </tr>
 
 
             <tr>
-                <td class="width30">  اسم الحساب المالي للمناديب الاب</td> 
+                <td class="width30">  اسم الحساب المالي الاب  للمناديب الاب</td> 
                 <td > {{ $data['delegates_parent_account_name'] }} رقم حساب مالي ( {{ $data["delegate_parent_account_number"] }} )</td>
             </tr>
 
             
             <tr>
-                <td class="width30">  اسم الحساب المالي للموظفين الاب</td> 
+                <td class="width30">  اسم الحساب المالي  الاب للموظفين الاب</td> 
                 <td > {{ $data['employees_parent_account_name'] }} رقم حساب مالي ( {{ $data["employees_parent_account_number"] }} )</td>
             </tr>
 
+            <tr>
+                <td class="width30">  اسم الحساب المالي الاب لخطوط الانتاج الاب</td> 
+                <td > {{ $data['production_lines_parent_account_name'] }} رقم حساب مالي ( {{ $data["production_lines_parent_account"] }} )</td>
+            </tr>
 
 
             <tr>

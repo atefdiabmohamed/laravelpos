@@ -31,6 +31,8 @@ use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\Services_with_ordersController;
 use App\Http\Controllers\Admin\Inv_stores_inventoryController;
 use App\Http\Controllers\Admin\Inv_production_orderController;
+use App\Http\Controllers\Admin\Inv_production_linesController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -361,6 +363,22 @@ Route::post('/inv_production_order/show_more_detials', [Inv_production_orderCont
 Route::get('/inv_production_order/do_approve/{id}', [Inv_production_orderController::class, 'do_approve'])->name('admin.inv_production_order.do_approve');
 Route::get('/inv_production_order/do_closes_archive/{id}', [Inv_production_orderController::class, 'do_closes_archive'])->name('admin.inv_production_order.do_closes_archive');
 /*           end inv_production_order                */
+
+
+/*         start  inv_production_lines                */
+Route::get('/inv_production_lines/index', [Inv_production_linesController::class, 'index'])->name('admin.inv_production_lines.index');
+Route::get('/inv_production_lines/create', [Inv_production_linesController::class, 'create'])->name('admin.inv_production_lines.create');
+Route::post('/inv_production_lines/store', [Inv_production_linesController::class, 'store'])->name('admin.inv_production_lines.store');
+Route::get('/inv_production_lines/edit/{id}', [Inv_production_linesController::class, 'edit'])->name('admin.inv_production_lines.edit');
+Route::post('/inv_production_lines/update/{id}', [Inv_production_linesController::class, 'update'])->name('admin.inv_production_lines.update');
+Route::get('/inv_production_lines/delete/{id}', [Inv_production_linesController::class, 'delete'])->name('admin.inv_production_lines.delete');
+Route::post('/inv_production_lines/ajax_search', [Inv_production_linesController::class, 'ajax_search'])->name('admin.inv_production_lines.ajax_search');
+Route::get('/inv_production_lines/show/{id}', [Inv_production_linesController::class, 'show'])->name('admin.inv_production_lines.show');
+/*           end inv_production_lines                */
+
+
+
+
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');
