@@ -1,15 +1,14 @@
 @extends('layouts.admin')
 @section('title')
-تعديل بيانات عميل
+خطوط الانتاج
 @endsection
 
 @section('contentheader')
-الحسابات
-
+خطوط الانتاج  
 @endsection
 
 @section('contentheaderlink')
-<a href="{{ route('admin.customer.index') }}">    العملاء </a>
+<a href="{{ route('admin.inv_production_lines.index') }}">    ورش الانتاج </a>
 @endsection
 
 @section('contentheaderactive')
@@ -17,23 +16,23 @@
 @endsection
 
 
+
 @section('content')
 
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title card_title_center"> تعديل بيانات عميل  </h3>
+          <h3 class="card-title card_title_center"> تعديل بيانات خط انتاج  </h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
        
       
-      <form action="{{ route('admin.customer.update',$data['id']) }}" method="post" >
+      <form action="{{ route('admin.inv_production_lines.update',$data['id']) }}" method="post" >
         <div class="row">
         @csrf
-    
 <div class="col-md-6">   
 <div class="form-group">
-  <label>اسم  العميل </label>
+  <label>اسم  خط الانتاج </label>
   <input name="name" id="name" class="form-control" value="{{ old('name',$data['name']) }}"    >
   @error('name')
   <span class="text-danger">{{ $message }}</span>
@@ -42,9 +41,6 @@
 </div>
 
 
-
-  
-    
 <div class="col-md-6">   
   <div class="form-group">
     <label>   العنوان</label>
@@ -91,7 +87,7 @@
       <div class="col-md-12">
       <div class="form-group text-center">
         <button id="do_add_item_cardd" type="submit" class="btn btn-primary btn-sm"> تعديل</button>
-        <a href="{{ route('admin.customer.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
+        <a href="{{ route('admin.inv_production_lines.index') }}" class="btn btn-sm btn-danger">الغاء</a>    
       
       </div>
     </div>

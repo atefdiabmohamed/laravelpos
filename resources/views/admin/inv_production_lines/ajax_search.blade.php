@@ -54,6 +54,7 @@
 
           @endif
           <hr>
+          
           <table id="example2" class="table table-bordered table-hover">
             <thead class="custom_thead">
         
@@ -75,7 +76,7 @@
             <tr>
            
              <td>{{ $info->name }}</td>  
-             <td>{{ $info->customer_code }}</td>  
+             <td>{{ $info->production_lines_code }}</td>  
 
              
              <td>{{ $info->account_number }}</td>  
@@ -88,7 +89,6 @@
 
           @else
       متزن
-           
           @endif
           
             </td> 
@@ -102,7 +102,7 @@
       
          <td>
 
-        <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.inv_production_lines.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
 
          </td>
            
@@ -114,7 +114,6 @@
    
    
             </tbody>
-             </table>
              </table>
       <br>
       <div class="col-md-12" id="ajax_pagination_in_search">
