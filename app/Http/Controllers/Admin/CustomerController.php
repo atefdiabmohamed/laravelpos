@@ -124,6 +124,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function edit($id)
 {
 $com_code = auth()->user()->com_code;
@@ -166,6 +167,8 @@ return redirect()->back()
 ->withInput();
 }
 }
+
+
 public function delete($id)
 {
 try {
@@ -189,6 +192,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function ajax_search(Request $request)
 {
 if ($request->ajax()) {
@@ -273,4 +277,6 @@ $mirror['net']=$mirror['credit_sum']+$mirror['debit_sum'];
 return view('admin.customers.ajax_search', ['data' => $data,'mirror'=>$mirror]);
 }
 }
+
+
 }

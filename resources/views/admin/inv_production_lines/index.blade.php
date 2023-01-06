@@ -33,7 +33,7 @@
         <div class="card-body">
           <div class="row">
           <div class="col-md-4">
-            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code"> برقم الخط
+            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="production_lines_code"> برقم الخط
             <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number"> برقم الحساب
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name"> بالاسم
             <input autofocus style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder=" اسم  - رقم الحساب  - كود الخط" class="form-control"> <br>
@@ -93,7 +93,7 @@
             <tr>
            
              <td>{{ $info->name }}</td>  
-             <td>{{ $info->customer_code }}</td>  
+             <td>{{ $info->production_lines_code }}</td>  
 
              
              <td>{{ $info->account_number }}</td>  
@@ -119,7 +119,7 @@
       
          <td>
 
-        <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+        <a href="{{ route('admin.inv_production_lines.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
 
          </td>
            
@@ -154,7 +154,7 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('assets/admin/js/customers.js') }}"></script>
+<script src="{{ asset('assets/admin/js/inv_production_lines.js') }}"></script>
 @endsection
 
 
