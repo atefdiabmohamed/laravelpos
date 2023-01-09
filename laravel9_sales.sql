@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2022 at 11:46 PM
+-- Generation Time: Jan 10, 2023 at 12:21 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -85,7 +85,10 @@ INSERT INTO `accounts` (`id`, `name`, `account_type`, `is_parent`, `parent_accou
 (30, 'منصور سالم البدري', 3, 0, 3, 30, 3, '0.00', '0.00', 13, NULL, 1, NULL, '2022-10-30 00:16:23', '2022-11-06 09:19:58', 1, 1, '2022-10-30'),
 (31, 'فوزي السيد حمدان', 3, 0, 3, 31, 3, '0.00', '-1000.00', 14, NULL, 1, NULL, '2022-10-31 09:28:00', '2022-11-06 09:32:41', 1, 1, '2022-10-31'),
 (32, 'هاشم محمد احمد السيد', 4, 0, 8, 32, 1, '-1000.00', '-194.00', 4, NULL, 1, NULL, '2022-11-06 08:56:28', '2022-12-08 02:16:38', 1, 1, '2022-11-06'),
-(33, 'شركة الرميزان للأجهزة الثقيله', 9, 0, 10, 33, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-11-22 17:41:58', '2022-12-02 13:39:13', 1, 1, '2022-11-22');
+(33, 'شركة الرميزان للأجهزة الثقيله', 9, 0, 10, 33, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-11-22 17:41:58', '2022-12-02 13:39:13', 1, 1, '2022-11-22'),
+(34, 'الحساب المالي الاب لخطوط الانتاج', 9, 1, NULL, 34, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2023-01-04 02:48:02', '2023-01-04 02:48:02', 1, 1, '2023-01-04'),
+(36, 'خط انتاج الافران الكبيره', 5, 0, 34, 35, 3, '0.00', '0.00', 1, NULL, 1, 1, '2023-01-04 02:55:26', '2023-01-07 01:02:45', 1, 1, '2023-01-04'),
+(37, 'خط اننتاج غسالات عادية', 5, 0, 34, 36, 3, '0.00', '0.00', 2, NULL, 1, NULL, '2023-01-07 01:10:00', '2023-01-07 01:10:00', 1, 1, '2023-01-07');
 
 -- --------------------------------------------------------
 
@@ -109,7 +112,7 @@ INSERT INTO `account_types` (`id`, `name`, `active`, `relatediternalaccounts`) V
 (2, 'مورد', 1, 1),
 (3, 'عميل', 1, 1),
 (4, 'مندوب', 1, 1),
-(5, 'موظف', 1, 1),
+(5, 'خط انتاج', 1, 1),
 (6, 'بنكي', 1, 0),
 (7, 'مصروفات', 1, 0),
 (8, 'قسم داخلي', 1, 1),
@@ -229,6 +232,7 @@ CREATE TABLE `admin_panel_settings` (
   `suppliers_parent_account_number` bigint(20) NOT NULL COMMENT 'الحساب الاب للموردين',
   `delegate_parent_account_number` bigint(20) NOT NULL COMMENT 'رقم الحساب المالي  لحساب الاب للمناديب',
   `employees_parent_account_number` bigint(20) NOT NULL COMMENT 'رقم الحساب المالي للموظفين الاب',
+  `production_lines_parent_account` bigint(20) NOT NULL COMMENT 'كود الحساب الاب لخطوط الانتاج',
   `added_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -241,8 +245,8 @@ CREATE TABLE `admin_panel_settings` (
 -- Dumping data for table `admin_panel_settings`
 --
 
-INSERT INTO `admin_panel_settings` (`id`, `system_name`, `photo`, `active`, `general_alert`, `address`, `phone`, `customer_parent_account_number`, `suppliers_parent_account_number`, `delegate_parent_account_number`, `employees_parent_account_number`, `added_by`, `updated_by`, `created_at`, `updated_at`, `com_code`, `notes`) VALUES
-(1, 'حلول للكمبوتير بسوهاج', '1667938745648.png', 1, NULL, 'سوهاج - كوبري النيل', '012659854', 3, 1, 8, 9, 0, 1, '0000-00-00 00:00:00', '2022-11-09 22:38:33', 1, 'الاضافة بالمبيعات  ctrl او enter');
+INSERT INTO `admin_panel_settings` (`id`, `system_name`, `photo`, `active`, `general_alert`, `address`, `phone`, `customer_parent_account_number`, `suppliers_parent_account_number`, `delegate_parent_account_number`, `employees_parent_account_number`, `production_lines_parent_account`, `added_by`, `updated_by`, `created_at`, `updated_at`, `com_code`, `notes`) VALUES
+(1, 'حلول للكمبوتير بسوهاج', '1667938745648.png', 1, NULL, 'سوهاج - كوبري النيل', '012659854', 3, 1, 8, 9, 34, 0, 1, '0000-00-00 00:00:00', '2023-01-04 02:48:18', 1, 'الاضافة بالمبيعات  ctrl او enter');
 
 -- --------------------------------------------------------
 
@@ -393,7 +397,7 @@ CREATE TABLE `inv_itemcard` (
 --
 
 INSERT INTO `inv_itemcard` (`id`, `item_code`, `barcode`, `name`, `item_type`, `inv_itemcard_categories_id`, `parent_inv_itemcard_id`, `does_has_retailunit`, `retail_uom_id`, `uom_id`, `retail_uom_quntToParent`, `added_by`, `created_at`, `updated_at`, `updated_by`, `active`, `date`, `com_code`, `price`, `nos_gomla_price`, `gomla_price`, `price_retail`, `nos_gomla_price_retail`, `gomla_price_retail`, `cost_price`, `cost_price_retail`, `has_fixced_price`, `All_QUENTITY`, `QUENTITY`, `QUENTITY_Retail`, `QUENTITY_all_Retails`, `photo`) VALUES
-(1, 1, 'item1', 'شماعات بلاستيك', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2022-12-19 01:30:02', NULL, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '14.00', NULL, 1, '950.00', '950.000', NULL, NULL, NULL);
+(1, 1, 'item1', 'شماعات بلاستيك', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-01-10 00:43:33', NULL, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '14.00', NULL, 1, '948.00', '948.000', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -425,7 +429,7 @@ CREATE TABLE `inv_itemcard_batches` (
 --
 
 INSERT INTO `inv_itemcard_batches` (`id`, `store_id`, `item_code`, `inv_uoms_id`, `unit_cost_price`, `quantity`, `total_cost_price`, `production_date`, `expired_date`, `com_code`, `auto_serial`, `added_by`, `created_at`, `updated_at`, `updated_by`, `is_send_to_archived`) VALUES
-(1, 1, 1, 10, '14.00', '950.00', '13300.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2022-12-19 01:30:02', 1, 0);
+(1, 1, 1, 10, '14.00', '948.00', '13272.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2023-01-10 00:43:32', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -487,7 +491,9 @@ CREATE TABLE `inv_itemcard_movements` (
 
 INSERT INTO `inv_itemcard_movements` (`id`, `inv_itemcard_movements_categories`, `item_code`, `store_id`, `items_movements_types`, `FK_table`, `FK_table_details`, `byan`, `quantity_befor_movement`, `quantity_after_move`, `added_by`, `date`, `created_at`, `com_code`, `quantity_befor_move_store`, `quantity_after_move_store`) VALUES
 (1, 1, 1, 1, 1, 6, 12, 'نظير مشتريات من المورد  عاطف دياب محمد فاتورة رقم 6', 'عدد  0 وحده', 'عدد  1000 وحده', 1, '2022-12-19', '2022-12-19 01:27:46', 1, 'عدد  0 وحده', 'عدد  1000 وحده'),
-(2, 3, 1, 1, 6, 1, 1, 'جرد بالمخازن للباتش رقم 1 جرد رقم 1', 'عدد  1000 وحده', 'عدد  950 وحده', 1, '2022-12-19', '2022-12-19 01:30:02', 1, 'عدد  1000 وحده', 'عدد  950 وحده');
+(2, 3, 1, 1, 6, 1, 1, 'جرد بالمخازن للباتش رقم 1 جرد رقم 1', 'عدد  1000 وحده', 'عدد  950 وحده', 1, '2022-12-19', '2022-12-19 01:30:02', 1, 'عدد  1000 وحده', 'عدد  950 وحده'),
+(3, 1, 1, 1, 3, 4, 13, ' نظير مرتجع مشتريات عام الي المورد الاحمدي للفراخ المجمده فاتورة رقم 4', 'عدد  950 وحده', 'عدد  949 وحده', 1, '2023-01-10', '2023-01-10 00:43:26', 1, 'عدد  950 وحده', 'عدد  949 وحده'),
+(4, 1, 1, 1, 3, 4, 14, ' نظير مرتجع مشتريات عام الي المورد الاحمدي للفراخ المجمده فاتورة رقم 4', 'عدد  949 وحده', 'عدد  948 وحده', 1, '2023-01-10', '2023-01-10 00:43:32', 1, 'عدد  949 وحده', 'عدد  948 وحده');
 
 -- --------------------------------------------------------
 
@@ -545,6 +551,108 @@ INSERT INTO `inv_itemcard_movements_types` (`id`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inv_production_exchange`
+--
+
+CREATE TABLE `inv_production_exchange` (
+  `id` bigint(20) NOT NULL,
+  `order_type` tinyint(1) NOT NULL COMMENT 'واحد صرف خامات من المخزن للخط - اتنثين مرتجع خامات من الخط للمخزن',
+  `auto_serial` bigint(20) NOT NULL,
+  `inv_production_order_auto_serial` bigint(20) DEFAULT NULL,
+  `order_date` date NOT NULL COMMENT 'تاريخ الفاتورة',
+  `production_lines_code` bigint(20) NOT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
+  `com_code` int(11) NOT NULL,
+  `notes` varchar(225) DEFAULT NULL COMMENT 'اجمالي الفاتورة قبل الخصم',
+  `discount_type` tinyint(1) DEFAULT NULL COMMENT 'نواع الخصم - واحد خصم نسبة  - اثنين خصم يدوي قيمة',
+  `discount_percent` decimal(10,2) DEFAULT 0.00 COMMENT 'قيمة نسبة الخصم',
+  `discount_value` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'قيمة الخصم',
+  `tax_percent` decimal(10,2) DEFAULT 0.00 COMMENT 'نسبة الضريبة ',
+  `total_cost_items` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'اجمالي الاصناف فقط',
+  `tax_value` decimal(10,2) DEFAULT 0.00 COMMENT 'قيمة الضريبة القيمة المضافة',
+  `total_befor_discount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_cost` decimal(10,2) DEFAULT 0.00 COMMENT 'القيمة الاجمالية النهائية للفاتورة',
+  `account_number` bigint(20) NOT NULL,
+  `money_for_account` decimal(10,2) DEFAULT NULL,
+  `pill_type` tinyint(1) NOT NULL COMMENT 'نوع الفاتورة - كاش او اجل  - واحد واثنين',
+  `what_paid` decimal(10,2) DEFAULT 0.00,
+  `what_remain` decimal(10,2) DEFAULT 0.00,
+  `treasuries_transactions_id` bigint(20) DEFAULT NULL,
+  `Supplier_balance_befor` decimal(10,2) DEFAULT NULL COMMENT 'حالة رصيد المورد قبل الفاتروة',
+  `Supplier_balance_after` decimal(10,2) DEFAULT NULL COMMENT 'حالة رصيد المورد بعد الفاتروة',
+  `added_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `store_id` bigint(20) NOT NULL COMMENT 'كود المخزن المستلم للفاتورة',
+  `approved_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_production_exchange_details`
+--
+
+CREATE TABLE `inv_production_exchange_details` (
+  `id` bigint(20) NOT NULL,
+  `inv_production_exchange_auto_serial` bigint(20) NOT NULL,
+  `order_type` tinyint(1) NOT NULL,
+  `com_code` int(11) NOT NULL,
+  `deliverd_quantity` decimal(10,2) NOT NULL,
+  `uom_id` int(11) NOT NULL,
+  `isparentuom` tinyint(1) NOT NULL COMMENT '1-main -0 retail',
+  `unit_price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `order_date` date NOT NULL,
+  `added_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `item_code` bigint(20) NOT NULL,
+  `batch_auto_serial` bigint(20) DEFAULT NULL COMMENT 'رقم الباتش بالمخزن التي تم تخزنن الصنف بها',
+  `production_date` date DEFAULT NULL,
+  `expire_date` date DEFAULT NULL,
+  `item_card_type` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل اصناف امر الصرف  الخامات  لخط الانتاج';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_production_lines`
+--
+
+CREATE TABLE `inv_production_lines` (
+  `id` bigint(20) NOT NULL,
+  `production_lines_code` bigint(20) NOT NULL,
+  `name` varchar(225) NOT NULL,
+  `account_number` bigint(20) NOT NULL,
+  `start_balance_status` tinyint(4) NOT NULL COMMENT 'e 1-credit -2 debit 3-balanced',
+  `start_balance` decimal(10,2) NOT NULL COMMENT 'دائن او مدين او متزن اول المدة',
+  `current_balance` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `notes` varchar(225) DEFAULT NULL,
+  `added_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `com_code` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `address` varchar(250) DEFAULT NULL,
+  `phones` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول خطوط الانتاج الورش';
+
+--
+-- Dumping data for table `inv_production_lines`
+--
+
+INSERT INTO `inv_production_lines` (`id`, `production_lines_code`, `name`, `account_number`, `start_balance_status`, `start_balance`, `current_balance`, `notes`, `added_by`, `updated_by`, `created_at`, `updated_at`, `active`, `com_code`, `date`, `address`, `phones`) VALUES
+(1, 1, 'خط انتاج الافران الكبيره', 35, 3, '0.00', '0.00', NULL, 1, 1, '2023-01-04 02:55:26', '2023-01-07 01:02:45', 1, 1, '2023-01-04', 'المنطقه الرابعه من المصنع الشرقي', '0125645658'),
+(2, 2, 'خط اننتاج غسالات عادية', 36, 3, '0.00', '0.00', NULL, 1, NULL, '2023-01-07 01:09:59', '2023-01-07 01:09:59', 1, 1, '2023-01-07', 'المنطقه الثالثه من المصنع الشرقي', '0126598555');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inv_production_order`
 --
 
@@ -572,7 +680,8 @@ CREATE TABLE `inv_production_order` (
 --
 
 INSERT INTO `inv_production_order` (`id`, `auto_serial`, `production_plane`, `production_plan_date`, `is_approved`, `added_by`, `updated_by`, `created_at`, `updated_at`, `com_code`, `approved_by`, `approved_at`, `is_closed`, `closed_by`, `closed_at`, `date`) VALUES
-(1, 1, 'انتاج عدد 100 فرن بلدي مواصفات حجم وسط', '2022-12-26', 0, 1, NULL, '2022-12-26 23:43:46', '2022-12-26 23:43:46', 1, NULL, NULL, 0, NULL, NULL, '2022-12-26');
+(3, 2, '150 فرن حجم كبير - عرائس - لمخزن صابرين القبلي', '2022-12-29', 1, 1, 1, '2022-12-29 01:02:20', '2023-01-02 10:07:43', 1, 1, '2023-01-02 10:00:24', 1, 1, '2023-01-02 10:07:43', '2022-12-29'),
+(4, 3, 'انتاج 1500 فرن كبير', '2023-01-02', 0, 1, NULL, '2023-01-02 10:23:03', '2023-01-02 10:23:03', 1, NULL, NULL, 0, NULL, NULL, '2023-01-02');
 
 -- --------------------------------------------------------
 
@@ -1240,7 +1349,8 @@ INSERT INTO `suppliers_with_orders` (`id`, `order_type`, `auto_serial`, `DOC_NO`
 (7, 3, 2, NULL, '2022-11-13', 5, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 21, '1000.00', 2, '0.00', '1000.00', NULL, NULL, NULL, 1, '2022-11-13 20:40:25', '2022-11-13 20:41:04', 1, 1, 1),
 (8, 3, 3, NULL, '2022-11-15', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '600.00', '0.00', '600.00', '600.00', 4, '600.00', 2, '0.00', '600.00', NULL, NULL, NULL, 1, '2022-11-15 20:36:49', '2022-11-15 20:37:06', 1, 1, 1),
 (9, 1, 5, '50', '2022-12-18', 5, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '50000.00', '0.00', '50000.00', '50000.00', 21, '-50000.00', 2, '0.00', '50000.00', NULL, NULL, NULL, 1, '2022-12-18 01:43:50', '2022-12-18 01:44:06', 1, 1, 1),
-(10, 1, 6, NULL, '2022-12-19', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '14000.00', '0.00', '14000.00', '14000.00', 4, '-14000.00', 2, '0.00', '14000.00', NULL, NULL, NULL, 1, '2022-12-19 01:27:30', '2022-12-19 01:27:46', 1, 1, 1);
+(10, 1, 6, NULL, '2022-12-19', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '14000.00', '0.00', '14000.00', '14000.00', 4, '-14000.00', 2, '0.00', '14000.00', NULL, NULL, NULL, 1, '2022-12-19 01:27:30', '2022-12-19 01:27:46', 1, 1, 1),
+(11, 3, 4, NULL, '2023-01-10', 3, 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '28.00', '0.00', '28.00', '28.00', 17, '28.00', 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2023-01-10 00:41:51', '2023-01-10 00:43:32', 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -1286,7 +1396,9 @@ INSERT INTO `suppliers_with_orders_details` (`id`, `suppliers_with_orders_auto_s
 (9, 2, 3, 1, '1.00', 1, 1, '1000.00', '1000.00', '2022-11-13', 1, '2022-11-13 20:40:55', NULL, '2022-11-13 20:40:55', 2, 3, '2022-10-01', '2024-10-25', 2),
 (10, 3, 3, 1, '3.00', 1, 1, '200.00', '600.00', '2022-11-15', 1, '2022-11-15 20:37:00', NULL, '2022-11-15 20:37:00', 5, 5, '2022-10-30', '2025-10-30', 2),
 (11, 5, 1, 1, '1000.00', 8, 1, '50.00', '50000.00', '2022-12-18', 1, '2022-12-18 01:44:02', NULL, '2022-12-18 01:44:02', 6, NULL, NULL, NULL, 1),
-(12, 6, 1, 1, '1000.00', 10, 1, '14.00', '14000.00', '2022-12-19', 1, '2022-12-19 01:27:42', NULL, '2022-12-19 01:27:42', 1, NULL, NULL, NULL, 1);
+(12, 6, 1, 1, '1000.00', 10, 1, '14.00', '14000.00', '2022-12-19', 1, '2022-12-19 01:27:42', NULL, '2022-12-19 01:27:42', 1, NULL, NULL, NULL, 1),
+(13, 4, 3, 1, '1.00', 10, 1, '14.00', '14.00', '2023-01-10', 1, '2023-01-10 00:43:25', NULL, '2023-01-10 00:43:25', 1, 1, NULL, NULL, 1),
+(14, 4, 3, 1, '1.00', 10, 1, '14.00', '14.00', '2023-01-10', 1, '2023-01-10 00:43:32', NULL, '2023-01-10 00:43:32', 1, 1, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1524,6 +1636,24 @@ ALTER TABLE `inv_itemcard_movements_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `inv_production_exchange`
+--
+ALTER TABLE `inv_production_exchange`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inv_production_exchange_details`
+--
+ALTER TABLE `inv_production_exchange_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inv_production_lines`
+--
+ALTER TABLE `inv_production_lines`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `inv_production_order`
 --
 ALTER TABLE `inv_production_order`
@@ -1685,7 +1815,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `account_types`
@@ -1757,7 +1887,7 @@ ALTER TABLE `inv_itemcard_categories`
 -- AUTO_INCREMENT for table `inv_itemcard_movements`
 --
 ALTER TABLE `inv_itemcard_movements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_movements_categories`
@@ -1772,10 +1902,28 @@ ALTER TABLE `inv_itemcard_movements_types`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT for table `inv_production_exchange`
+--
+ALTER TABLE `inv_production_exchange`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inv_production_exchange_details`
+--
+ALTER TABLE `inv_production_exchange_details`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inv_production_lines`
+--
+ALTER TABLE `inv_production_lines`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `inv_production_order`
 --
 ALTER TABLE `inv_production_order`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inv_stores_inventory`
@@ -1877,13 +2025,13 @@ ALTER TABLE `suppliers_categories`
 -- AUTO_INCREMENT for table `suppliers_with_orders`
 --
 ALTER TABLE `suppliers_with_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `suppliers_with_orders_details`
 --
 ALTER TABLE `suppliers_with_orders_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `suupliers`
