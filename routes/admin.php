@@ -32,6 +32,10 @@ use App\Http\Controllers\Admin\Services_with_ordersController;
 use App\Http\Controllers\Admin\Inv_stores_inventoryController;
 use App\Http\Controllers\Admin\Inv_production_orderController;
 use App\Http\Controllers\Admin\Inv_production_linesController;
+use App\Http\Controllers\Admin\Inv_production_exchangeController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -237,6 +241,7 @@ Route::get('/delegates/delete/{id}', [DelegatesController::class, 'delete'])->na
 Route::post('/delegates/ajax_search', [DelegatesController::class, 'ajax_search'])->name('admin.delegates.ajax_search');
 Route::post('/delegates/show', [DelegatesController::class, 'show'])->name('admin.delegates.show');
 /*           end delegates                */
+
 /*         start  suppliers_orders Gernal Return   مرتجع المشتريات العام             */
 Route::get('/suppliers_orders_general_return/index', [Suppliers_with_ordersGeneralRetuen::class, 'index'])->name('admin.suppliers_orders_general_return.index');
 Route::get('/suppliers_orders_general_return/create', [Suppliers_with_ordersGeneralRetuen::class, 'create'])->name('admin.suppliers_orders_general_return.create');
@@ -260,6 +265,9 @@ Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_wit
 Route::post('/suppliers_orders_general_return/get_item_batches', [Suppliers_with_ordersGeneralRetuen::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_item_batches');
 Route::get('/suppliers_orders_general_return/printsaleswina4/{id}/{size}', [Suppliers_with_ordersGeneralRetuen::class, 'printsaleswina4'])->name('admin.suppliers_orders_general_return.printsaleswina4');
 /*           end  suppliers_orders Gernal Return                */
+
+
+
 /*          start    itemcardBalance               */
 Route::get('/itemcardBalance/index', [ItemcardBalanceController::class, 'index'])->name('admin.itemcardBalance.index');
 Route::post('/itemcardBalance/ajax_search', [ItemcardBalanceController::class, 'ajax_search'])->name('admin.itemcardBalance.ajax_search');
@@ -375,6 +383,35 @@ Route::get('/inv_production_lines/delete/{id}', [Inv_production_linesController:
 Route::post('/inv_production_lines/ajax_search', [Inv_production_linesController::class, 'ajax_search'])->name('admin.inv_production_lines.ajax_search');
 Route::get('/inv_production_lines/show/{id}', [Inv_production_linesController::class, 'show'])->name('admin.inv_production_lines.show');
 /*           end inv_production_lines                */
+
+
+
+/*         start  Inv_production_exchange    صرف الخامات لخطوط الانتاج - الورش            */
+Route::get('/inv_production_exchange/index', [Inv_production_exchangeController::class, 'index'])->name('admin.inv_production_exchange.index');
+Route::get('/inv_production_exchange/create', [Inv_production_exchangeController::class, 'create'])->name('admin.inv_production_exchange.create');
+Route::post('/inv_production_exchange/store', [Inv_production_exchangeController::class, 'store'])->name('admin.inv_production_exchange.store');
+Route::get('/inv_production_exchange/edit/{id}', [Inv_production_exchangeController::class, 'edit'])->name('admin.inv_production_exchange.edit');
+Route::post('/inv_production_exchange/update/{id}', [Inv_production_exchangeController::class, 'update'])->name('admin.inv_production_exchange.update');
+Route::get('/inv_production_exchange/delete/{id}', [Inv_production_exchangeController::class, 'delete'])->name('admin.inv_production_exchange.delete');
+Route::post('/inv_production_exchange/ajax_search', [Inv_production_exchangeController::class, 'ajax_search'])->name('admin.inv_production_exchange.ajax_search');
+Route::get('/inv_production_exchange/show/{id}', [Inv_production_exchangeController::class, 'show'])->name('admin.inv_production_exchange.show');
+Route::post('/inv_production_exchange/get_item_uoms', [Inv_production_exchangeController::class, 'get_item_uoms'])->name('admin.inv_production_exchange.get_item_uoms');
+Route::post('/inv_production_exchange/load_modal_add_details', [Inv_production_exchangeController::class, 'load_modal_add_details'])->name('admin.inv_production_exchange.load_modal_add_details');
+Route::post('/inv_production_exchange/Add_item_to_invoice', [Inv_production_exchangeController::class, 'Add_item_to_invoice'])->name('admin.inv_production_exchange.Add_item_to_invoice');
+Route::post('/inv_production_exchange/reload_itemsdetials', [Inv_production_exchangeController::class, 'reload_itemsdetials'])->name('admin.inv_production_exchange.reload_itemsdetials');
+Route::post('/inv_production_exchange/reload_parent_pill', [Inv_production_exchangeController::class, 'reload_parent_pill'])->name('admin.inv_production_exchange.reload_parent_pill');
+Route::post('/inv_production_exchange/load_edit_item_details', [Inv_production_exchangeController::class, 'load_edit_item_details'])->name('admin.inv_production_exchange.load_edit_item_details');
+Route::post('/inv_production_exchange/edit_item_details', [Inv_production_exchangeController::class, 'edit_item_details'])->name('admin.inv_production_exchange.edit_item_details');
+Route::get('/inv_production_exchange/delete_details/{id}/{id_parent}', [Inv_production_exchangeController::class, 'delete_details'])->name('admin.inv_production_exchange.delete_details');
+Route::post('/inv_production_exchange/do_approve/{id}', [Inv_production_exchangeController::class, 'do_approve'])->name('admin.inv_production_exchange.do_approve');
+Route::post('/inv_production_exchange/load_modal_approve_invoice', [Inv_production_exchangeController::class, 'load_modal_approve_invoice'])->name('admin.inv_production_exchange.load_modal_approve_invoice');
+Route::post('/inv_production_exchange/load_usershiftDiv', [Inv_production_exchangeController::class, 'load_usershiftDiv'])->name('admin.inv_production_exchange.load_usershiftDiv');
+Route::post('/inv_production_exchange/get_item_batches', [Inv_production_exchangeController::class, 'get_item_batches'])->name('admin.inv_production_exchange.get_item_batches');
+Route::get('/inv_production_exchange/printsaleswina4/{id}/{size}', [Inv_production_exchangeController::class, 'printsaleswina4'])->name('admin.inv_production_exchange.printsaleswina4');
+/*           end  Inv_production_exchange               */
+
+
+
 
 
 
