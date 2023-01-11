@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inv_production_exchange extends Model
 {
     use HasFactory;
-    protected $table="inv_itemcard";
+    protected $table="inv_production_exchange";
     protected $fillable=[ 
         'order_type', 'auto_serial', 'inv_production_order_auto_serial', 'order_date',
          'production_lines_code', 'is_approved', 'com_code', 'notes', 'discount_type', 

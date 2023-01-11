@@ -81,6 +81,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function edit($id)
 {
 $com_code = auth()->user()->com_code;

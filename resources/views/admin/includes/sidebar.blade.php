@@ -204,8 +204,8 @@
            </li>
 
 
-           <li class="nav-item has-treeview  {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') )?'menu-open':'' }}    ">
-            <a href="#" class="nav-link {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') )?'active':'' }} ">
+           <li class="nav-item has-treeview  {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') || request()->is('admin/inv_production_exchange*') )?'menu-open':'' }}    ">
+            <a href="#" class="nav-link {{ (request()->is('admin/inv_production_order*')  || request()->is('admin/inv_production_lines*') || request()->is('admin/inv_production_exchange*'))?'active':'' }} ">
                <i class="nav-icon fas fa-tachometer-alt"></i>
                <p>
              حركات خطوط الانتاج
@@ -229,7 +229,14 @@
                 </a>
              </li>
           
-
+    
+             <li class="nav-item">
+               <a href="{{ route('admin.inv_production_exchange.index') }}" class="nav-link {{ (request()->is('admin/inv_production_exchange*')  )?'active':'' }}">
+                  <p>
+            صرف خامات لخط الانتاج      
+                  </p>
+               </a>
+            </li>
 
            
             </ul>
