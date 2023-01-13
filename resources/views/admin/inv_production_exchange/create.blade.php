@@ -11,7 +11,7 @@
 صرف الخامات
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.inv_production_order.index') }}">   صرف الخامات للورش</a>
+<a href="{{ route('admin.inv_production_exchange.index') }}">   صرف الخامات للورش</a>
 @endsection
 @section('contentheaderactive')
 اضافة
