@@ -15,6 +15,7 @@ use App\Models\Admin_panel_setting;
 use App\Models\Inv_itemcard_batches;
 use App\Models\Inv_production_order;
 use App\Http\Requests\Inv_production_exchangeRequest;
+use App\Http\Requests\inv_production_exchangeUpRequest;
 use Illuminate\Http\Request;
 class Inv_production_exchangeController extends Controller
 {
@@ -90,6 +91,57 @@ $data_insert['com_code'] = $com_code;
 insert(new Inv_production_exchange(),$data_insert);
 //$id = get_field_value(new Suppliers_with_orders(), "id", array("auto_serial" => $data_insert['auto_serial'], "com_code" => $com_code, "order_type" => 3));
 return redirect()->route("admin.inv_production_exchange.index")->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
+->withInput();
+}
+}
+public function edit($id)
+{
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_production_exchange(), array("*"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+if (empty($data)) {
+return redirect()->route('admin.inv_production_exchange.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data['is_approved'] == 1) {
+return redirect()->route('admin.inv_production_exchange.index')->with(['error' => 'عفوا لايمكن التحديث علي فاتورة معتمدة ومؤرشفة']);
+}
+$Inv_production_lines = get_cols_where(new Inv_production_lines(), array('production_lines_code', 'name'), array('com_code' => $com_code), 'id', 'ASC');
+$stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code), 'id', 'DESC');
+$Inv_production_order = get_cols_where(new Inv_production_order(), array( 'auto_serial'), array('com_code' => $com_code, 'is_closed' => 0,'is_approved'=>1), 'id', 'DESC');
+$added_counter_details=get_count_where(new Inv_production_exchange_details(),array("com_code"=>$com_code,"order_type"=>1,"inv_production_exchange_auto_serial"=>$data['auto_serial']));
+return view('admin.inv_production_exchange.edit', ['data' => $data, 'Inv_production_lines' => $Inv_production_lines, 'stores' => $stores,'Inv_production_order'=>$Inv_production_order,'added_counter_details'=>$added_counter_details]);
+}
+public function update($id, inv_production_exchangeUpRequest $request)
+{
+try {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_production_exchange(), array("is_approved","auto_serial"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+if (empty($data)) {
+return redirect()->route('admin.inv_production_exchange.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+}
+if ($data['is_approved'] == 1) {
+return redirect()->route('admin.inv_production_exchange.index')->with(['error' => 'عفوا لايمكن التحديث علي فاتورة معتمدة ومؤرشفة']);
+}
+$data_Inv_production_line = get_cols_where_row(new Inv_production_lines(), array("account_number"), array("production_lines_code" => $request->production_lines_code, "com_code" => $com_code));
+if (empty($data_Inv_production_line)) {
+return redirect()->route('admin.inv_production_exchange.index')->with(['error' => 'عفوا غير قادر علي الوصول الي  بيانات خط الانتاج !!']);
+}
+$added_counter_details=get_count_where(new Inv_production_exchange_details(),array("com_code"=>$com_code,"order_type"=>1,"inv_production_exchange_auto_serial"=>$data['auto_serial']));
+if($added_counter_details==0){
+$data_to_update['store_id'] = $request->store_id;
+$data_to_update['production_lines_code'] = $request->production_lines_code;
+$data_to_update['account_number'] = $data_Inv_production_line['account_number'];
+}
+$data_to_update['order_date'] = $request->order_date;
+$data_to_update['notes'] = $request->notes;
+$data_to_update['inv_production_order_auto_serial'] = $request->inv_production_order_auto_serial;
+$data_to_update['pill_type'] = $request->pill_type;
+$data_to_update['updated_by'] = auth()->user()->id;
+$data_to_update['updated_at'] = date("Y-m-d H:i:s");
+update(new Inv_production_exchange(), $data_to_update, array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+return redirect()->route('admin.inv_production_exchange.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
 } catch (\Exception $ex) {
 return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
