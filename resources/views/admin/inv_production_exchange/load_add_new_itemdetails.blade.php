@@ -1,3 +1,4 @@
+
   <div class="row">
     <div class="col-md-4" >
       <div class="form-group"> 
@@ -43,13 +44,13 @@
     </div>
     <div class="col-md-4 relatied_to_itemCard" style="display: none;">
       <div class="form-group">
-       <label>  سعر الوحدة</label>
+       <label>  سعر تكلفة الوحدة</label>
        <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="item_price" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
        </div>
      </div>
    <div class="col-md-4 relatied_to_itemCard" style="display: none;">
    <div class="form-group">
-    <label> الكمية المرتجعة</label>
+    <label> الكمية المصروفة</label>
     <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="item_quantity" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
     </div>
   </div>
@@ -72,4 +73,5 @@
    
 
       </div>
+   
 

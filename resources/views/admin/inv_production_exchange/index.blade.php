@@ -7,7 +7,7 @@
 صرف الخامات
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.inv_production_order.index') }}">   صرف الخامات للورش</a>
+<a href="{{ route('admin.inv_production_exchange.index') }}">   صرف الخامات للورش</a>
 @endsection
 @section('contentheaderactive')
 عرض
@@ -75,10 +75,10 @@
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>كود</th>
-                     <th> المورد</th>
+                     <th> خط الانتاج</th>
                      <th> تاريخ الفاتورة</th>
                      <th>  نوع الفاتورة</th>
-                     <th>   مخزن صرف المرتجع</th>
+                     <th>   مخزن الصرف </th>
                      <th>    اجمالي الفاتورة</th>
                      <th>حالة الفاتورة</th>
                      <th></th>
@@ -87,7 +87,7 @@
                      @foreach ($data as $info )
                      <tr>
                         <td>{{ $info->auto_serial }}</td>
-                        <td>{{ $info->supplier_name }}</td>
+                        <td>{{ $info->production_lines_name }}</td>
                         <td>{{ $info->order_date }}</td>
                         <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
                         <td>{{ $info->store_name }}</td>
