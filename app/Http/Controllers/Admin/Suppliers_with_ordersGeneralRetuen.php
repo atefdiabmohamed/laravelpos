@@ -137,6 +137,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function delete($id)
 {
 try {
@@ -260,6 +261,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function show($id)
 {
 try {
@@ -365,6 +367,7 @@ return view("admin.suppliers_orders_general_return.load_add_new_itemdetails", ['
 }
 }
 }
+
 public function edit_item_details(Request $request)
 {
 if ($request->ajax()) {
@@ -786,6 +789,8 @@ return view("admin.suppliers_orders_general_return.get_item_batches", ['item_car
 }
 }
 }
+
+
 public function Add_item_to_invoice(Request $request)
 { 
 try {
@@ -914,6 +919,9 @@ echo  json_encode("done");
 echo "there is error " . $ex->getMessage();
 }
 }
+
+
+
 function recalclate_parent_invoice($auto_serial)
 {
 $com_code = auth()->user()->com_code;
