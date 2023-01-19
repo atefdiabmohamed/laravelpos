@@ -28,6 +28,7 @@
          <!-- /.card-header -->
          <div class="card-body">
             <div id="ajax_responce_serarchDivparentpill">
+
                @if (@isset($data) && !@empty($data))
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
@@ -137,6 +138,8 @@
                      </td>
                   </tr>
                </table>
+
+               
             </div>
             <!--  treasuries_delivery   -->
             <div class="card-header">
@@ -204,6 +207,7 @@
                      @endforeach
                   </tbody>
                </table>
+               
                @else
                <div class="alert alert-danger">
                   عفوا لاتوجد بيانات لعرضها !!
