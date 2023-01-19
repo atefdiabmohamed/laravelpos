@@ -400,4 +400,181 @@ update(new Inv_production_exchange(), $dataUpdateParent, array("com_code" => $co
 }
 
 
+public function reload_parent_pill(Request $request)
+{
+if ($request->ajax()) {
+$com_code = auth()->user()->com_code;
+$data = get_cols_where_row(new Inv_production_exchange(), array("*"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
+if (!empty($data)) {
+    $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+    $data['production_lines_name'] = Inv_production_lines::where('production_lines_code', $data['production_lines_code'])->value('name');
+    $data['store_name'] = Store::where('id', $data['store_id'])->value('name');
+    if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
+    $data['updated_by_admin'] = Admin::where('id', $data['updated_by'])->value('name');
+    }
+return view("admin.inv_production_exchange.reload_parent_pill", ['data' => $data]);
+}
+}
+}
+
+public function reload_itemsdetials(Request $request)
+{
+if ($request->ajax()) {
+$com_code = auth()->user()->com_code;
+$auto_serial = $request->autoserailparent;
+$data = get_cols_where_row(new Inv_production_exchange(), array("is_approved","id"), array("auto_serial" => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
+
+  $details = get_cols_where(new Inv_production_exchange_details(), array("*"), array('inv_production_exchange_auto_serial' => $auto_serial, 'order_type' => 1, 'com_code' => $com_code), 'id', 'DESC');
+    if (!empty($details)) {
+    foreach ($details as $info) {
+    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+    $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+    if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
+    $data['updated_by_admin'] = Admin::where('id', $data['updated_by'])->value('name');
+    }
+    }
+    }
+
+return view("admin.inv_production_exchange.reload_itemsdetials", ['data' => $data, 'details' => $details]);
+}
+}
+
+
+public function delete_details($id, $parent_id)
+{ 
+try {
+$com_code = auth()->user()->com_code;
+$parent_pill_data = get_cols_where_row(new Inv_production_exchange(), array("is_approved", "auto_serial","store_id","production_lines_code"), array("id" => $parent_id, "com_code" => $com_code, 'order_type' => 1));
+if (empty($parent_pill_data)) {
+return redirect()->back()
+->with(['error' => ' عفوا حدث خطأ ما'  ]);
+}
+if ($parent_pill_data['is_approved'] == 1) {
+if (empty($parent_pill_data)) {
+return redirect()->back()
+->with(['error' => 'عفوا  لايمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
+}
+}
+$item_row = Inv_production_exchange_details::find($id);
+if (!empty($item_row)) {
+$flag = $item_row->delete();
+if ($flag) {
+/** update parent pill */
+$this->recalclate_parent_invoice($parent_pill_data['auto_serial']);
+$itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit","item_type"), array("com_code" => $com_code, "item_code" => $item_row['item_code']));
+$batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id","production_date","expired_date"), array("com_code" => $com_code, "auto_serial" => $item_row['batch_auto_serial'], 'store_id' => $parent_pill_data['store_id'], 'item_code' => $item_row['item_code']));
+if (!empty($itemCard_Data) and !empty($batch_data)) {
+//خصم الكمية من الباتش 
+//كمية الصنف بكل المخازن قبل الحركة
+$quantityBeforMove = get_sum_where(
+new Inv_itemcard_batches(),
+"quantity",
+array(
+"item_code" => $item_row['item_code'],
+"com_code" => $com_code
+)
+);
+//get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+$quantityBeforMoveCurrntStore = get_sum_where(
+new Inv_itemcard_batches(),
+"quantity",
+array(
+"item_code" => $item_row['item_code'], "com_code" => $com_code,
+'store_id' => $parent_pill_data['store_id']
+)
+);
+//حنرجع  الكمية لحظيا من باتش الصنف
+//update current Batch تحديث علي الباتش القديمة
+if($item_row['isparentuom']==1){
+//حنرجع بشكل مباشر لانه بنفس وحده الباتش الاب
+$dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_row['deliverd_quantity'];
+}else{
+//مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل الخصم انتبه !!
+$item_quantityByParentUom=$item_row['deliverd_quantity']/$itemCard_Data['retail_uom_quntToParent'];
+$dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_quantityByParentUom;
+}
+$dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+$dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+$dataUpdateOldBatch["updated_by"] = auth()->user()->id;
+$flag = update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $batch_data['id'], "com_code" => $com_code));
+if ($flag) {
+$quantityAfterMove = get_sum_where(
+new Inv_itemcard_batches(),
+"quantity",
+array(
+"item_code" => $item_row['item_code'],
+"com_code" => $com_code
+)
+);
+//get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي بعد الحركة
+$quantityAfterMoveCurrentStore = get_sum_where(
+new Inv_itemcard_batches(),
+"quantity",
+array("item_code" => $item_row['item_code'], "com_code" => $com_code, 'store_id' => $parent_pill_data['store_id'])
+);
+//التاثير في حركة كارت الصنف
+$dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 4;
+$dataInsert_inv_itemcard_movements['items_movements_types'] = 18;
+$dataInsert_inv_itemcard_movements['item_code'] = $item_row['item_code'];
+//كود الفاتورة الاب
+$dataInsert_inv_itemcard_movements['FK_table'] = $parent_pill_data['auto_serial'];
+//كود صف الابن بتفاصيل الفاتورة
+$dataInsert_inv_itemcard_movements['FK_table_details'] = $item_row['id'];
+$production_lines_name = Inv_production_lines::where('production_lines_code', $parent_pill_data['production_lines_code'])->value('name');
+$dataInsert_inv_itemcard_movements['byan'] = " نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج     " . " " . $production_lines_name . " فاتورة رقم" . " " . $parent_pill_data['auto_serial'];
+$MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
+//كمية الصنف بكل المخازن قبل الحركة
+$dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+// كمية الصنف بكل المخازن بعد  الحركة
+$dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+//كمية الصنف  المخزن الحالي قبل الحركة
+$dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+// كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+$dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+$dataInsert_inv_itemcard_movements["store_id"] = $parent_pill_data['store_id'];
+$dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+$dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+$dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+$dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+$flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+if ($flag) {
+//update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+do_update_itemCardQuantity(
+new Inv_itemCard(),
+$item_row['item_code'],
+new Inv_itemcard_batches(),
+$itemCard_Data['does_has_retailunit'],
+$itemCard_Data['retail_uom_quntToParent']
+);
+return redirect()->back()
+->with(['success' => '   تم حذف البيانات بنجاح']);
+}
+}else{
+return redirect()->back()
+->with(['error' => '2عفوا حدث خطأ ما']);
+}
+}else{
+return redirect()->back()
+->with(['error' => '3عفوا حدث خطأ ما']);
+}
+} else {
+return redirect()->back()
+->with(['error' => '4عفوا حدث خطأ ما']);
+}
+} else {
+return redirect()->back()
+->with(['error' => 'عفوا غير قادر الي الوصول للبيانات المطلوبة']);
+}
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => '5عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+
+
+
+
+
+
 }
