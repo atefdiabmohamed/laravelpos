@@ -43,7 +43,7 @@ $(document).ready(function () {
     } else {
       var batchSerial = null;
     }
-    get_inv_itemcard_batches(batchSerial);
+    get_inv_itemcard_batches(batchSerial,false);
 
   });
 
@@ -192,7 +192,7 @@ $(document).ready(function () {
   }
 
   //جلب كميات الصنف من المخزن بالباتشات وترتيبهم حسب نوع الصنف
-  function get_inv_itemcard_batches(oldBatchId = null) {
+  function get_inv_itemcard_batches(oldBatchId = null,do_update_price=true) {
     var item_code = $("#item_code").val();
     var uom_id = $("#uom_id").val();
     var store_id = $("#store_id").val();
@@ -212,7 +212,10 @@ $(document).ready(function () {
           var inv_itemcard_batches_autoserial = $("#inv_itemcard_batches_autoserial").val();
           if (inv_itemcard_batches_autoserial != "") {
             var Batchunitprice = $("#inv_itemcard_batches_autoserial option:selected").data("price");
+           if(do_update_price==true){
             $("#item_price").val(Batchunitprice * 1);
+           }
+       
             $("#item_quantity").focus();
           }
 
@@ -808,18 +811,19 @@ $(document).ready(function () {
     var token_search = $("#token_search").val();
     var ajax_search_url = $("#ajax_search_url").val();
     var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
-    var suuplier_code = $("#suuplier_code_search").val();
+    var production_lines_code= $("#production_lines_code_search").val();
     var search_by_text = $("#search_by_text").val();
     var store_id = $("#store_id_search").val();
     var order_date_form = $("#order_date_form").val();
     var order_date_to = $("#order_date_to").val();
-
+    var is_approved = $("#is_approved_serach").val();
+    
     jQuery.ajax({
       url: ajax_search_url,
       type: 'post',
       dataType: 'html',
       cache: false,
-      data: { "_token": token_search, searchbyradio: searchbyradio, suuplier_code: suuplier_code, store_id: store_id, order_date_form: order_date_form, order_date_to: order_date_to, search_by_text: search_by_text },
+      data: { "_token": token_search, searchbyradio: searchbyradio, production_lines_code: production_lines_code, store_id: store_id, order_date_form: order_date_form, order_date_to: order_date_to, search_by_text: search_by_text,is_approved:is_approved },
       success: function (data) {
         $("#ajax_responce_serarchDiv").html(data);
 
@@ -835,13 +839,13 @@ $(document).ready(function () {
   $(document).on('click', '#ajax_pagination_in_search a ', function (e) {
     e.preventDefault();
     var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
-    var suuplier_code = $("#suuplier_code_search").val();
+    var production_lines_code= $("#production_lines_code_search").val();
     var search_by_text = $("#search_by_text").val();
     var store_id = $("#store_id_search").val();
     var order_date_form = $("#order_date_form").val();
     var order_date_to = $("#order_date_to").val();
+    var is_approved = $("#is_approved_serach").val();
     var token_search = $("#token_search").val();
-
     var url = $(this).attr("href");
 
     jQuery.ajax({
@@ -849,7 +853,7 @@ $(document).ready(function () {
       type: 'post',
       dataType: 'html',
       cache: false,
-      data: { "_token": token_search, searchbyradio: searchbyradio, suuplier_code: suuplier_code, store_id: store_id, order_date_form: order_date_form, order_date_to: order_date_to, search_by_text: search_by_text },
+      data: { "_token": token_search, searchbyradio: searchbyradio, production_lines_code: production_lines_code, store_id: store_id, order_date_form: order_date_form, order_date_to: order_date_to, search_by_text: search_by_text,is_approved:is_approved },
       success: function (data) {
 
         $("#ajax_responce_serarchDiv").html(data);
@@ -866,7 +870,7 @@ $(document).ready(function () {
 
 
 
-  $(document).on('change', '#suuplier_code_search', function (e) {
+  $(document).on('change', '#production_lines_code_search', function (e) {
     make_search();
   });
 
@@ -886,6 +890,9 @@ $(document).ready(function () {
     make_search();
   });
 
+  $(document).on('change', '#is_approved_serach', function (e) {
+    make_search();
+  });
 
 
 

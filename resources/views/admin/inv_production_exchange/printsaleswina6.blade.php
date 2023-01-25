@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة مرتجع مشتريات </title>
+      <title> طباعة فاتورة صرف خامات لخط انتاج </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       
       <style>
@@ -59,16 +59,16 @@ table{margin: 0 auto;}
       <div class="row">
       <table class="mainheadtable"  cellspacing="0"   dir="rtl">
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود المورد 
-               <span style="margin-right: 10px;">/ {{ $data["suuplier_code"] }}</span>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود خط الانتاج 
+               <span style="margin-right: 10px;">/ {{ $data["production_lines_code"] }}</span>
            
             </td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم المورد  <span style="margin-right: 10px;">/ {{ $data['supplier_name'] }}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم خط الانتاج  <span style="margin-right: 10px;">/ {{ $data['production_lines_name'] }}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['supplier_phone']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['production_lines_phones']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>

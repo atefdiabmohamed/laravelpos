@@ -138,6 +138,8 @@ return redirect()->back()
 }
 }
 
+
+
 public function delete($id)
 {
 try {
@@ -661,6 +663,8 @@ refresh_account_blance_supplier($data['account_number'], new Account(), new Supp
 return redirect()->route("admin.suppliers_orders_general_return.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
 }
 }
+
+
 public function ajax_search(Request $request)
 {
 if ($request->ajax()) {

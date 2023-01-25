@@ -3,7 +3,7 @@
 @if($counterDetails>0)
 
 
-<form action="{{ route("admin.suppliers_orders_general_return.do_approve",$data['auto_serial']) }}" method="post">
+<form action="{{ route("admin.inv_production_exchange.do_approve",$data['auto_serial']) }}" method="post">
      @csrf
      
 <div class="row">
@@ -97,20 +97,20 @@
           <div class="form-group">
                <label>     نوع الفاتورة   </label>
                <select class="form-control" name="pill_type" id="pill_type">
-               <option value="1" @if($data['pill_type']==1) selected @endif >     كاش</option>
-               <option value="2" @if($data['pill_type']==2) selected @endif >  اجل</option>
+               <!-- <option value="1" @if($data['pill_type']==1) selected @endif >     كاش</option>-->
+              <option value="2" @if($data['pill_type']==2) selected @endif >  اجل</option> 
                </select>
           </div>
          </div>
          <div class="col-md-6 > 
           <div class="form-group">
-            <label>    المحصل الان  من المورد    </label>
-            <input   name="what_paid" id="what_paid" class="form-control"  @if($data['pill_type']==2)  value="0" @else readonly value="{{ $data['total_cost']*1 }}"   @endif  >
+            <label>    المحصل الان  من خط الانتاج    </label>
+            <input readonly   name="what_paid" id="what_paid" class="form-control"  @if($data['pill_type']==2)  value="0" @else readonly value="{{ $data['total_cost']*1 }}"   @endif  >
             </div>
 
             <div class="col-md-6 > 
                <div class="form-group">
-                 <label>    المتبقي علي المورد    </label>
+                 <label>    المتبقي علي خط الانتاج    </label>
                  <input readonly   name="what_remain" id="what_remain" class="form-control"  @if($data['pill_type']==2)  value="{{ $data['total_cost']*1 }}" @else value="0"   @endif  >
                  </div>
                  <div class="col-md-12 text-center" > 
