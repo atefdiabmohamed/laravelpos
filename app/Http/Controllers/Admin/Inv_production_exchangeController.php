@@ -260,7 +260,7 @@ public function Add_item_to_invoice(Request $request)
 try {
 if ($request->ajax()) { 
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new Inv_production_exchange(), array("is_approved", "order_date", "production_lines_code"), array("com_code" => $com_code, "auto_serial" => $request->autoserailparent,'order_type'=>1));
+$invoice_data = get_cols_where_row(new Inv_production_exchange(), array("is_approved", "order_date", "production_lines_code","id"), array("com_code" => $com_code, "auto_serial" => $request->autoserailparent,'order_type'=>1));
 if (!empty($invoice_data)) {  
 if ($invoice_data['is_approved'] == 0) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id","production_date","expired_date"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
@@ -271,6 +271,7 @@ if (!empty($itemCard_Data)) {
 $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 $datainsert_items['inv_production_exchange_auto_serial'] = $request->autoserailparent;
 $datainsert_items['order_type'] = 1;
+$datainsert_items['inv_production_exchange_id'] =$invoice_data['id'];
 $datainsert_items['order_date'] = $invoice_data['order_date'];
 $datainsert_items['item_code'] = $request->item_code;
 $datainsert_items['uom_id'] = $request->uom_id;
@@ -601,6 +602,7 @@ if ($flag) {
 //حنلف علي الاصناف المضافه علي الفاتورة ونطبق عليهم نفس اللي عملناها في حذف تفاصيل عنصر علي الفاتورة
 if(!empty($items_details)){
 foreach($items_details as $info){
+      //حيتم الحذف بشكل الي من خلال العلاقه بين الجدولين ونقدر نستغني عن الكود الخاص بالحذف  
 $flagDelete=delete(new Inv_production_exchange_details(),array("com_code"=>$com_code,"order_type"=>1,"inv_production_exchange_auto_serial"=>$parent_pill_data['auto_serial'],'id'=>$info->id));
 if($flagDelete){
 
