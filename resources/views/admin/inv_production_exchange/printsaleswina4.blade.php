@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة مرتجع مشتريات </title>
+      <title> طباعة فاتورة صرف خامات لخط انتاج </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
@@ -14,16 +14,16 @@
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود المورد 
-               <span style="margin-right: 10px;">/ {{ $data["suuplier_code"] }}</span>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود خط الانتاج 
+               <span style="margin-right: 10px;">/ {{ $data["production_lines_code"] }}</span>
            
             </td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم المورد  <span style="margin-right: 10px;">/ {{ $data['supplier_name'] }}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم خط الانتاج  <span style="margin-right: 10px;">/ {{ $data['production_lines_name'] }}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['supplier_phone']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['production_lines_phones']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
@@ -39,11 +39,11 @@
       <table style="width: 30%;float: right;  margin-right: 5px;" dir="rtl">
          <tr>
             <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
+               width: 350px;
                height: 30px;
                text-align: center;
                background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة مرتجع مشتريات </span></td>
+               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة صرف خامات لخط الانتاج </span></td>
          </tr>
          <tr>
             <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;

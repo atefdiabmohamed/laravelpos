@@ -3,6 +3,10 @@
 @section('title')
 حركات خط الاإنتاج
 @endsection
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('contentheader')
 صرف الخامات
 @endsection
@@ -25,19 +29,22 @@
       <div class="row">
          <div class="col-md-4">
             <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود الآلي
+            <input  type="radio" name="searchbyradio" id="searchbyradio" value="inv_production_order"> بكود التشغيل 
+
             <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
          </div>
          <div class="col-md-4">
             <div class="form-group">
-               <label>  بحث  بالموردين</label>
-               <select name="suuplier_code_search" id="suuplier_code_search" class="form-control select2">
-                  <option value="all">بحث بكل الموردين</option>
-                  @if (@isset($suupliers) && !@empty($suupliers))
-                  @foreach ($suupliers as $info )
-                  <option value="{{ $info->suuplier_code }}"> {{ $info->name }} </option>
+               <label>    بحث بخطوط الانتاج (الورش)</label>
+               <select name="production_lines_code_search" id="production_lines_code_search" class="form-control select2">
+                  <option value="all">بحث بالكل</option>
+                  @if (@isset($Inv_production_lines) && !@empty($Inv_production_lines))
+                  @foreach ($Inv_production_lines as $info )
+                  <option  value="{{ $info->production_lines_code }}"> {{ $info->name }} </option>
                   @endforeach
                   @endif
                </select>
+             
             </div>
          </div>
          <div class="col-md-4">
@@ -65,6 +72,19 @@
                <input name="order_date_to" id="order_date_to" class="form-control" type="date" value=""    >
             </div>
          </div>
+         <div class="col-md-4">
+         <div class="form-group">
+            <label>    حالة الاعتماد والارشفة</label>
+            <select name="is_approved_serach" id="is_approved_serach" class="form-control">
+               <option value="all">بحث بكل الحالات</option>
+               <option    value="1">  معتمد</option>
+               <option    value="0">  مفتوح</option>
+            </select>
+            @error('pill_type')
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+         </div>
+      </div>
          <div class="clearfix"></div>
          <div class="col-md-12">
             <div id="ajax_responce_serarchDiv">
@@ -123,7 +143,7 @@
 </div>
 @endsection
 @section('script')
-<script src="{{ asset('assets/admin/js/suppliers_with_order.js') }}"></script>
+<script src="{{ asset('assets/admin/js/inv_production_exchange.js') }}"></script>
 <script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
 <script>
    //Initialize Select2 Elements
@@ -131,4 +151,6 @@
      theme: 'bootstrap4'
    });
 </script>
+<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+
 @endsection
