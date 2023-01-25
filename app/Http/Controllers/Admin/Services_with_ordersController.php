@@ -144,12 +144,13 @@ public function add_new_details(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$parent_pill_data = get_cols_where_row(new services_with_orders(), array("is_approved", "order_date", "tax_value", "discount_value",'order_type','auto_serial'), array("id" => $request->id_parent_pill, "com_code" => $com_code));
+$parent_pill_data = get_cols_where_row(new services_with_orders(), array("is_approved", "order_date", "tax_value", "discount_value",'order_type','auto_serial',"id"), array("id" => $request->id_parent_pill, "com_code" => $com_code));
 if (!empty($parent_pill_data)) {
 if ($parent_pill_data['is_approved'] == 0) {
 $data_insert['services_with_orders_auto_serial'] = $parent_pill_data['auto_serial'];
 $data_insert['order_type'] = $parent_pill_data['order_type'];;
 $data_insert['service_id'] = $request->services_id_add;
+$data_insert['services_with_orders_id'] = $parent_pill_data['id'];
 $data_insert['notes'] = $request->notes_add;
 $data_insert['total'] = $request->total_add;
 $data_insert['order_date'] = $parent_pill_data['order_date'];

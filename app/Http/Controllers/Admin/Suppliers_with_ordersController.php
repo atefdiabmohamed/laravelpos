@@ -184,11 +184,12 @@ public function add_new_details(Request $request)
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
 $item_code = $request->item_code;
-$suppliers_with_ordersData = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "order_date", "tax_value", "discount_value"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
+$suppliers_with_ordersData = get_cols_where_row(new Suppliers_with_orders(), array("is_approved", "order_date", "tax_value", "discount_value","id"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
 if (!empty($suppliers_with_ordersData)) {
 if ($suppliers_with_ordersData['is_approved'] == 0) {
 $data_insert['suppliers_with_orders_auto_serial'] = $request->autoserailparent;
 $data_insert['order_type'] = 1;
+$data_insert['suppliers_with_order_id'] = $suppliers_with_ordersData['id'];
 $data_insert['item_code'] = $request->item_code_add;
 $data_insert['deliverd_quantity'] = $request->quantity_add;
 $data_insert['unit_price'] = $request->price_add;
@@ -350,6 +351,7 @@ return redirect()->back()
 }
 $flag = delete(new Suppliers_with_orders(), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
 if ($flag) {
+    //حيتم الحذف بشكل الي من خلال العلاقه بين الجدولين ونقدر نستغني عن الكود الخاص بالحذف 
 delete(new Suppliers_with_orders_details(), array("suppliers_with_orders_auto_serial" => $parent_pill_data['auto_serial'], "com_code" => $com_code, 'order_type' => 1));
 return redirect()->route('admin.suppliers_orders.index')->with(['success' => 'لقد تم حذف  البيانات بنجاح']);
 }

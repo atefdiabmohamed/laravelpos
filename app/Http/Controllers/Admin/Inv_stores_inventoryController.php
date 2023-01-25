@@ -217,6 +217,7 @@ if($counter==0){
 $data_insert['inv_stores_inventory_auto_serial'] = $data['auto_serial'];
 $data_insert['batch_auto_serial'] = $batch->auto_serial;
 $data_insert['item_code'] = $batch->item_code;
+$data_insert['inv_stores_inventory_id'] = $data['id'];
 $data_insert['inv_uoms_id'] = $batch->inv_uoms_id;
 $data_insert['unit_cost_price'] = $batch->unit_cost_price;
 $data_insert['old_quantity'] = $batch->quantity;
@@ -300,6 +301,8 @@ return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error
 if ($Data_item_details['is_closed'] == 1) {
 return redirect()->route('admin.stores_inventory.show',$id_parent)->with(['error' => 'عفوا لايمكن التحديث علي امر جرد لصنف مغلق ومرحل  ']);
 }
+
+    //حيتم الحذف بشكل الي من خلال العلاقه بين الجدولين ونقدر نستغني عن الكود الخاص بالحذف  
 $flag = delete(new Inv_stores_inventory_details(), array("id"=>$id,'com_code'=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial'],'is_closed'=>0));
 if ($flag) {
 $data_to_update_parent['total_cost_batches']=get_sum_where(new Inv_stores_inventory_details(),'total_cost_price',array("com_code"=>$com_code,'inv_stores_inventory_auto_serial'=>$data_parent['auto_serial']));
