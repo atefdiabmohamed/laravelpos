@@ -1,4 +1,6 @@
 <?php
+//لاتنسونا من صالح الدعاء وجزاكم الله خيرا
+
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin_panel_setting;
 use App\Models\Admin;

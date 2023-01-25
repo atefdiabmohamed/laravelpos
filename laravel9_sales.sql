@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2023 at 12:21 AM
+-- Generation Time: Jan 25, 2023 at 02:07 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -397,7 +397,7 @@ CREATE TABLE `inv_itemcard` (
 --
 
 INSERT INTO `inv_itemcard` (`id`, `item_code`, `barcode`, `name`, `item_type`, `inv_itemcard_categories_id`, `parent_inv_itemcard_id`, `does_has_retailunit`, `retail_uom_id`, `uom_id`, `retail_uom_quntToParent`, `added_by`, `created_at`, `updated_at`, `updated_by`, `active`, `date`, `com_code`, `price`, `nos_gomla_price`, `gomla_price`, `price_retail`, `nos_gomla_price_retail`, `gomla_price_retail`, `cost_price`, `cost_price_retail`, `has_fixced_price`, `All_QUENTITY`, `QUENTITY`, `QUENTITY_Retail`, `QUENTITY_all_Retails`, `photo`) VALUES
-(1, 1, 'item1', 'شماعات بلاستيك', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-01-10 00:43:33', NULL, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '14.00', NULL, 1, '948.00', '948.000', NULL, NULL, NULL);
+(1, 1, 'item1', 'الواح حديد مستوي متر في متر', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-01-23 01:53:53', 1, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '14.00', NULL, 1, '943.00', '943.000', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -429,7 +429,7 @@ CREATE TABLE `inv_itemcard_batches` (
 --
 
 INSERT INTO `inv_itemcard_batches` (`id`, `store_id`, `item_code`, `inv_uoms_id`, `unit_cost_price`, `quantity`, `total_cost_price`, `production_date`, `expired_date`, `com_code`, `auto_serial`, `added_by`, `created_at`, `updated_at`, `updated_by`, `is_send_to_archived`) VALUES
-(1, 1, 1, 10, '14.00', '948.00', '13272.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2023-01-10 00:43:32', 1, 0);
+(1, 1, 1, 10, '14.00', '943.00', '13202.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2023-01-23 01:53:52', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -490,10 +490,18 @@ CREATE TABLE `inv_itemcard_movements` (
 --
 
 INSERT INTO `inv_itemcard_movements` (`id`, `inv_itemcard_movements_categories`, `item_code`, `store_id`, `items_movements_types`, `FK_table`, `FK_table_details`, `byan`, `quantity_befor_movement`, `quantity_after_move`, `added_by`, `date`, `created_at`, `com_code`, `quantity_befor_move_store`, `quantity_after_move_store`) VALUES
-(1, 1, 1, 1, 1, 6, 12, 'نظير مشتريات من المورد  عاطف دياب محمد فاتورة رقم 6', 'عدد  0 وحده', 'عدد  1000 وحده', 1, '2022-12-19', '2022-12-19 01:27:46', 1, 'عدد  0 وحده', 'عدد  1000 وحده'),
-(2, 3, 1, 1, 6, 1, 1, 'جرد بالمخازن للباتش رقم 1 جرد رقم 1', 'عدد  1000 وحده', 'عدد  950 وحده', 1, '2022-12-19', '2022-12-19 01:30:02', 1, 'عدد  1000 وحده', 'عدد  950 وحده'),
-(3, 1, 1, 1, 3, 4, 13, ' نظير مرتجع مشتريات عام الي المورد الاحمدي للفراخ المجمده فاتورة رقم 4', 'عدد  950 وحده', 'عدد  949 وحده', 1, '2023-01-10', '2023-01-10 00:43:26', 1, 'عدد  950 وحده', 'عدد  949 وحده'),
-(4, 1, 1, 1, 3, 4, 14, ' نظير مرتجع مشتريات عام الي المورد الاحمدي للفراخ المجمده فاتورة رقم 4', 'عدد  949 وحده', 'عدد  948 وحده', 1, '2023-01-10', '2023-01-10 00:43:32', 1, 'عدد  949 وحده', 'عدد  948 وحده');
+(1, 4, 1, 1, 18, 1, 11, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  939 وحده', 'عدد  940 وحده', 1, '2023-01-23', '2023-01-23 01:41:30', 1, 'عدد  939 وحده', 'عدد  940 وحده'),
+(2, 4, 1, 1, 18, 1, 10, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  940 وحده', 'عدد  941 وحده', 1, '2023-01-23', '2023-01-23 01:41:30', 1, 'عدد  940 وحده', 'عدد  941 وحده'),
+(3, 4, 1, 1, 18, 1, 9, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  941 وحده', 'عدد  942 وحده', 1, '2023-01-23', '2023-01-23 01:41:31', 1, 'عدد  941 وحده', 'عدد  942 وحده'),
+(4, 4, 1, 1, 18, 1, 8, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  942 وحده', 'عدد  943 وحده', 1, '2023-01-23', '2023-01-23 01:41:31', 1, 'عدد  942 وحده', 'عدد  943 وحده'),
+(5, 4, 1, 1, 18, 1, 7, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  943 وحده', 'عدد  944 وحده', 1, '2023-01-23', '2023-01-23 01:41:32', 1, 'عدد  943 وحده', 'عدد  944 وحده'),
+(6, 4, 1, 1, 18, 1, 5, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  944 وحده', 'عدد  945 وحده', 1, '2023-01-23', '2023-01-23 01:41:32', 1, 'عدد  944 وحده', 'عدد  945 وحده'),
+(7, 4, 1, 1, 18, 1, 4, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  945 وحده', 'عدد  946 وحده', 1, '2023-01-23', '2023-01-23 01:41:32', 1, 'عدد  945 وحده', 'عدد  946 وحده'),
+(8, 4, 1, 1, 18, 1, 3, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  946 وحده', 'عدد  947 وحده', 1, '2023-01-23', '2023-01-23 01:41:33', 1, 'عدد  946 وحده', 'عدد  947 وحده'),
+(9, 4, 1, 1, 18, 1, 2, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  947 وحده', 'عدد  948 وحده', 1, '2023-01-23', '2023-01-23 01:41:33', 1, 'عدد  947 وحده', 'عدد  948 وحده'),
+(10, 4, 1, 1, 17, 1, 12, ' نظير ًرف خامات   الي خط انتاج  خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  948 وحده', 'عدد  848 وحده', 1, '2023-01-23', '2023-01-23 01:48:12', 1, 'عدد  948 وحده', 'عدد  848 وحده'),
+(11, 4, 1, 1, 18, 1, 12, ' نظير حذف سطر الصنف من فاتورة صرف خامات  لخط الانتاج      خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  848 وحده', 'عدد  948 وحده', 1, '2023-01-23', '2023-01-23 01:53:11', 1, 'عدد  848 وحده', 'عدد  948 وحده'),
+(12, 4, 1, 1, 17, 1, 13, ' نظير ًرف خامات   الي خط انتاج  خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  948 وحده', 'عدد  943 وحده', 1, '2023-01-23', '2023-01-23 01:53:52', 1, 'عدد  948 وحده', 'عدد  943 وحده');
 
 -- --------------------------------------------------------
 
@@ -513,7 +521,8 @@ CREATE TABLE `inv_itemcard_movements_categories` (
 INSERT INTO `inv_itemcard_movements_categories` (`id`, `name`) VALUES
 (1, 'حركة علي المشتريات'),
 (2, 'حركة علي المبيعات'),
-(3, 'حركة علي المخازن');
+(3, 'حركة علي المخازن'),
+(4, 'حركة علي خطوط الانتاج');
 
 -- --------------------------------------------------------
 
@@ -546,7 +555,9 @@ INSERT INTO `inv_itemcard_movements_types` (`id`, `type`) VALUES
 (13, 'استلام انتاج تام من خط التصنيع'),
 (14, 'رد انتاج تام الي خط التصنيع'),
 (15, 'حذف الصنف من تفاصيل فاتورة مبيعات مفتوحة'),
-(16, 'حذف الصنف من تفاصيل فاتورة مرتجع مبيعات عام مفتوحة');
+(16, 'حذف الصنف من تفاصيل فاتورة مرتجع مبيعات عام مفتوحة'),
+(17, 'صرف خامات لخط الانتاج'),
+(18, 'حذف صنف مضاف علي فاتورة صرف خامات لخط الانتاج');
 
 -- --------------------------------------------------------
 
@@ -596,6 +607,7 @@ CREATE TABLE `inv_production_exchange` (
 
 CREATE TABLE `inv_production_exchange_details` (
   `id` bigint(20) NOT NULL,
+  `inv_production_exchange_id` bigint(20) NOT NULL,
   `inv_production_exchange_auto_serial` bigint(20) NOT NULL,
   `order_type` tinyint(1) NOT NULL,
   `com_code` int(11) NOT NULL,
@@ -681,7 +693,7 @@ CREATE TABLE `inv_production_order` (
 
 INSERT INTO `inv_production_order` (`id`, `auto_serial`, `production_plane`, `production_plan_date`, `is_approved`, `added_by`, `updated_by`, `created_at`, `updated_at`, `com_code`, `approved_by`, `approved_at`, `is_closed`, `closed_by`, `closed_at`, `date`) VALUES
 (3, 2, '150 فرن حجم كبير - عرائس - لمخزن صابرين القبلي', '2022-12-29', 1, 1, 1, '2022-12-29 01:02:20', '2023-01-02 10:07:43', 1, 1, '2023-01-02 10:00:24', 1, 1, '2023-01-02 10:07:43', '2022-12-29'),
-(4, 3, 'انتاج 1500 فرن كبير', '2023-01-02', 0, 1, NULL, '2023-01-02 10:23:03', '2023-01-02 10:23:03', 1, NULL, NULL, 0, NULL, NULL, '2023-01-02');
+(4, 3, 'انتاج 1500 فرن كبير', '2023-01-02', 1, 1, NULL, '2023-01-02 10:23:03', '2023-01-11 01:43:44', 1, 1, '2023-01-11 01:43:44', 0, NULL, NULL, '2023-01-02');
 
 -- --------------------------------------------------------
 
@@ -708,15 +720,6 @@ CREATE TABLE `inv_stores_inventory` (
   `closed_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول جرد المخازن';
 
---
--- Dumping data for table `inv_stores_inventory`
---
-
-INSERT INTO `inv_stores_inventory` (`id`, `store_id`, `inventory_date`, `inventory_type`, `auto_serial`, `is_closed`, `total_cost_batches`, `notes`, `added_by`, `date`, `created_at`, `updated_by`, `updated_at`, `com_code`, `cloased_by`, `closed_at`) VALUES
-(1, 1, '2022-12-19', 1, 1, 1, '13300.00', NULL, 1, '2022-12-19', '2022-12-19 01:28:25', NULL, '2022-12-19 01:32:36', 1, 1, '2022-12-19 01:32:36'),
-(2, 3, '2022-12-23', 1, 2, 0, '0.00', NULL, 1, '2022-12-23', '2022-12-23 22:51:47', NULL, '2022-12-23 22:51:47', 1, NULL, NULL),
-(3, 4, '2022-12-23', 3, 3, 0, '0.00', NULL, 1, '2022-12-23', '2022-12-23 22:51:54', NULL, '2022-12-23 22:51:54', 1, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -725,6 +728,7 @@ INSERT INTO `inv_stores_inventory` (`id`, `store_id`, `inventory_date`, `invento
 
 CREATE TABLE `inv_stores_inventory_details` (
   `id` bigint(20) NOT NULL,
+  `inv_stores_inventory_id` bigint(20) NOT NULL,
   `inv_stores_inventory_auto_serial` bigint(20) NOT NULL,
   `item_code` bigint(20) NOT NULL,
   `inv_uoms_id` int(11) NOT NULL,
@@ -746,13 +750,6 @@ CREATE TABLE `inv_stores_inventory_details` (
   `closed_at` datetime DEFAULT NULL,
   `com_code` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل امر الجرد';
-
---
--- Dumping data for table `inv_stores_inventory_details`
---
-
-INSERT INTO `inv_stores_inventory_details` (`id`, `inv_stores_inventory_auto_serial`, `item_code`, `inv_uoms_id`, `batch_auto_serial`, `old_quantity`, `new_quantity`, `diffrent_quantity`, `unit_cost_price`, `total_cost_price`, `production_date`, `expired_date`, `notes`, `is_closed`, `added_by`, `created_at`, `updated_by`, `updated_at`, `cloased_by`, `closed_at`, `com_code`) VALUES
-(1, 1, 1, 10, 1, '1000.00', '950.00', '-50.00', '14.00', '13300.00', NULL, NULL, '50 شماعه هوالك بسبب سؤء التنزيل وتنزل غرامه علي امين المخزن', 1, 1, '2022-12-19 01:29:07', 1, '2022-12-19 01:30:02', 1, '2022-12-19 01:30:02', 1);
 
 -- --------------------------------------------------------
 
@@ -926,25 +923,6 @@ CREATE TABLE `sales_invoices` (
   `sales_item_type` tinyint(1) NOT NULL COMMENT 'e	نوع البيع مع الصنف واحد قطاعي - اتنين نص جمية -ثلاثه جملة	'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='المبيعات للعملاء';
 
---
--- Dumping data for table `sales_invoices`
---
-
-INSERT INTO `sales_invoices` (`id`, `sales_matrial_types`, `auto_serial`, `invoice_date`, `is_has_customer`, `customer_code`, `delegate_code`, `delegate_commission_percent_type`, `delegate_commission_percent`, `delegate_commission_value`, `is_approved`, `com_code`, `notes`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `total_cost_items`, `tax_value`, `total_befor_discount`, `total_cost`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `customer_balance_befor`, `customer_balance_after`, `added_by`, `created_at`, `updated_at`, `updated_by`, `approved_by`, `date`, `sales_item_type`) VALUES
-(1, 3, 1, '2022-11-05', 0, NULL, 1, '2.00', '2.00', '20.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', NULL, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-05 00:08:53', '2022-11-05 00:09:08', 1, 1, '2022-11-05', 1),
-(2, 3, 2, '2022-11-05', 0, NULL, 1, '2.00', '10.00', '100.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', NULL, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-05 00:10:10', '2022-11-05 00:12:08', 1, 1, '2022-11-05', 1),
-(3, 1, 3, '2022-11-05', 0, NULL, 1, '2.00', '5.00', '54.72', 1, 1, NULL, NULL, '0.00', '0.00', '14.00', '960.00', '134.40', '1094.40', '1094.40', NULL, '1094.40', 1, '1094.40', '0.00', NULL, NULL, NULL, 1, '2022-11-05 00:12:31', '2022-11-05 00:13:08', 1, 1, '2022-11-05', 2),
-(4, 3, 4, '2022-11-06', 0, NULL, 4, '2.00', '2.00', '-114.00', 1, 1, NULL, NULL, '0.00', '0.00', '14.00', '5000.00', '700.00', '5700.00', '5700.00', NULL, '5700.00', 1, '5700.00', '0.00', NULL, NULL, NULL, 1, '2022-11-06 09:00:38', '2022-11-06 09:02:08', 1, 1, '2022-11-06', 1),
-(5, 4, 5, '2022-11-06', 0, NULL, 4, '2.00', '2.00', '-20.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', NULL, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-06 09:17:07', '2022-11-06 09:17:29', 1, 1, '2022-11-06', 1),
-(6, 4, 6, '2022-11-06', 0, NULL, 4, '2.00', '2.00', '-20.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', NULL, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-06 09:18:07', '2022-11-06 09:18:17', 1, 1, '2022-11-06', 1),
-(7, 4, 7, '2022-11-08', 1, 1, 1, '2.00', '10.00', '-114.00', 1, 1, NULL, NULL, '0.00', '0.00', '14.00', '1000.00', '140.00', '1140.00', '1140.00', 5, '1140.00', 1, '1140.00', '0.00', NULL, NULL, NULL, 1, '2022-11-08 22:24:13', '2022-11-08 22:24:26', 1, 1, '2022-11-08', 1),
-(8, 4, 8, '2022-11-08', 1, 1, 4, NULL, '0.00', '0.00', 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', NULL, NULL, 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2022-11-08 22:30:37', '2022-11-08 22:30:37', NULL, NULL, '2022-11-08', 1),
-(10, 4, 9, '2022-11-09', 0, NULL, 1, NULL, '0.00', '0.00', 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', NULL, NULL, 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2022-11-09 22:20:04', '2022-11-09 22:20:04', NULL, NULL, '2022-11-09', 1),
-(11, 4, 10, '2022-11-09', 0, NULL, 1, NULL, '0.00', '0.00', 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', NULL, NULL, 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2022-11-09 22:24:36', '2022-11-09 22:24:36', NULL, NULL, '2022-11-09', 1),
-(12, 4, 11, '2022-11-09', 0, NULL, 1, '2.00', '0.00', '0.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', NULL, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-09 22:29:58', '2022-11-09 22:51:50', 1, 1, '2022-11-09', 1),
-(13, 4, 12, '2022-11-17', 1, 4, 4, '2.00', '2.00', '-20.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 16, '1000.00', 1, '1000.00', '0.00', NULL, NULL, NULL, 1, '2022-11-17 22:42:49', '2022-11-17 22:42:59', 1, 1, '2022-11-17', 1),
-(14, 4, 13, '2022-11-19', 1, 4, 4, '2.00', '2.00', '-20.00', 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 16, '1000.00', 2, '0.00', '1000.00', NULL, NULL, NULL, 1, '2022-11-19 10:47:59', '2022-11-19 10:48:08', 1, 1, '2022-11-19', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -953,6 +931,7 @@ INSERT INTO `sales_invoices` (`id`, `sales_matrial_types`, `auto_serial`, `invoi
 
 CREATE TABLE `sales_invoices_details` (
   `id` bigint(20) NOT NULL,
+  `sales_invoices_id` bigint(20) NOT NULL,
   `sales_invoices_auto_serial` bigint(20) NOT NULL,
   `store_id` int(11) NOT NULL,
   `sales_item_type` tinyint(1) NOT NULL COMMENT 'نوع البيع مع الصنف\r\nواحد قطاعي - اتنين نص جمية -ثلاثه جملة',
@@ -974,22 +953,6 @@ CREATE TABLE `sales_invoices_details` (
   `expire_date` date DEFAULT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل انصاف فاتورة المشتريات والمرتجعات';
-
---
--- Dumping data for table `sales_invoices_details`
---
-
-INSERT INTO `sales_invoices_details` (`id`, `sales_invoices_auto_serial`, `store_id`, `sales_item_type`, `item_code`, `uom_id`, `batch_auto_serial`, `quantity`, `unit_price`, `total_price`, `is_normal_orOther`, `isparentuom`, `com_code`, `invoice_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `production_date`, `expire_date`, `date`) VALUES
-(1, 1, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-05', 1, '2022-11-05 00:09:04', NULL, '2022-11-05 00:09:04', NULL, NULL, '2022-11-05'),
-(2, 2, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-05', 1, '2022-11-05 00:10:22', NULL, '2022-11-05 00:10:22', NULL, NULL, '2022-11-05'),
-(3, 3, 1, 2, 4, 5, 1, '1.0000', '960.00', '960.00', 1, 1, 1, '2022-11-05', 1, '2022-11-05 00:12:38', NULL, '2022-11-05 00:12:38', NULL, NULL, '2022-11-05'),
-(4, 4, 1, 1, 2, 1, 3, '5.0000', '1000.00', '5000.00', 1, 1, 1, '2022-11-06', 1, '2022-11-06 09:01:28', NULL, '2022-11-06 09:01:28', NULL, NULL, '2022-11-06'),
-(5, 5, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-06', 1, '2022-11-06 09:17:17', NULL, '2022-11-06 09:17:17', NULL, NULL, '2022-11-06'),
-(6, 6, 1, 1, 5, 1, 5, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-06', 1, '2022-11-06 09:18:14', NULL, '2022-11-06 09:18:14', NULL, NULL, '2022-11-06'),
-(7, 7, 1, 1, 5, 1, 5, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-08', 1, '2022-11-08 22:24:21', NULL, '2022-11-08 22:24:21', NULL, NULL, '2022-11-08'),
-(13, 11, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-09', 1, '2022-11-09 22:51:28', NULL, '2022-11-09 22:51:28', NULL, NULL, '2022-11-09'),
-(14, 12, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-17', 1, '2022-11-17 22:42:57', NULL, '2022-11-17 22:42:57', NULL, NULL, '2022-11-17'),
-(15, 13, 1, 1, 4, 5, 1, '1.0000', '1000.00', '1000.00', 1, 1, 1, '2022-11-19', 1, '2022-11-19 10:48:05', NULL, '2022-11-19 10:48:05', NULL, NULL, '2022-11-19');
 
 -- --------------------------------------------------------
 
@@ -1033,15 +996,6 @@ CREATE TABLE `sales_invoices_return` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='مرتجع المبيعات للعملاء';
 
---
--- Dumping data for table `sales_invoices_return`
---
-
-INSERT INTO `sales_invoices_return` (`id`, `return_type`, `sales_matrial_types`, `auto_serial`, `invoice_date`, `is_has_customer`, `customer_code`, `delegate_code`, `is_approved`, `com_code`, `notes`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `total_cost_items`, `tax_value`, `total_befor_discount`, `total_cost`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `customer_balance_befor`, `customer_balance_after`, `added_by`, `created_at`, `updated_at`, `updated_by`, `approved_by`, `date`) VALUES
-(2, 2, 1, 1, '2022-10-31', 1, 1, 3, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '4000.00', '0.00', '4000.00', '4000.00', 5, '-4000.00', 2, '0.00', '0.00', NULL, NULL, NULL, 1, '2022-10-31 09:51:55', '2022-10-31 13:29:20', 1, 1, '2022-10-31'),
-(3, 2, 3, 2, '2022-10-31', 1, 4, 3, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 16, '-1000.00', 2, '0.00', '1000.00', NULL, NULL, NULL, 1, '2022-10-31 13:30:04', '2022-10-31 13:30:28', 1, 1, '2022-10-31'),
-(4, 2, 1, 3, '2022-10-31', 1, 14, 3, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 31, '-1000.00', 2, '0.00', '1000.00', NULL, NULL, NULL, 1, '2022-10-31 13:38:03', '2022-10-31 13:38:14', 1, 1, '2022-10-31');
-
 -- --------------------------------------------------------
 
 --
@@ -1050,6 +1004,7 @@ INSERT INTO `sales_invoices_return` (`id`, `return_type`, `sales_matrial_types`,
 
 CREATE TABLE `sales_invoices_return_details` (
   `id` bigint(20) NOT NULL,
+  `sales_invoices_return_id` bigint(20) NOT NULL,
   `sales_invoices_auto_serial` bigint(20) NOT NULL,
   `store_id` int(11) NOT NULL,
   `sales_item_type` tinyint(1) NOT NULL COMMENT 'نوع البيع مع الصنف\r\nواحد قطاعي - اتنين نص جمية -ثلاثه جملة',
@@ -1072,18 +1027,6 @@ CREATE TABLE `sales_invoices_return_details` (
   `expire_date` date DEFAULT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل اصناف فاتورة مرتجع المبيعات';
-
---
--- Dumping data for table `sales_invoices_return_details`
---
-
-INSERT INTO `sales_invoices_return_details` (`id`, `sales_invoices_auto_serial`, `store_id`, `sales_item_type`, `item_code`, `uom_id`, `batch_auto_serial`, `quantity`, `unit_cost_price`, `unit_price`, `total_price`, `is_normal_orOther`, `isparentuom`, `com_code`, `invoice_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `production_date`, `expire_date`, `date`) VALUES
-(1, 1, 1, 1, 3, 1, NULL, '1.0000', '900.00', '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:01:16', NULL, '2022-10-31 13:01:16', '2022-10-05', '2023-10-31', '2022-10-31'),
-(2, 1, 1, 1, 3, 1, NULL, '1.0000', '900.00', '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:02:31', NULL, '2022-10-31 13:02:31', '2022-10-05', '2023-10-31', '2022-10-31'),
-(3, 1, 1, 1, 3, 1, 7, '1.0000', NULL, '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:05:15', NULL, '2022-10-31 13:05:15', NULL, NULL, '2022-10-31'),
-(4, 1, 1, 1, 4, 5, NULL, '1.0000', '90.00', '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:06:16', NULL, '2022-10-31 13:06:16', NULL, NULL, '2022-10-31'),
-(8, 2, 1, 1, 3, 1, 7, '1.0000', NULL, '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:30:16', NULL, '2022-10-31 13:30:16', NULL, NULL, '2022-10-31'),
-(9, 3, 1, 1, 3, 1, 7, '1.0000', NULL, '1000.00', '1000.00', 1, 1, 1, '2022-10-31', 1, '2022-10-31 13:38:10', NULL, '2022-10-31 13:38:10', NULL, NULL, '2022-10-31');
 
 -- --------------------------------------------------------
 
@@ -1177,26 +1120,6 @@ CREATE TABLE `services_with_orders` (
   `approved_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
 
---
--- Dumping data for table `services_with_orders`
---
-
-INSERT INTO `services_with_orders` (`id`, `order_type`, `auto_serial`, `order_date`, `is_approved`, `com_code`, `notes`, `total_services`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `tax_value`, `total_befor_discount`, `total_cost`, `is_account_number`, `entity_name`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `added_by`, `created_at`, `updated_at`, `updated_by`, `approved_by`) VALUES
-(1, 2, 1, '2022-12-01', 1, 1, NULL, '10000.00', NULL, '0.00', '0.00', '0.00', '0.00', '10000.00', '10000.00', 1, NULL, 33, '10000.00', 1, '10000.00', '0.00', NULL, 1, '2022-12-01 01:08:46', '2022-12-01 01:10:34', 1, 1),
-(2, 1, 2, '2022-12-01', 1, 1, NULL, '100.00', NULL, '0.00', '0.00', '0.00', '0.00', '100.00', '100.00', 1, '', 33, '-100.00', 1, '100.00', '0.00', NULL, 1, '2022-12-01 01:11:02', '2022-12-01 01:11:27', 1, 1),
-(3, 1, 3, '2022-12-01', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 0, 'شركة النور', NULL, NULL, 1, '1000.00', '0.00', NULL, 1, '2022-12-01 01:11:52', '2022-12-01 01:12:03', 1, 1),
-(4, 2, 2, '2022-12-01', 1, 1, NULL, '1500.00', NULL, '0.00', '0.00', '0.00', '0.00', '1500.00', '1500.00', 0, 'شكرة النور', NULL, NULL, 1, '1500.00', '0.00', NULL, 1, '2022-12-01 01:13:01', '2022-12-01 01:13:14', 1, 1),
-(5, 2, 3, '2022-12-02', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 1, NULL, 26, '1000.00', 2, '0.00', '1000.00', NULL, 1, '2022-12-02 13:49:43', '2022-12-02 13:50:05', 1, 1),
-(6, 2, 4, '2022-12-02', 1, 1, NULL, '500.00', NULL, '0.00', '0.00', '0.00', '0.00', '500.00', '500.00', 1, NULL, 26, '500.00', 2, '0.00', '500.00', NULL, 1, '2022-12-02 13:54:51', '2022-12-02 13:55:17', 1, 1),
-(7, 2, 5, '2022-12-02', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 1, NULL, 26, '1000.00', 2, '0.00', '1000.00', NULL, 1, '2022-12-02 13:57:12', '2022-12-02 13:57:33', 1, 1),
-(8, 2, 6, '2022-12-02', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 1, NULL, 26, '1000.00', 2, '0.00', '1000.00', NULL, 1, '2022-12-02 13:59:44', '2022-12-02 13:59:59', 1, 1),
-(9, 1, 4, '2022-12-05', 1, 1, NULL, '500.00', NULL, '0.00', '0.00', '0.00', '0.00', '500.00', '500.00', 1, NULL, 21, '-500.00', 2, '0.00', '500.00', NULL, 1, '2022-12-05 00:36:29', '2022-12-05 00:36:53', 1, 1),
-(10, 2, 7, '2022-12-05', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 1, NULL, 21, '1000.00', 2, '0.00', '1000.00', NULL, 1, '2022-12-05 00:37:12', '2022-12-05 00:37:23', 1, 1),
-(11, 1, 5, '2022-12-05', 1, 1, NULL, '500.00', NULL, '0.00', '0.00', '0.00', '0.00', '500.00', '500.00', 1, NULL, 21, '-500.00', 1, '500.00', '0.00', NULL, 1, '2022-12-05 00:39:32', '2022-12-05 00:39:53', 1, 1),
-(12, 2, 8, '2022-12-05', 1, 1, NULL, '500.00', NULL, '0.00', '0.00', '0.00', '0.00', '500.00', '500.00', 1, NULL, 21, '500.00', 1, '500.00', '0.00', NULL, 1, '2022-12-05 00:40:11', '2022-12-05 00:40:28', 1, 1),
-(13, 1, 6, '2022-12-08', 1, 1, NULL, '1000.00', NULL, '0.00', '0.00', '0.00', '0.00', '1000.00', '1000.00', 1, '', 32, '-1000.00', 2, '0.00', '1000.00', NULL, 1, '2022-12-08 01:59:23', '2022-12-08 01:59:44', 1, 1),
-(14, 2, 9, '2022-12-08', 1, 1, NULL, '2000.00', NULL, '0.00', '0.00', '0.00', '0.00', '2000.00', '2000.00', 1, NULL, 32, '2000.00', 2, '0.00', '2000.00', NULL, 1, '2022-12-08 01:59:56', '2022-12-08 02:00:10', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1205,6 +1128,7 @@ INSERT INTO `services_with_orders` (`id`, `order_type`, `auto_serial`, `order_da
 
 CREATE TABLE `services_with_orders_details` (
   `id` bigint(20) NOT NULL,
+  `services_with_orders_id` bigint(20) NOT NULL,
   `services_with_orders_auto_serial` bigint(20) NOT NULL,
   `order_type` tinyint(4) NOT NULL,
   `service_id` int(11) NOT NULL,
@@ -1217,26 +1141,6 @@ CREATE TABLE `services_with_orders_details` (
   `com_code` int(11) NOT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `services_with_orders_details`
---
-
-INSERT INTO `services_with_orders_details` (`id`, `services_with_orders_auto_serial`, `order_type`, `service_id`, `notes`, `total`, `added_by`, `updated_by`, `created_at`, `updated_at`, `com_code`, `date`) VALUES
-(1, 1, 2, 4, '14 كاميرا', '10000.00', 1, NULL, '2022-12-01 01:09:03', '2022-12-01 01:09:03', 1, '2022-12-01'),
-(2, 2, 1, 1, NULL, '100.00', 1, NULL, '2022-12-01 01:11:24', '2022-12-01 01:11:24', 1, '2022-12-01'),
-(3, 3, 1, 1, NULL, '1000.00', 1, NULL, '2022-12-01 01:12:00', '2022-12-01 01:12:00', 1, '2022-12-01'),
-(4, 2, 2, 4, NULL, '1500.00', 1, NULL, '2022-12-01 01:13:10', '2022-12-01 01:13:10', 1, '2022-12-01'),
-(5, 3, 2, 4, '3 كاميرات', '1000.00', 1, NULL, '2022-12-02 13:49:56', '2022-12-02 13:49:56', 1, '2022-12-02'),
-(6, 4, 2, 3, 'عدد 150 ورقه متعدد الوان وعادي', '500.00', 1, NULL, '2022-12-02 13:55:12', '2022-12-02 13:55:12', 1, '2022-12-02'),
-(7, 5, 2, 4, '3 كاميرات', '1000.00', 1, NULL, '2022-12-02 13:57:29', '2022-12-02 13:57:29', 1, '2022-12-02'),
-(8, 6, 2, 4, NULL, '1000.00', 1, NULL, '2022-12-02 13:59:53', '2022-12-02 13:59:53', 1, '2022-12-02'),
-(9, 4, 1, 1, 'ايجار', '500.00', 1, NULL, '2022-12-05 00:36:41', '2022-12-05 00:36:41', 1, '2022-12-05'),
-(10, 7, 2, 4, NULL, '1000.00', 1, NULL, '2022-12-05 00:37:20', '2022-12-05 00:37:20', 1, '2022-12-05'),
-(11, 5, 1, 1, NULL, '500.00', 1, NULL, '2022-12-05 00:39:42', '2022-12-05 00:39:42', 1, '2022-12-05'),
-(12, 8, 2, 3, NULL, '500.00', 1, NULL, '2022-12-05 00:40:22', '2022-12-05 00:40:22', 1, '2022-12-05'),
-(13, 6, 1, 1, NULL, '1000.00', 1, NULL, '2022-12-08 01:59:40', '2022-12-08 01:59:40', 1, '2022-12-08'),
-(14, 9, 2, 4, NULL, '2000.00', 1, NULL, '2022-12-08 02:00:05', '2022-12-08 02:00:05', 1, '2022-12-08');
 
 -- --------------------------------------------------------
 
@@ -1337,21 +1241,6 @@ CREATE TABLE `suppliers_with_orders` (
   `approved_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
 
---
--- Dumping data for table `suppliers_with_orders`
---
-
-INSERT INTO `suppliers_with_orders` (`id`, `order_type`, `auto_serial`, `DOC_NO`, `order_date`, `suuplier_code`, `is_approved`, `com_code`, `notes`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `total_cost_items`, `tax_value`, `total_befor_discount`, `total_cost`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `Supplier_balance_befor`, `Supplier_balance_after`, `added_by`, `created_at`, `updated_at`, `updated_by`, `store_id`, `approved_by`) VALUES
-(1, 1, 1, '1', '2022-10-25', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '56200.00', '0.00', '56200.00', '56200.00', 4, '-56200.00', 2, '0.00', '56200.00', NULL, NULL, NULL, 1, '2022-10-25 15:25:48', '2022-10-25 15:27:19', 1, 1, 1),
-(3, 1, 3, '5', '2022-10-30', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '2000.00', '0.00', '2000.00', '2000.00', 4, '-2000.00', 2, '0.00', '2000.00', NULL, NULL, NULL, 1, '2022-10-30 00:12:14', '2022-10-30 00:12:45', 1, 1, 1),
-(4, 1, 4, '6', '2022-10-30', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '10000.00', '0.00', '10000.00', '10000.00', 4, '-10000.00', 2, '0.00', '10000.00', NULL, NULL, NULL, 1, '2022-10-30 00:15:20', '2022-10-30 00:15:50', 1, 1, 1),
-(5, 3, 1, NULL, '2022-11-13', 5, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '400.00', '0.00', '400.00', '400.00', 21, '400.00', 2, '0.00', '400.00', NULL, NULL, NULL, 1, '2022-11-13 20:38:39', '2022-11-13 20:39:27', 1, 1, 1),
-(7, 3, 2, NULL, '2022-11-13', 5, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '1000.00', '0.00', '1000.00', '1000.00', 21, '1000.00', 2, '0.00', '1000.00', NULL, NULL, NULL, 1, '2022-11-13 20:40:25', '2022-11-13 20:41:04', 1, 1, 1),
-(8, 3, 3, NULL, '2022-11-15', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '600.00', '0.00', '600.00', '600.00', 4, '600.00', 2, '0.00', '600.00', NULL, NULL, NULL, 1, '2022-11-15 20:36:49', '2022-11-15 20:37:06', 1, 1, 1),
-(9, 1, 5, '50', '2022-12-18', 5, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '50000.00', '0.00', '50000.00', '50000.00', 21, '-50000.00', 2, '0.00', '50000.00', NULL, NULL, NULL, 1, '2022-12-18 01:43:50', '2022-12-18 01:44:06', 1, 1, 1),
-(10, 1, 6, NULL, '2022-12-19', 1, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '14000.00', '0.00', '14000.00', '14000.00', 4, '-14000.00', 2, '0.00', '14000.00', NULL, NULL, NULL, 1, '2022-12-19 01:27:30', '2022-12-19 01:27:46', 1, 1, 1),
-(11, 3, 4, NULL, '2023-01-10', 3, 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '28.00', '0.00', '28.00', '28.00', 17, '28.00', 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2023-01-10 00:41:51', '2023-01-10 00:43:32', 1, 1, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -1360,6 +1249,7 @@ INSERT INTO `suppliers_with_orders` (`id`, `order_type`, `auto_serial`, `DOC_NO`
 
 CREATE TABLE `suppliers_with_orders_details` (
   `id` bigint(20) NOT NULL,
+  `suppliers_with_order_id` bigint(20) NOT NULL,
   `suppliers_with_orders_auto_serial` bigint(20) NOT NULL,
   `order_type` tinyint(1) NOT NULL,
   `com_code` int(11) NOT NULL,
@@ -1379,26 +1269,6 @@ CREATE TABLE `suppliers_with_orders_details` (
   `expire_date` date DEFAULT NULL,
   `item_card_type` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل انصاف فاتورة المشتريات والمرتجعات';
-
---
--- Dumping data for table `suppliers_with_orders_details`
---
-
-INSERT INTO `suppliers_with_orders_details` (`id`, `suppliers_with_orders_auto_serial`, `order_type`, `com_code`, `deliverd_quantity`, `uom_id`, `isparentuom`, `unit_price`, `total_price`, `order_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `item_code`, `batch_auto_serial`, `production_date`, `expire_date`, `item_card_type`) VALUES
-(1, 1, 1, 1, '10.00', 5, 1, '100.00', '1000.00', '2022-10-25', 1, '2022-10-25 15:26:02', 1, '2022-10-25 15:26:20', 4, NULL, NULL, NULL, 1),
-(2, 1, 1, 1, '20.00', 5, 1, '110.00', '2200.00', '2022-10-25', 1, '2022-10-25 15:26:37', NULL, '2022-10-25 15:26:37', 4, NULL, NULL, NULL, 1),
-(3, 1, 1, 1, '20.00', 1, 1, '1000.00', '20000.00', '2022-10-25', 1, '2022-10-25 15:26:59', NULL, '2022-10-25 15:26:59', 2, NULL, '2022-10-01', '2024-10-25', 2),
-(4, 1, 1, 1, '30.00', 1, 1, '1100.00', '33000.00', '2022-10-25', 1, '2022-10-25 15:27:11', NULL, '2022-10-25 15:27:11', 2, NULL, '2022-10-01', '2024-10-25', 2),
-(5, 3, 1, 1, '10.00', 1, 1, '200.00', '2000.00', '2022-10-30', 1, '2022-10-30 00:12:40', NULL, '2022-10-30 00:12:40', 5, NULL, '2022-10-30', '2025-10-30', 2),
-(6, 4, 1, 1, '10.00', 1, 1, '1000.00', '10000.00', '2022-10-30', 1, '2022-10-30 00:15:46', NULL, '2022-10-30 00:15:46', 5, NULL, '2022-10-30', '2025-10-30', 2),
-(7, 1, 3, 1, '1.00', 1, 1, '200.00', '200.00', '2022-11-13', 1, '2022-11-13 20:38:57', NULL, '2022-11-13 20:38:57', 5, 5, '2022-10-30', '2025-10-30', 2),
-(8, 1, 3, 1, '1.00', 5, 1, '100.00', '200.00', '2022-11-13', 1, '2022-11-13 20:39:03', NULL, '2022-11-13 20:39:03', 4, 1, NULL, NULL, 1),
-(9, 2, 3, 1, '1.00', 1, 1, '1000.00', '1000.00', '2022-11-13', 1, '2022-11-13 20:40:55', NULL, '2022-11-13 20:40:55', 2, 3, '2022-10-01', '2024-10-25', 2),
-(10, 3, 3, 1, '3.00', 1, 1, '200.00', '600.00', '2022-11-15', 1, '2022-11-15 20:37:00', NULL, '2022-11-15 20:37:00', 5, 5, '2022-10-30', '2025-10-30', 2),
-(11, 5, 1, 1, '1000.00', 8, 1, '50.00', '50000.00', '2022-12-18', 1, '2022-12-18 01:44:02', NULL, '2022-12-18 01:44:02', 6, NULL, NULL, NULL, 1),
-(12, 6, 1, 1, '1000.00', 10, 1, '14.00', '14000.00', '2022-12-19', 1, '2022-12-19 01:27:42', NULL, '2022-12-19 01:27:42', 1, NULL, NULL, NULL, 1),
-(13, 4, 3, 1, '1.00', 10, 1, '14.00', '14.00', '2023-01-10', 1, '2023-01-10 00:43:25', NULL, '2023-01-10 00:43:25', 1, 1, NULL, NULL, 1),
-(14, 4, 3, 1, '1.00', 10, 1, '14.00', '14.00', '2023-01-10', 1, '2023-01-10 00:43:32', NULL, '2023-01-10 00:43:32', 1, 1, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1645,7 +1515,8 @@ ALTER TABLE `inv_production_exchange`
 -- Indexes for table `inv_production_exchange_details`
 --
 ALTER TABLE `inv_production_exchange_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inv_production_exchange_id` (`inv_production_exchange_id`);
 
 --
 -- Indexes for table `inv_production_lines`
@@ -1663,13 +1534,17 @@ ALTER TABLE `inv_production_order`
 -- Indexes for table `inv_stores_inventory`
 --
 ALTER TABLE `inv_stores_inventory`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `auto_serial` (`auto_serial`);
 
 --
 -- Indexes for table `inv_stores_inventory_details`
 --
 ALTER TABLE `inv_stores_inventory_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `batch_auto_serial` (`batch_auto_serial`),
+  ADD KEY `inv_stores_inventory_auto_serial` (`inv_stores_inventory_auto_serial`),
+  ADD KEY `inv_stores_inventory_id` (`inv_stores_inventory_id`);
 
 --
 -- Indexes for table `inv_uoms`
@@ -1708,13 +1583,16 @@ ALTER TABLE `personal_access_tokens`
 -- Indexes for table `sales_invoices`
 --
 ALTER TABLE `sales_invoices`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `auto_serial` (`auto_serial`);
 
 --
 -- Indexes for table `sales_invoices_details`
 --
 ALTER TABLE `sales_invoices_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sales_invoices_auto_serial` (`sales_invoices_auto_serial`),
+  ADD KEY `sales_invoices_id` (`sales_invoices_id`);
 
 --
 -- Indexes for table `sales_invoices_return`
@@ -1726,7 +1604,9 @@ ALTER TABLE `sales_invoices_return`
 -- Indexes for table `sales_invoices_return_details`
 --
 ALTER TABLE `sales_invoices_return_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sales_invoices_auto_serial` (`sales_invoices_auto_serial`),
+  ADD KEY `sales_invoices_return_id` (`sales_invoices_return_id`);
 
 --
 -- Indexes for table `sales_matrial_types`
@@ -1750,7 +1630,8 @@ ALTER TABLE `services_with_orders`
 -- Indexes for table `services_with_orders_details`
 --
 ALTER TABLE `services_with_orders_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `services_with_orders_id` (`services_with_orders_id`);
 
 --
 -- Indexes for table `stores`
@@ -1774,7 +1655,8 @@ ALTER TABLE `suppliers_with_orders`
 -- Indexes for table `suppliers_with_orders_details`
 --
 ALTER TABLE `suppliers_with_orders_details`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `suppliers_with_order_id` (`suppliers_with_order_id`);
 
 --
 -- Indexes for table `suupliers`
@@ -1887,31 +1769,31 @@ ALTER TABLE `inv_itemcard_categories`
 -- AUTO_INCREMENT for table `inv_itemcard_movements`
 --
 ALTER TABLE `inv_itemcard_movements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_movements_categories`
 --
 ALTER TABLE `inv_itemcard_movements_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_movements_types`
 --
 ALTER TABLE `inv_itemcard_movements_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `inv_production_exchange`
 --
 ALTER TABLE `inv_production_exchange`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inv_production_exchange_details`
 --
 ALTER TABLE `inv_production_exchange_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `inv_production_lines`
@@ -2001,13 +1883,13 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `services_with_orders`
 --
 ALTER TABLE `services_with_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `services_with_orders_details`
 --
 ALTER TABLE `services_with_orders_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stores`
@@ -2025,13 +1907,13 @@ ALTER TABLE `suppliers_categories`
 -- AUTO_INCREMENT for table `suppliers_with_orders`
 --
 ALTER TABLE `suppliers_with_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `suppliers_with_orders_details`
 --
 ALTER TABLE `suppliers_with_orders_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `suupliers`
@@ -2062,6 +1944,46 @@ ALTER TABLE `treasuries_transactions`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `inv_production_exchange_details`
+--
+ALTER TABLE `inv_production_exchange_details`
+  ADD CONSTRAINT `inv_production_exchange_details_ibfk_1` FOREIGN KEY (`inv_production_exchange_id`) REFERENCES `inv_production_exchange` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `inv_stores_inventory_details`
+--
+ALTER TABLE `inv_stores_inventory_details`
+  ADD CONSTRAINT `inv_stores_inventory_details_ibfk_1` FOREIGN KEY (`inv_stores_inventory_id`) REFERENCES `inv_stores_inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `sales_invoices_details`
+--
+ALTER TABLE `sales_invoices_details`
+  ADD CONSTRAINT `sales_invoices_details_ibfk_1` FOREIGN KEY (`sales_invoices_id`) REFERENCES `sales_invoices` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `sales_invoices_return_details`
+--
+ALTER TABLE `sales_invoices_return_details`
+  ADD CONSTRAINT `sales_invoices_return_details_ibfk_1` FOREIGN KEY (`sales_invoices_return_id`) REFERENCES `sales_invoices_return` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `services_with_orders_details`
+--
+ALTER TABLE `services_with_orders_details`
+  ADD CONSTRAINT `services_with_orders_details_ibfk_1` FOREIGN KEY (`services_with_orders_id`) REFERENCES `services_with_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `suppliers_with_orders_details`
+--
+ALTER TABLE `suppliers_with_orders_details`
+  ADD CONSTRAINT `suppliers_with_orders_details_ibfk_1` FOREIGN KEY (`suppliers_with_order_id`) REFERENCES `suppliers_with_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
