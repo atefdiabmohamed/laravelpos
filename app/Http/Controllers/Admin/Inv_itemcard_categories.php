@@ -1,4 +1,6 @@
 <?php
+//لاتنسونا من صالح الدعاء وجزاكم الله خيرا
+
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

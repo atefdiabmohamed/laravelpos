@@ -1,5 +1,6 @@
 <?php
-//لاتنسونا من صالح دعائكم
+//لاتنسونا من صالح الدعاء وجزاكم الله خيرا
+
 
 namespace App\Http\Controllers\Admin;
 
