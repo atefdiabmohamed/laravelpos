@@ -421,6 +421,7 @@ $com_code = auth()->user()->com_code;
 $invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->auto_serial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
+
 $sales_invoices_details_data = get_cols_where_row(new Sales_invoices_details(), array("batch_auto_serial", "quantity", "item_code", "store_id","isparentuom"), array("com_code" => $com_code, "id" => $request->id));
 if (!empty($sales_invoices_details_data)) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $sales_invoices_details_data['batch_auto_serial']));
@@ -523,6 +524,8 @@ echo  json_encode("done");
 }
 }
 }
+
+
 }
 }
 }
@@ -635,25 +638,145 @@ echo json_encode("done");
 }
 }
 }
+
 public function delete($id)
 {
 try {
 $com_code = auth()->user()->com_code;
-$SalesInvoiceData = get_cols_where_row(new Sales_invoices(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code));
-if (!empty($SalesInvoiceData)) {
+$invoice_data = get_cols_where_row(new Sales_invoices(), array("*"), array("id" => $id, "com_code" => $com_code));
+if (empty($invoice_data)) {
+    return redirect()->back()
+->with(['error' => 'عفوا غير قادر الي الوصول للبيانات المطلوبة']);
+}
+
+if ($invoice_data['is_approved']==1) {
+    return redirect()->back()
+->with(['error' => 'عفوا لايمكن حذف فاتورة معتمدة ومؤرشفة !!']);
+}
+$sales_invoices_details = get_cols_where(new Sales_invoices_details(), array("*"), array("com_code" => $com_code, "sales_invoices_auto_serial" => $invoice_data['auto_serial']));
+
+if(!empty($sales_invoices_details)){
+   
+    foreach($sales_invoices_details as $item){
+   
+        $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $item->batch_auto_serial));
+        if (!empty($batch_data)) {
+        $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit"), array("com_code" => $com_code, "item_code" => $item->item_code));
+        if (!empty($itemCard_Data)) {
+        $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
+        //حذف السطر من تفاصيل الفاتورة
+        $flag = delete(new Sales_invoices_details(), array("com_code" => $com_code, "id" => $item->id));
+        if ($flag) {
+        //رد الكمية الي الباتش 
+        //كمية الصنف بكل المخازن قبل الحركة
+        $quantityBeforMove = get_sum_where(
+        new Inv_itemcard_batches(),
+        "quantity",
+        array(
+        "item_code" => $item->item_code,
+        "com_code" => $com_code
+        )
+        );
+        //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي قبل الحركة
+        $quantityBeforMoveCurrntStore = get_sum_where(
+        new Inv_itemcard_batches(),
+        "quantity",
+        array(
+        "item_code" => $item->item_code, "com_code" => $com_code,
+        'store_id' => $item->store_id
+        )
+        );
+        if($item->isparentuom==1){
+        //حنرد بشكل مباشر لانه بنفس وحده الباتش الاب
+        $item_quantityByParentUom =$item->quantity;
+        }else{
+        //مرجع بالوحده الابن التجزئة فلازم تحولها الي الاب قبل ردها للمخزن انتبه !!
+        $item_quantityByParentUom=$item->quantity/$itemCard_Data['retail_uom_quntToParent'];
+        }
+        //هنا هنرد الكمية لحظيا الي باتش الصنف
+        //update current Batch تحديث علي الباتش القديمة
+        $dataUpdateOldBatch['quantity'] = $batch_data['quantity'] + $item_quantityByParentUom;
+        $dataUpdateOldBatch['total_cost_price'] = $batch_data['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+        $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
+        $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
+        $flag = update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $batch_data['id'], "com_code" => $com_code));
+        if ($flag) {
+        $quantityAfterMove = get_sum_where(
+        new Inv_itemcard_batches(),
+        "quantity",
+        array(
+        "item_code" => $item->item_code,
+        "com_code" => $com_code
+        )
+        );
+        //get Quantity Befor any Action  حنجيب كيمة الصنف  بالمخزن المحدد معه   الحالي بعد الحركة
+        $quantityAfterMoveCurrentStore = get_sum_where(
+        new Inv_itemcard_batches(),
+        "quantity",
+        array("item_code" => $item->item_code, "com_code" => $com_code, 'store_id' => $item->store_id)
+        );
+        //التاثير في حركة كارت الصنف
+        $dataInsert_inv_itemcard_movements['inv_itemcard_movements_categories'] = 2;
+        $dataInsert_inv_itemcard_movements['items_movements_types'] = 15;
+        $dataInsert_inv_itemcard_movements['item_code'] = $item->item_code;
+        //كود الفاتورة الاب
+        $dataInsert_inv_itemcard_movements['FK_table'] = $invoice_data['auto_serial'];
+        //كود صف الابن بتفاصيل الفاتورة
+        $dataInsert_inv_itemcard_movements['FK_table_details'] = $item->id;
+        if ($invoice_data['is_has_customer'] == 1) {
+        $customerName = get_field_value(new Customer(), "name", array("com_code" => $com_code, "customer_code" => $invoice_data['customer_code']));
+        } else {
+        $customerName = " طياري لايوجد";
+        }
+        $dataInsert_inv_itemcard_movements['byan'] = "حذف الصنف من تفاصيل  فاتورة مبيعات  للعميل " . " " . $customerName . " فاتورة رقم" . " " . $invoice_data['auto_serial'];
+        //كمية الصنف بكل المخازن قبل الحركة
+        $dataInsert_inv_itemcard_movements['quantity_befor_movement'] = "عدد " . " " . ($quantityBeforMove * 1) . " " . $MainUomName;
+        // كمية الصنف بكل المخازن بعد  الحركة
+        $dataInsert_inv_itemcard_movements['quantity_after_move'] = "عدد " . " " . ($quantityAfterMove * 1) . " " . $MainUomName;
+        //كمية الصنف  المخزن الحالي قبل الحركة
+        $dataInsert_inv_itemcard_movements['quantity_befor_move_store'] = "عدد " . " " . ($quantityBeforMoveCurrntStore * 1) . " " . $MainUomName;
+        // كمية الصنف بالمخزن الحالي بعد الحركة الحركة
+        $dataInsert_inv_itemcard_movements['quantity_after_move_store'] = "عدد " . " " . ($quantityAfterMoveCurrentStore * 1) . " " . $MainUomName;
+        $dataInsert_inv_itemcard_movements["store_id"] = $item->store_id;
+        $dataInsert_inv_itemcard_movements["created_at"] = date("Y-m-d H:i:s");
+        $dataInsert_inv_itemcard_movements["added_by"] = auth()->user()->id;
+        $dataInsert_inv_itemcard_movements["date"] = date("Y-m-d");
+        $dataInsert_inv_itemcard_movements["com_code"] = $com_code;
+        $flag = insert(new Inv_itemcard_movements(), $dataInsert_inv_itemcard_movements);
+        if ($flag) {
+        //update itemcard Quantity mirror  تحديث المرآه الرئيسية للصنف
+        do_update_itemCardQuantity(
+        new Inv_itemCard(),
+        $item->item_code,
+        new Inv_itemcard_batches(),
+        $itemCard_Data['does_has_retailunit'],
+        $itemCard_Data['retail_uom_quntToParent']
+        );
+     
+        }
+        }
+        }
+        }
+        }
+        
+        
+
+    }
+}
+
+
+  
+
 $flag = delete(new Sales_invoices(), array("id" => $id, "com_code" => $com_code));
 if ($flag) {
-delete(new Sales_invoices_details(), array("sales_invoices_auto_serial" => $SalesInvoiceData['auto_serial'], "com_code" => $com_code));
-return redirect()->back()
-->with(['success' => '   تم حذف البيانات بنجاح']);
+    return redirect()->back()
+    ->with(['success' => '   تم حذف البيانات بنجاح']);
+    
 } else {
 return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما']);
 }
-} else {
-return redirect()->back()
-->with(['error' => 'عفوا غير قادر الي الوصول للبيانات المطلوبة']);
-}
+ 
 } catch (\Exception $ex) {
 return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
