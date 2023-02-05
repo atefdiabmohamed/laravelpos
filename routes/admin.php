@@ -33,8 +33,7 @@ use App\Http\Controllers\Admin\Inv_stores_inventoryController;
 use App\Http\Controllers\Admin\Inv_production_orderController;
 use App\Http\Controllers\Admin\Inv_production_linesController;
 use App\Http\Controllers\Admin\Inv_production_exchangeController;
-
-
+use App\Http\Controllers\Admin\inv_production_ReceiveController;
 
 
 /*
@@ -410,6 +409,31 @@ Route::post('/inv_production_exchange/get_item_batches', [Inv_production_exchang
 Route::get('/inv_production_exchange/printsaleswina4/{id}/{size}', [Inv_production_exchangeController::class, 'printsaleswina4'])->name('admin.inv_production_exchange.printsaleswina4');
 /*           end  Inv_production_exchange               */
 
+
+
+/*         start  inv_production_Receive    استلام منتج تام من خط الانتاج الانتاج - الورش            */
+Route::get('/inv_production_Receive/index', [inv_production_ReceiveController::class, 'index'])->name('admin.inv_production_Receive.index');
+Route::get('/inv_production_Receive/create', [inv_production_ReceiveController::class, 'create'])->name('admin.inv_production_Receive.create');
+Route::post('/inv_production_Receive/store', [inv_production_ReceiveController::class, 'store'])->name('admin.inv_production_Receive.store');
+Route::get('/inv_production_Receive/edit/{id}', [inv_production_ReceiveController::class, 'edit'])->name('admin.inv_production_Receive.edit');
+Route::post('/inv_production_Receive/update/{id}', [inv_production_ReceiveController::class, 'update'])->name('admin.inv_production_Receive.update');
+Route::get('/inv_production_Receive/delete/{id}', [inv_production_ReceiveController::class, 'delete'])->name('admin.inv_production_Receive.delete');
+Route::post('/inv_production_Receive/ajax_search', [inv_production_ReceiveController::class, 'ajax_search'])->name('admin.inv_production_Receive.ajax_search');
+Route::get('/inv_production_Receive/show/{id}', [inv_production_ReceiveController::class, 'show'])->name('admin.inv_production_Receive.show');
+Route::post('/inv_production_Receive/get_item_uoms', [inv_production_ReceiveController::class, 'get_item_uoms'])->name('admin.inv_production_Receive.get_item_uoms');
+Route::post('/inv_production_Receive/load_modal_add_details', [inv_production_ReceiveController::class, 'load_modal_add_details'])->name('admin.inv_production_Receive.load_modal_add_details');
+Route::post('/inv_production_Receive/Add_item_to_invoice', [inv_production_ReceiveController::class, 'Add_item_to_invoice'])->name('admin.inv_production_Receive.Add_item_to_invoice');
+Route::post('/inv_production_Receive/reload_itemsdetials', [inv_production_ReceiveController::class, 'reload_itemsdetials'])->name('admin.inv_production_Receive.reload_itemsdetials');
+Route::post('/inv_production_Receive/reload_parent_pill', [inv_production_ReceiveController::class, 'reload_parent_pill'])->name('admin.inv_production_Receive.reload_parent_pill');
+Route::post('/inv_production_Receive/load_edit_item_details', [inv_production_ReceiveController::class, 'load_edit_item_details'])->name('admin.inv_production_Receive.load_edit_item_details');
+Route::post('/inv_production_Receive/edit_item_details', [inv_production_ReceiveController::class, 'edit_item_details'])->name('admin.inv_production_Receive.edit_item_details');
+Route::get('/inv_production_Receive/delete_details/{id}/{id_parent}', [inv_production_ReceiveController::class, 'delete_details'])->name('admin.inv_production_Receive.delete_details');
+Route::post('/inv_production_Receive/do_approve/{id}', [inv_production_ReceiveController::class, 'do_approve'])->name('admin.inv_production_Receive.do_approve');
+Route::post('/inv_production_Receive/load_modal_approve_invoice', [inv_production_ReceiveController::class, 'load_modal_approve_invoice'])->name('admin.inv_production_Receive.load_modal_approve_invoice');
+Route::post('/inv_production_Receive/load_usershiftDiv', [inv_production_ReceiveController::class, 'load_usershiftDiv'])->name('admin.inv_production_Receive.load_usershiftDiv');
+Route::post('/inv_production_Receive/get_item_batches', [inv_production_ReceiveController::class, 'get_item_batches'])->name('admin.inv_production_Receive.get_item_batches');
+Route::get('/inv_production_Receive/printsaleswina4/{id}/{size}', [inv_production_ReceiveController::class, 'printsaleswina4'])->name('admin.inv_production_Receive.printsaleswina4');
+/*           end  inv_production_Receive               */
 
 
 
