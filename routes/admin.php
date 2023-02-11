@@ -422,7 +422,7 @@ Route::post('/inv_production_Receive/ajax_search', [inv_production_ReceiveContro
 Route::get('/inv_production_Receive/show/{id}', [inv_production_ReceiveController::class, 'show'])->name('admin.inv_production_Receive.show');
 Route::post('/inv_production_Receive/get_item_uoms', [inv_production_ReceiveController::class, 'get_item_uoms'])->name('admin.inv_production_Receive.get_item_uoms');
 Route::post('/inv_production_Receive/load_modal_add_details', [inv_production_ReceiveController::class, 'load_modal_add_details'])->name('admin.inv_production_Receive.load_modal_add_details');
-Route::post('/inv_production_Receive/Add_item_to_invoice', [inv_production_ReceiveController::class, 'Add_item_to_invoice'])->name('admin.inv_production_Receive.Add_item_to_invoice');
+Route::post('/inv_production_Receive/add_new_details', [inv_production_ReceiveController::class, 'add_new_details'])->name('admin.inv_production_Receive.add_new_details');
 Route::post('/inv_production_Receive/reload_itemsdetials', [inv_production_ReceiveController::class, 'reload_itemsdetials'])->name('admin.inv_production_Receive.reload_itemsdetials');
 Route::post('/inv_production_Receive/reload_parent_pill', [inv_production_ReceiveController::class, 'reload_parent_pill'])->name('admin.inv_production_Receive.reload_parent_pill');
 Route::post('/inv_production_Receive/load_edit_item_details', [inv_production_ReceiveController::class, 'load_edit_item_details'])->name('admin.inv_production_Receive.load_edit_item_details');

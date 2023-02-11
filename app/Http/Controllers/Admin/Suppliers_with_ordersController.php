@@ -179,6 +179,7 @@ $item_card_Data['parent_uom_name'] = get_field_value(new Inv_uom(), "name", arra
 return view("admin.suppliers_with_orders.get_item_uoms", ['item_card_Data' => $item_card_Data]);
 }
 }
+
 public function add_new_details(Request $request)
 {
 if ($request->ajax()) {
@@ -222,6 +223,9 @@ echo json_encode("done");
 }
 
 }
+
+
+
 public function reload_itemsdetials(Request $request)
 {
 if ($request->ajax()) {
