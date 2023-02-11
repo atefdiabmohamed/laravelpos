@@ -100,6 +100,8 @@ return redirect()->back()
 ->withInput();
 }
 }
+
+
 public function edit($id)
 {
 $com_code = auth()->user()->com_code;
@@ -185,6 +187,8 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
+
 public function load_modal_add_details(Request $request)
 {
 if ($request->ajax()) {
