@@ -1,3 +1,4 @@
+
 @if (@isset($data) && !@empty($data))
 <table id="example2" class="table table-bordered table-hover">
    <tr>
@@ -21,7 +22,7 @@
       <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
    </tr>
    <tr>
-      <td class="width30">     مخزن الصرف  </td>
+      <td class="width30">     مخزن استلام الانتاج  </td>
       <td > {{ $data['store_name'] }}</td>
    </tr>
    <tr>
@@ -100,16 +101,16 @@
          لايوجد تحديث
          @endif
          @if($data['is_approved']==0)
-         <a href="{{ route('admin.inv_production_exchange.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-         <a href="{{ route('admin.inv_production_exchange.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+         <a href="{{ route('admin.inv_production_Receive.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+         <a href="{{ route('admin.inv_production_Receive.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
          <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
          @endif
       </td>
    </tr>
 </table>
+
 @else
 <div class="alert alert-danger">
    عفوا لاتوجد بيانات لعرضها !!
 </div>
 @endif
-

@@ -263,6 +263,7 @@ return view("admin.suppliers_with_orders.reload_parent_pill", ['data' => $data])
 }
 }
 }
+
 public function load_edit_item_details(Request $request)
 {
 if ($request->ajax()) {
@@ -364,6 +365,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function delete_details($id, $parent_id)
 {
 try {
@@ -406,6 +408,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 
 
 public function load_modal_approve_invoice(Request $request)

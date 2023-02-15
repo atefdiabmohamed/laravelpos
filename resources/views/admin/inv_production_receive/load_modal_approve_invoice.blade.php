@@ -3,7 +3,7 @@
 @if($counterDetails>0)
 
 
-<form action="{{ route("admin.inv_production_exchange.do_approve",$data['auto_serial']) }}" method="post">
+<form action="{{ route("admin.inv_production_Receive.do_approve",$data['auto_serial']) }}" method="post">
      @csrf
      
 <div class="row">
