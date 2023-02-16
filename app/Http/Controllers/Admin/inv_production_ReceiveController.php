@@ -16,6 +16,8 @@ use App\Models\Inv_itemcard_batches;
 use App\Models\Inv_production_order;
 use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
+use App\Models\services_with_orders;
+use App\Models\Inv_production_exchange;
 use App\Models\Treasuries_transactions;
 use Illuminate\Http\Request;
 use App\Http\Requests\Inv_production_ReceiveRequest;
@@ -512,7 +514,7 @@ update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "
 }
 }
 //سيتم عمل دالة تحيث رصيد حساب خط الانتاج  مستقبلا 
-//refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(),new services_with_orders(), false);
+refresh_account_blance_ProductionLine($data['account_number'], new Account(), new Inv_production_lines(), new Treasuries_transactions(),new services_with_orders(),new Inv_production_exchange(),new inv_production_receive(), false);
 //store move حركة المخزن
 //first Get item card data جنجيب الاصناف اللي علي الفاتورة
 $items = get_cols_where(new inv_production_receive_details(), array("*"), array("inv_production_receive_auto_serial" => $auto_serial, "com_code" => $com_code, "order_type" => 1), "id", "ASC");
@@ -629,6 +631,133 @@ return redirect()->route("admin.inv_production_Receive.show", $data['id'])->with
 
 
 
+public function ajax_search(Request $request)
+{
+if ($request->ajax()) {
+$search_by_text = $request->search_by_text;
+$production_lines_code = $request->production_lines_code;
+$store_id = $request->store_id;
+$order_date_form = $request->order_date_form;
+$order_date_to = $request->order_date_to;
+$searchbyradio = $request->searchbyradio;
+$is_approved = $request->is_approved;
 
+if ($production_lines_code == 'all') {
+//دائما  true
+$field1 = "id";
+$operator1 = ">";
+$value1 = 0;
+} else {
+$field1 = "production_lines_code";
+$operator1 = "=";
+$value1 = $production_lines_code;
+}
+if ($store_id == 'all') {
+//دائما  true
+$field2 = "id";
+$operator2 = ">";
+$value2 = 0;
+} else {
+$field2 = "store_id";
+$operator2 = "=";
+$value2 = $store_id;
+}
+if ($order_date_form == '') {
+//دائما  true
+$field3 = "id";
+$operator3 = ">";
+$value3 = 0;
+} else {
+$field3 = "order_date";
+$operator3 = ">=";
+$value3 = $order_date_form;
+}
+if ($order_date_to == '') {
+//دائما  true
+$field4 = "id";
+$operator4 = ">";
+$value4 = 0;
+} else {
+$field4 = "order_date";
+$operator4 = "<=";
+$value4 = $order_date_to;
+}
+if ($search_by_text != '') {
+if ($searchbyradio == 'auto_serial') {
+$field5 = "auto_serial";
+$operator5 = "=";
+$value5 = $search_by_text;
+} else {
+$field5 = "inv_production_order_auto_serial";
+$operator5 = "=";
+$value5 = $search_by_text;
+}
+} else {
+//true 
+$field5 = "id";
+$operator5 = ">";
+$value5 = 0;
+}
+
+if ($is_approved == 'all') {
+  //دائما  true
+  $field6 = "id";
+  $operator6 = ">";
+  $value6 = 0;
+  } else {
+  $field6 = "is_approved";
+  $operator6 = "=";
+  $value6 = $is_approved;
+  }
+
+$data = inv_production_receive::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->where($field6, $operator6, $value6)->where('order_type','=',1)->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+if (!empty($data)) {
+    foreach ($data as $info) {
+    $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+    $info->production_lines_name = Inv_production_lines::where('production_lines_code', $info->production_lines_code)->value('name');
+    $info->store_name = Store::where('id', $info->store_id)->value('name');
+    if ($info->updated_by > 0 and $info->updated_by != null) {
+    $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+    }
+    }
+    }
+return view('admin.inv_production_Receive.ajax_search', ['data' => $data]);
+}
+}
+
+
+
+public function printsaleswina4($id,$size){
+
+    try {
+    $com_code = auth()->user()->com_code;
+    $invoice_data = get_cols_where_row(new inv_production_receive(), array("*"), array("id" => $id, "com_code" => $com_code, 'order_type' => 1));
+    if (empty($invoice_data)) {
+    return redirect()->route('admin.inv_production_Receive.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+    }
+    $invoice_data['added_by_admin'] = Admin::where('id', $invoice_data['added_by'])->value('name');
+    $invoice_data['production_lines_name'] = Inv_production_lines::where('production_lines_code', $invoice_data['production_lines_code'])->value('name');
+    $invoice_data['production_lines_phones'] = Inv_production_lines::where('production_lines_code', $invoice_data['production_lines_code'])->value('phones');
+    $invoice_data['store_name'] = Store::where('id', $invoice_data['store_id'])->value('name');  
+  $invoices_details = get_cols_where(new inv_production_receive_details(), array("*"), array('inv_production_receive_auto_serial' => $invoice_data['auto_serial'], 'order_type' => 1, 'com_code' => $com_code), 'id', 'ASC');
+    if (!empty($invoices_details)) {
+    foreach ($invoices_details as $info) {
+    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+    }
+    }
+    $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+    
+    if($size=="A4"){
+        return view('admin.inv_production_exchange.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+    }else{
+        return view('admin.inv_production_exchange.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+    
+    }
+    } catch (\Exception $ex) {
+    return redirect()->back()
+    ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+    }
 
 }

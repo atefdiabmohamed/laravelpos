@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة صرف خامات لخط انتاج </title>
+      <title> طباعة فاتورة استلام انتاج تام  من خط انتاج </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
@@ -29,7 +29,7 @@
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الفاتورة  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الاستلام  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
@@ -43,7 +43,7 @@
                height: 30px;
                text-align: center;
                background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة صرف خامات لخط الانتاج </span></td>
+               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة استلام انتاج تام من خط الانتاج </span></td>
          </tr>
          <tr>
             <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;

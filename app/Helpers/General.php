@@ -129,6 +129,11 @@ return $the_final_Balance;
 }
 }
 }
+
+
+
+
+
 function refresh_account_blance_delegate($account_number=null,$AccountModel=null,$delgateModel=null,$treasuries_transactionsModel=null,$SalesinvoiceModel=null,$ServicesOrdersModel=null,$returnFlag=true){
 $com_code=auth()->user()->com_code;
 //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
@@ -244,3 +249,33 @@ function get_count_where($model=null,  $where = array())
 $counter = $model::where($where)->count();
 return $counter;
 }
+
+//get Account Balance دالة احتساب وتحديث رصيد الحساب المالي للمورد  
+function refresh_account_blance_ProductionLine($account_number=null,$AccountModel=null,$ProductionLineModel=null,$treasuries_transactionsModel=null,$ServicesOrdersModel=null,$inv_production_exchangeModel=null,$inv_production_receiveModel=null,$returnFlag=false){
+    $com_code=auth()->user()->com_code;
+    //حنجيب الرصيد الافتتاحي  للحساب اول المده لحظة تكويده
+    $AccountData=  $AccountModel::select("start_balance","account_type")->where(["com_code"=>$com_code,"account_number"=>$account_number])->first();
+    // 
+    if($AccountData['account_type']==5){
+    //صافي مجموع صرف الخامات واستلام الانتاج التام لخط الانتاج   
+    $the_net_in_inv_production_exchange=$inv_production_exchangeModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+    $the_net_inv_production_receive=$inv_production_receiveModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+    //صافي حركة النقديه بالخزن علي حساب خط الانتاج
+    $the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
+    //صافي حركة فواتير الخدمات الخارجية والداخلية المتعلقه بالحساب المالي لخط الانتاج
+    $the_net_Services_inv_productionLine=$ServicesOrdersModel::where(["com_code"=>$com_code,"account_number"=>$account_number,'is_account_number'=>1])->sum("money_for_account");
+    
+    
+    //الرصيد النهائي لخط الانتاج
+    $the_final_Balance=$AccountData['start_balance']+$the_net_in_inv_production_exchange+$the_net_inv_production_receive+$the_net_Services_inv_productionLine+$the_net_in_treasuries_transactions;
+    $dataToUpdateAccount['current_balance']=$the_final_Balance;
+    //update in Accounts حندث جدول الحسابات المالية بحقل خط الانتاج
+    $AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
+    $dataToUpdateLine['current_balance']=$the_final_Balance;
+    //update in Accounts حندث جدول الموردين  بحقل المورد
+    $ProductionLineModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateLine);
+    if($returnFlag){
+    return $the_final_Balance;
+    }
+    }
+    }
