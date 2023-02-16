@@ -129,6 +129,7 @@
                      @endforeach
                   </tbody>
                </table>
+               
                <br>
                {{ $data->links() }}
                @else

@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة صرف خامات لخط انتاج </title>
+      <title> طباعة فاتورة استلام انتاج تام من خط الانتاج </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       
       <style>
@@ -74,7 +74,7 @@ table{margin: 0 auto;}
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الفاتورة  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الاستلام  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>

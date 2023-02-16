@@ -17,6 +17,9 @@ use App\Models\Inv_production_order;
 use App\Models\Admins_Shifts;
 use App\Models\Treasuries;
 use App\Models\Treasuries_transactions;
+use App\Models\services_with_orders;
+use App\Models\inv_production_receive;
+
 use App\Http\Requests\Inv_production_exchangeRequest;
 use App\Http\Requests\inv_production_exchangeUpRequest;
 use Illuminate\Http\Request;
@@ -794,7 +797,7 @@ if ($flag) {
 //حنجيب  سجل المورد من الشجره المحاسبية برقم الحساب المالب
 //حركات  مختلفه
 //first make treasuries_transactions  action if what paid >0
-/*
+
 if ($request['what_paid'] > 0) {
 //first get isal number with treasuries 
 $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
@@ -831,8 +834,9 @@ $dataUpdateTreasuries['last_isal_collect'] = $dataInsert_treasuries_transactions
 update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $user_shift['treasuries_id']));
 }
 }
-refresh_account_blance_supplier($data['account_number'], new Account(), new Supplier(), new Treasuries_transactions(), new Suppliers_with_orders(),new services_with_orders(), false);
-*/
+
+refresh_account_blance_ProductionLine($data['account_number'], new Account(), new Inv_production_lines(), new Treasuries_transactions(),new services_with_orders(),new Inv_production_exchange(),new inv_production_receive(), false);
+
 
 return redirect()->route("admin.inv_production_exchange.show", $data['id'])->with(['success' => " تم اعتماد وترحيل الفاتورة بنجاح  "]);
 }
