@@ -34,6 +34,8 @@ use App\Http\Controllers\Admin\Inv_production_orderController;
 use App\Http\Controllers\Admin\Inv_production_linesController;
 use App\Http\Controllers\Admin\Inv_production_exchangeController;
 use App\Http\Controllers\Admin\inv_production_ReceiveController;
+use App\Http\Controllers\Admin\Inv_stores_transferController;
+
 
 
 /*
@@ -435,6 +437,29 @@ Route::post('/inv_production_Receive/get_item_batches', [inv_production_ReceiveC
 Route::get('/inv_production_Receive/printsaleswina4/{id}/{size}', [inv_production_ReceiveController::class, 'printsaleswina4'])->name('admin.inv_production_Receive.printsaleswina4');
 /*           end  inv_production_Receive               */
 
+/*         start  inv_stores_transfer       التحويل بين المخازن    */
+Route::get('/inv_stores_transfer/index', [Inv_stores_transferController::class, 'index'])->name('admin.inv_stores_transfer.index');
+Route::get('/inv_stores_transfer/create', [Inv_stores_transferController::class, 'create'])->name('admin.inv_stores_transfer.create');
+Route::post('/inv_stores_transfer/store', [Inv_stores_transferController::class, 'store'])->name('admin.inv_stores_transfer.store');
+Route::get('/inv_stores_transfer/edit/{id}', [Inv_stores_transferController::class, 'edit'])->name('admin.inv_stores_transfer.edit');
+Route::post('/inv_stores_transfer/update/{id}', [Inv_stores_transferController::class, 'update'])->name('admin.inv_stores_transfer.update');
+Route::get('/inv_stores_transfer/delete/{id}', [Inv_stores_transferController::class, 'delete'])->name('admin.inv_stores_transfer.delete');
+Route::post('/inv_stores_transfer/ajax_search', [Inv_stores_transferController::class, 'ajax_search'])->name('admin.inv_stores_transfer.ajax_search');
+Route::get('/inv_stores_transfer/show/{id}', [Inv_stores_transferController::class, 'show'])->name('admin.inv_stores_transfer.show');
+Route::post('/inv_stores_transfer/get_item_uoms', [Inv_stores_transferController::class, 'get_item_uoms'])->name('admin.inv_stores_transfer.get_item_uoms');
+Route::post('/inv_stores_transfer/load_modal_add_details', [Inv_stores_transferController::class, 'load_modal_add_details'])->name('admin.inv_stores_transfer.load_modal_add_details');
+Route::post('/inv_stores_transfer/Add_item_to_invoice', [Inv_stores_transferController::class, 'Add_item_to_invoice'])->name('admin.inv_stores_transfer.Add_item_to_invoice');
+Route::post('/inv_stores_transfer/reload_itemsdetials', [Inv_stores_transferController::class, 'reload_itemsdetials'])->name('admin.inv_stores_transfer.reload_itemsdetials');
+Route::post('/inv_stores_transfer/reload_parent_pill', [Inv_stores_transferController::class, 'reload_parent_pill'])->name('admin.inv_stores_transfer.reload_parent_pill');
+Route::post('/inv_stores_transfer/load_edit_item_details', [Inv_stores_transferController::class, 'load_edit_item_details'])->name('admin.inv_stores_transfer.load_edit_item_details');
+Route::post('/inv_stores_transfer/edit_item_details', [Inv_stores_transferController::class, 'edit_item_details'])->name('admin.inv_stores_transfer.edit_item_details');
+Route::get('/inv_stores_transfer/delete_details/{id}/{id_parent}', [Inv_stores_transferController::class, 'delete_details'])->name('admin.inv_stores_transfer.delete_details');
+Route::post('/inv_stores_transfer/do_approve/{id}', [Inv_stores_transferController::class, 'do_approve'])->name('admin.inv_stores_transfer.do_approve');
+Route::post('/inv_stores_transfer/load_modal_approve_invoice', [Inv_stores_transferController::class, 'load_modal_approve_invoice'])->name('admin.inv_stores_transfer.load_modal_approve_invoice');
+Route::post('/inv_stores_transfer/load_usershiftDiv', [Inv_stores_transferController::class, 'load_usershiftDiv'])->name('admin.inv_stores_transfer.load_usershiftDiv');
+Route::post('/inv_stores_transfer/get_item_batches', [Inv_stores_transferController::class, 'get_item_batches'])->name('admin.inv_stores_transfer.get_item_batches');
+Route::get('/inv_stores_transfer/printsaleswina4/{id}/{size}', [Inv_stores_transferController::class, 'printsaleswina4'])->name('admin.inv_stores_transfer.printsaleswina4');
+/*           end  inv_stores_transfer               */
 
 
 

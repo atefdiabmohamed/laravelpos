@@ -161,8 +161,8 @@
               </ul>
            </li>
 
-           <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') ||request()->is('admin/stores_inventory*'))?'menu-open':'' }}     ">
-              <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*')  ||request()->is('admin/stores_inventory*') )?'active':'' }}">
+           <li class="nav-item has-treeview {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*') ||request()->is('admin/stores_inventory*') ||request()->is('admin/inv_stores_transfer*'))?'menu-open':'' }}     ">
+              <a href="#" class="nav-link {{ (request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') ||request()->is('admin/itemcardBalance*')  ||request()->is('admin/stores_inventory*') ||request()->is('admin/inv_stores_transfer*') )?'active':'' }}">
                  <i class="nav-icon fas fa-tachometer-alt"></i>
                  <p>
                     حركات مخزنية
@@ -184,6 +184,15 @@
                        </p>
                     </a>
                  </li>
+                 <li class="nav-item">
+                  <a href="{{ route('admin.inv_stores_transfer.index') }}" class="nav-link {{ (request()->is('admin/inv_stores_transfer*')  )?'active':'' }}">
+                     <p>
+               التحويل بين المخازن      
+                     </p>
+                  </a>
+               </li>
+
+
                  <li class="nav-item">
                   <a href="{{ route('admin.stores_inventory.index') }}" class="nav-link {{ (request()->is('admin/stores_inventory*')  )?'active':'' }}">
                      <p>
