@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2023 at 12:50 AM
+-- Generation Time: Feb 20, 2023 at 12:15 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -291,8 +291,7 @@ INSERT INTO `customers` (`id`, `customer_code`, `name`, `account_number`, `start
 (15, 10, 'محمود هاشم احمد', 27, 3, '0.00', '0.00', NULL, 1, NULL, '2022-10-28 16:16:36', '2022-11-06 09:23:20', 1, 1, '2022-10-28', NULL, NULL),
 (16, 11, 'السيد ابو الوفا', 28, 3, '0.00', '0.00', NULL, 1, NULL, '2022-10-28 17:59:29', '2022-10-28 17:59:29', 1, 1, '2022-10-28', NULL, NULL),
 (17, 12, 'حمدان عيسي سلام', 29, 3, '0.00', '0.00', NULL, 1, NULL, '2022-10-28 18:02:52', '2022-10-31 15:48:08', 1, 1, '2022-10-28', NULL, NULL),
-(18, 13, 'منصور سالم البدري', 30, 3, '0.00', '0.00', NULL, 1, NULL, '2022-10-30 00:16:23', '2022-11-06 09:19:58', 1, 1, '2022-10-30', NULL, NULL),
-(19, 14, 'فوزي السيد حمدان', 31, 3, '0.00', '-1000.00', NULL, 1, NULL, '2022-10-31 09:28:00', '2022-11-06 09:32:41', 1, 1, '2022-10-31', NULL, NULL);
+(18, 13, 'منصور سالم البدري', 30, 3, '0.00', '0.00', NULL, 1, NULL, '2022-10-30 00:16:23', '2022-11-06 09:19:58', 1, 1, '2022-10-30', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -880,6 +879,58 @@ CREATE TABLE `inv_stores_inventory_details` (
   `closed_at` datetime DEFAULT NULL,
   `com_code` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل امر الجرد';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_stores_transfer`
+--
+
+CREATE TABLE `inv_stores_transfer` (
+  `id` bigint(20) NOT NULL,
+  `auto_serial` bigint(20) NOT NULL,
+  `transfer_from_store_id` int(11) NOT NULL COMMENT 'مخزن التحويل',
+  `transfer_to_store_id` int(11) NOT NULL COMMENT 'مخزن الاستلام',
+  `order_date` date NOT NULL COMMENT 'تاريخ التحويل',
+  `is_approved` tinyint(1) NOT NULL DEFAULT 0,
+  `com_code` int(11) NOT NULL,
+  `notes` varchar(225) DEFAULT NULL COMMENT 'اجمالي الفاتورة قبل الخصم',
+  `total_cost_items` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'اجمالي الاصناف فقط',
+  `added_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `approved_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inv_stores_transfer_details`
+--
+
+CREATE TABLE `inv_stores_transfer_details` (
+  `id` bigint(20) NOT NULL,
+  `inv_stores_transfer_id` bigint(20) NOT NULL,
+  `inv_stores_transfer_auto_serial` bigint(20) NOT NULL,
+  `com_code` int(11) NOT NULL,
+  `deliverd_quantity` decimal(10,2) NOT NULL,
+  `uom_id` int(11) NOT NULL,
+  `isparentuom` tinyint(1) NOT NULL COMMENT '1-main -0 retail',
+  `unit_price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `order_date` date NOT NULL,
+  `added_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `item_code` bigint(20) NOT NULL,
+  `production_date` date DEFAULT NULL,
+  `expire_date` date DEFAULT NULL,
+  `item_card_type` tinyint(1) NOT NULL,
+  `transfer_from_batch_id` bigint(20) NOT NULL,
+  `transfer_to_batch_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل اصناف امر الصرف  الخامات  لخط الانتاج';
 
 -- --------------------------------------------------------
 
@@ -1691,6 +1742,19 @@ ALTER TABLE `inv_stores_inventory_details`
   ADD KEY `inv_stores_inventory_id` (`inv_stores_inventory_id`);
 
 --
+-- Indexes for table `inv_stores_transfer`
+--
+ALTER TABLE `inv_stores_transfer`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `inv_stores_transfer_details`
+--
+ALTER TABLE `inv_stores_transfer_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inv_stores_transfer_id` (`inv_stores_transfer_id`);
+
+--
 -- Indexes for table `inv_uoms`
 --
 ALTER TABLE `inv_uoms`
@@ -1976,6 +2040,18 @@ ALTER TABLE `inv_stores_inventory_details`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `inv_stores_transfer`
+--
+ALTER TABLE `inv_stores_transfer`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inv_stores_transfer_details`
+--
+ALTER TABLE `inv_stores_transfer_details`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `inv_uoms`
 --
 ALTER TABLE `inv_uoms`
@@ -2122,6 +2198,12 @@ ALTER TABLE `inv_production_receive_details`
 --
 ALTER TABLE `inv_stores_inventory_details`
   ADD CONSTRAINT `inv_stores_inventory_details_ibfk_1` FOREIGN KEY (`inv_stores_inventory_id`) REFERENCES `inv_stores_inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `inv_stores_transfer_details`
+--
+ALTER TABLE `inv_stores_transfer_details`
+  ADD CONSTRAINT `inv_stores_transfer_details_ibfk_1` FOREIGN KEY (`inv_stores_transfer_id`) REFERENCES `inv_stores_transfer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `sales_invoices_details`
