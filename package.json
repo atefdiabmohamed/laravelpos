@@ -3,6 +3,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build"
+        
     },
     "devDependencies": {
         "axios": "^0.27",
