@@ -1,29 +1,29 @@
 <!-- لاتنسونا من صالح دعائكم -->
 @extends('layouts.admin')
 @section('title')
-حركات خط الاإنتاج
-@endsection
-@section('contentheader')
-صرف الخامات
-@endsection
-@section('contentheaderlink')
-<a href="{{ route('admin.inv_production_exchange.index') }}">   صرف الخامات للورش</a>
-@endsection
-@section('contentheaderactive')
-عرض التفاصيل
+حركات مخزنية 
 @endsection
 @section("css")
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
 @endsection
+@section('contentheader')
+ التحويل
+@endsection
+@section('contentheaderlink')
+<a href="{{ route('admin.inv_stores_transfer.index') }}">     التحويل بين المخازن</a>
+@endsection
+@section('contentheaderactive')
+عرض التفاصيل
+@endsection
+
 
 @section('content')
 <div class="row">
    <div class="col-12">
       <div class="card">
          <div class="card-header">
-            <h3 class="card-title card_title_center">تفاصيل فاتورة صرف خامات لخط انتاج  </h3>
+            <h3 class="card-title card_title_center">تفاصيل أمر تحويل بين المخازن  </h3>
          </div>
          <!-- /.card-header -->
          <div class="card-body">
@@ -32,62 +32,25 @@
                @if (@isset($data) && !@empty($data))
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
-                     <td class="width30"> كود الفاتورة الالي</td>
+                     <td class="width30"> كود  امر التحويل</td>
                      <td > {{ $data['auto_serial'] }}</td>
                   </tr>
                   <tr>
-                     <td class="width30">   تاريخ الفاتورة </td>
+                     <td class="width30">   تاريخ الامر </td>
                      <td > {{ $data['order_date'] }}</td>
-                  </tr>
+             
                   <tr>
-                     <td class="width30">    كود أمر التشغيل </td>
-                     <td > {{ $data['inv_production_order_auto_serial'] }}</td>
+                     <td class="width30">  اسم  مخزن الصرف </td>
+                     <td > {{ $data['from_store_name'] }}</td>
                   </tr>
+               
                   <tr>
-                     <td class="width30">  اسم خط الانتاج </td>
-                     <td > {{ $data['production_lines_name'] }}</td>
+                     <td class="width30">     اسم مخزن الاستلام  </td>
+                     <td > {{ $data['to_store_name'] }}</td>
                   </tr>
+                  
                   <tr>
-                     <td class="width30"> نوع الفاتورة</td>
-                     <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
-                  </tr>
-                  <tr>
-                     <td class="width30">     مخزن الصرف  </td>
-                     <td > {{ $data['store_name'] }}</td>
-                  </tr>
-                  <tr>
-                     <td class="width30">   اجمالي الاصناف علي الفاتورة </td>
-                     <td > {{ $data['total_befor_discount']*(1) }}</td>
-                  </tr>
-                  @if ($data['discount_type']!=null)
-                  <tr>
-                     <td class="width30">   الخصم علي الفاتورة </td>
-                     <td> 
-                        @if ($data['discount_type']==1)
-                        خصم نسبة ( {{ $data['discount_percent']*1 }} ) وقيمتها ( {{ $data["discount_value"]*1 }} )
-                        @else
-                        خصم يدوي وقيمته( {{ $data["discount_value"]*1 }} )
-                        @endif
-                     </td>
-                  </tr>
-                  @else
-                  <tr>
-                     <td class="width30">   الخصم علي الفاتورة </td>
-                     <td > لايوجد</td>
-                  </tr>
-                  @endif
-                  <tr>
-                     <td class="width30">    نسبة القيمة المضافة </td>
-                     <td > 
-                        @if($data['tax_percent']>0)
-                        لايوجد
-                        @else
-                        بنسبة ({{ $data["tax_percent"]*1 }}) %  وقيمتها ( {{ $data['tax_value']*1 }} )
-                        @endif
-                     </td>
-                  </tr>
-                  <tr>
-                     <td class="width30">   اجمالي الفاتورة </td>
+                     <td class="width30">   اجمالي تكلفة الاصناف </td>
                      <td > {{ $data['total_cost']*(1) }}</td>
                   </tr>
                   <tr>
@@ -131,8 +94,8 @@
                         لايوجد تحديث
                         @endif
                         @if($data['is_approved']==0)
-                        <a href="{{ route('admin.inv_production_exchange.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-                        <a href="{{ route('admin.inv_production_exchange.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+                        <a href="{{ route('admin.inv_stores_transfer.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+                        <a href="{{ route('admin.inv_stores_transfer.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
                         <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
                         @endif
                      </td>
@@ -152,16 +115,16 @@
                   @endif
                </h3>
                <input type="hidden" id="token_search" value="{{csrf_token() }}">
-               <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.inv_production_exchange.get_item_uoms') }}">
-               <input type="hidden" id="ajax_Add_item_to_invoice" value="{{ route('admin.inv_production_exchange.Add_item_to_invoice') }}">
-               <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.inv_production_exchange.reload_itemsdetials') }}">
-               <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.inv_production_exchange.reload_parent_pill') }}">
-               <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.inv_production_exchange.load_edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.inv_production_exchange.load_modal_add_details') }}">
-               <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.inv_production_exchange.edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.inv_production_exchange.load_modal_approve_invoice') }}">
-               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.inv_production_exchange.load_usershiftDiv') }}">
-               <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.inv_production_exchange.get_item_batches') }}">
+               <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.inv_stores_transfer.get_item_uoms') }}">
+               <input type="hidden" id="ajax_Add_item_to_invoice" value="{{ route('admin.inv_stores_transfer.Add_item_to_invoice') }}">
+               <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.inv_stores_transfer.reload_itemsdetials') }}">
+               <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.inv_stores_transfer.reload_parent_pill') }}">
+               <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.inv_stores_transfer.load_edit_item_details') }}">
+               <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.inv_stores_transfer.load_modal_add_details') }}">
+               <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.inv_stores_transfer.edit_item_details') }}">
+               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.inv_stores_transfer.load_modal_approve_invoice') }}">
+               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.inv_stores_transfer.load_usershiftDiv') }}">
+               <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.inv_stores_transfer.get_item_batches') }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
             </div>
             <div id="ajax_responce_serarchDivDetails">
@@ -197,7 +160,7 @@
                         <td>{{ $info->total_price*(1) }}</td>
                         <td>
                            @if($data['is_approved']==0)
-                           <a href="{{ route('admin.inv_production_exchange.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
+                           <a href="{{ route('admin.inv_stores_transfer.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
                            @endif
                         </td>
                      </tr>
@@ -288,5 +251,5 @@
      theme: 'bootstrap4'
    });
 </script>
-<script  src="{{ asset('assets/admin/js/inv_production_exchange.js') }}"> </script>
+<script  src="{{ asset('assets/admin/js/inv_stores_transfer.js') }}"> </script>
 @endsection

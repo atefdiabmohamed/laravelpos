@@ -51,6 +51,7 @@ $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $
 $Inv_production_order = get_cols_where(new Inv_production_order(), array( 'auto_serial'), array('com_code' => $com_code, 'is_closed' => 0,'is_approved'=>1), 'id', 'DESC');
 return view('admin.inv_production_exchange.create', ['Inv_production_lines' => $Inv_production_lines, 'stores' => $stores,'Inv_production_order'=>$Inv_production_order]);
 }
+
 public function store(Inv_production_exchangeRequest $request)
 {
 try {
