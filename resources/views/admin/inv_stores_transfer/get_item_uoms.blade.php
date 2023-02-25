@@ -1,6 +1,6 @@
 
 <div class="form-group"> 
-    <label>     وحدة المرتجع</label>
+    <label>     وحدة الصرف</label>
     <select  id="uom_id" class="form-control select2" style="width: 100%;">
       @if (@isset($item_card_Data) && !@empty($item_card_Data))
     @if($item_card_Data['does_has_retailunit']==1)

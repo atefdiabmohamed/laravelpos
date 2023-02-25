@@ -263,6 +263,8 @@ return view("admin.suppliers_orders_general_return.get_item_batches", ['item_car
 }
 
 
+
+
 public function Add_item_to_invoice(Request $request)
 { 
 try {
@@ -451,6 +453,7 @@ $data = get_cols_where_row(new Inv_production_exchange(), array("is_approved","i
 return view("admin.inv_production_exchange.reload_itemsdetials", ['data' => $data, 'details' => $details]);
 }
 }
+
 
 
 public function delete_details($id, $parent_id)
