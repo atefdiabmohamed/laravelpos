@@ -1,63 +1,29 @@
 @if (@isset($data) && !@empty($data))
 <table id="example2" class="table table-bordered table-hover">
    <tr>
-      <td class="width30"> كود الفاتورة الالي</td>
+      <td class="width30"> كود  امر التحويل</td>
       <td > {{ $data['auto_serial'] }}</td>
    </tr>
    <tr>
-      <td class="width30">   تاريخ الفاتورة </td>
+      <td class="width30">   تاريخ الامر </td>
       <td > {{ $data['order_date'] }}</td>
+
+   <tr>
+      <td class="width30">  اسم  مخزن الصرف </td>
+      <td > {{ $data['from_store_name'] }}</td>
+   </tr>
+
+   <tr>
+      <td class="width30">     اسم مخزن الاستلام  </td>
+      <td > {{ $data['to_store_name'] }}</td>
    </tr>
    <tr>
-      <td class="width30">    كود أمر التشغيل </td>
-      <td > {{ $data['inv_production_order_auto_serial'] }}</td>
+      <td class="width30">    عدد الاصناف المضافة  </td>
+      <td > {{ $data['items_counter']*(1) }}</td>
    </tr>
    <tr>
-      <td class="width30">  اسم خط الانتاج </td>
-      <td > {{ $data['production_lines_name'] }}</td>
-   </tr>
-   <tr>
-      <td class="width30"> نوع الفاتورة</td>
-      <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
-   </tr>
-   <tr>
-      <td class="width30">     مخزن الصرف  </td>
-      <td > {{ $data['store_name'] }}</td>
-   </tr>
-   <tr>
-      <td class="width30">   اجمالي الاصناف علي الفاتورة </td>
-      <td > {{ $data['total_befor_discount']*(1) }}</td>
-   </tr>
-   @if ($data['discount_type']!=null)
-   <tr>
-      <td class="width30">   الخصم علي الفاتورة </td>
-      <td> 
-         @if ($data['discount_type']==1)
-         خصم نسبة ( {{ $data['discount_percent']*1 }} ) وقيمتها ( {{ $data["discount_value"]*1 }} )
-         @else
-         خصم يدوي وقيمته( {{ $data["discount_value"]*1 }} )
-         @endif
-      </td>
-   </tr>
-   @else
-   <tr>
-      <td class="width30">   الخصم علي الفاتورة </td>
-      <td > لايوجد</td>
-   </tr>
-   @endif
-   <tr>
-      <td class="width30">    نسبة القيمة المضافة </td>
-      <td > 
-         @if($data['tax_percent']>0)
-         لايوجد
-         @else
-         بنسبة ({{ $data["tax_percent"]*1 }}) %  وقيمتها ( {{ $data['tax_value']*1 }} )
-         @endif
-      </td>
-   </tr>
-   <tr>
-      <td class="width30">   اجمالي الفاتورة </td>
-      <td > {{ $data['total_cost']*(1) }}</td>
+      <td class="width30">   اجمالي تكلفة الاصناف </td>
+      <td > {{ $data['total_cost_items']*(1) }}</td>
    </tr>
    <tr>
       <td class="width30">       حالة الفاتورة </td>
@@ -100,8 +66,8 @@
          لايوجد تحديث
          @endif
          @if($data['is_approved']==0)
-         <a href="{{ route('admin.inv_production_exchange.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
-         <a href="{{ route('admin.inv_production_exchange.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+         <a href="{{ route('admin.inv_stores_transfer.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+         <a href="{{ route('admin.inv_stores_transfer.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
          <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
          @endif
       </td>

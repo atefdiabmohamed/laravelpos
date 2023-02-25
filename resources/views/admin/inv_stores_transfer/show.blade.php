@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 @section('contentheader')
- التحويل
+التحويل
 @endsection
 @section('contentheaderlink')
 <a href="{{ route('admin.inv_stores_transfer.index') }}">     التحويل بين المخازن</a>
@@ -16,8 +16,6 @@
 @section('contentheaderactive')
 عرض التفاصيل
 @endsection
-
-
 @section('content')
 <div class="row">
    <div class="col-12">
@@ -28,7 +26,6 @@
          <!-- /.card-header -->
          <div class="card-body">
             <div id="ajax_responce_serarchDivparentpill">
-
                @if (@isset($data) && !@empty($data))
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
@@ -38,20 +35,21 @@
                   <tr>
                      <td class="width30">   تاريخ الامر </td>
                      <td > {{ $data['order_date'] }}</td>
-             
                   <tr>
                      <td class="width30">  اسم  مخزن الصرف </td>
                      <td > {{ $data['from_store_name'] }}</td>
                   </tr>
-               
                   <tr>
                      <td class="width30">     اسم مخزن الاستلام  </td>
                      <td > {{ $data['to_store_name'] }}</td>
                   </tr>
-                  
+                  <tr>
+                     <td class="width30">    عدد الاصناف المضافة  </td>
+                     <td > {{ $data['items_counter']*(1) }}</td>
+                  </tr>
                   <tr>
                      <td class="width30">   اجمالي تكلفة الاصناف </td>
-                     <td > {{ $data['total_cost']*(1) }}</td>
+                     <td > {{ $data['total_cost_items']*(1) }}</td>
                   </tr>
                   <tr>
                      <td class="width30">       حالة الفاتورة </td>
@@ -101,8 +99,6 @@
                      </td>
                   </tr>
                </table>
-
-               
             </div>
             <!--  treasuries_delivery   -->
             <div class="card-header">
@@ -159,7 +155,7 @@
                         <td>{{ $info->unit_price*(1) }}</td>
                         <td>{{ $info->total_price*(1) }}</td>
                         <td>
-                           @if($data['is_approved']==0)
+                           @if($info->is_approved==0 and $data['is_approved']==0)
                            <a href="{{ route('admin.inv_stores_transfer.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
                            @endif
                         </td>
@@ -170,7 +166,6 @@
                      @endforeach
                   </tbody>
                </table>
-               
                @else
                <div class="alert alert-danger">
                   عفوا لاتوجد بيانات لعرضها !!

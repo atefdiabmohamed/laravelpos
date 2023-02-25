@@ -13,7 +13,8 @@ class inv_stores_transfer_details extends Model
         'inv_stores_transfer_id', 'inv_stores_transfer_auto_serial', 
         'com_code', 'deliverd_quantity', 'uom_id', 'isparentuom', 'unit_price',
          'total_price', 'order_date', 'added_by', 'created_at', 'updated_by', 
-         'updated_at', 'item_code', 'production_date', 'expire_date', 'item_card_type', 
+         'updated_at', 'item_code', 'production_date', 'expire_date',
+          'item_card_type','is_approved','approved_by','approved_at',
         'transfer_from_batch_id', 'transfer_to_batch_id'
         ];
 }
