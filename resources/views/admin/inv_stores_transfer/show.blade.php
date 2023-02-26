@@ -163,9 +163,7 @@
                            <br>
                            بسبب 
                            <span style="color:brown;">{{ $info->canceld_cause }}</span>
-
-
-                         @endif
+                           @endif
                         </td>
                      </tr>
                      @php
