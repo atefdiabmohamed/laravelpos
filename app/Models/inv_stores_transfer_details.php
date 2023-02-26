@@ -15,7 +15,8 @@ class inv_stores_transfer_details extends Model
          'total_price', 'order_date', 'added_by', 'created_at', 'updated_by', 
          'updated_at', 'item_code', 'production_date', 'expire_date',
           'item_card_type','is_approved','approved_by','approved_at',
-        'transfer_from_batch_id', 'transfer_to_batch_id'
+        'transfer_from_batch_id', 'transfer_to_batch_id','is_canceld_receive',
+        'canceld_by','canceld_at','canceld_cause'
         ];
 }
  
