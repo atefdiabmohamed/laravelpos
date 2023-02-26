@@ -1,5 +1,5 @@
 <?php
-
+//لاتنسونا من صالح الدعاء
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use App\Models\inv_stores_transfer;
@@ -12,10 +12,9 @@ use App\Models\Admin_panel_setting;
 use App\Models\Inv_itemcard_batches;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 class Inv_stores_transferIncomingController extends Controller
 {
-    public function index()
+public function index()
 { 
 $com_code = auth()->user()->com_code;
 $data = get_cols_where_p(new inv_stores_transfer(), array("*"), array("com_code" => $com_code), 'id', 'DESC', PAGINATION_COUNT);
@@ -32,7 +31,6 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'ASC');
 return view('admin.inv_stores_transfer_incoming.index', ['data' => $data, 'stores' => $stores]);
 }
-
 public function show($id)
 {
 try {
@@ -64,8 +62,6 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
-
-
 //اعتماد واستلام كمية صنف 
 function approve_one_details($id,$id_parent, Request $request)
 {
@@ -76,18 +72,15 @@ if (empty($data)) {
 return redirect()->route("admin.inv_stores_transfer_incoming.index")->with(['error' => "عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
 }
 if ($data['is_approved'] == 1) {
-    return redirect()->route("admin.suppliers_orders.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
-    }
-
+return redirect()->route("admin.suppliers_orders.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
+}
 $dataDetails = get_cols_where_row(new inv_stores_transfer_details(), array( "is_approved"), array("id" => $id, "com_code" => $com_code));
 if (empty($dataDetails)) {
 return redirect()->route("admin.inv_stores_transfer_incoming.index")->with(['error' => "عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
 }
 if ($dataDetails['is_approved'] == 1) {
-    return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
-    }
-
-
+return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
+}
 //store move حركة مخزن الاستلام
 //first Get item card data جنجيب الاصناف بالكود الحالي  علي امر التحويل
 $items = get_cols_where(new inv_stores_transfer_details(), array("*"), array("inv_stores_transfer_auto_serial" => $data['auto_serial'], "com_code" => $com_code, "id" => $id), "id", "ASC");
@@ -112,14 +105,12 @@ $quntity = ($info->deliverd_quantity / $itemCard_Data['retail_uom_quntToParent']
 $unit_price = $info->unit_price * $itemCard_Data['retail_uom_quntToParent'];
 }
 //بندخل الكميات للمخزن بوحده القياس الاب  اجباري 
-
 $dataInsertBatch["store_id"] = $data['transfer_to_store_id'];
 $dataInsertBatch["item_code"] = $info->item_code;
 $dataInsertBatch["production_date"] = $info->production_date;
 $dataInsertBatch["expired_date"] = $info->expire_date;
 $dataInsertBatch["unit_cost_price"] = $unit_price;
 $dataInsertBatch["inv_uoms_id"] = $itemCard_Data['uom_id'];
-
 $OldBatchExsists = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "id", "unit_cost_price"), $dataInsertBatch);
 if (!empty($OldBatchExsists)) {
 //update current Batch تحديث علي الباتش القديمة
@@ -183,20 +174,16 @@ do_update_itemCardQuantity(new Inv_itemCard(), $info->item_code, new Inv_itemcar
 }
 }
 return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['success' => " تم اعتماد واستلام كمية الصنف  بنجاح  "]);
-
 }
-
 public function load_cancel_one_details(Request $request)
 {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
 $parent_pill_data = get_cols_where_row(new inv_stores_transfer(), array("is_approved","id"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code,"is_approved"=>0));
- $data = get_cols_where_row(new inv_stores_transfer_details(), array("is_approved","id"), array("id" => $request->id, "com_code" => $com_code,"is_approved"=>0,"is_canceld_receive"=>0));
+$data = get_cols_where_row(new inv_stores_transfer_details(), array("is_approved","id"), array("id" => $request->id, "com_code" => $com_code,"is_approved"=>0,"is_canceld_receive"=>0));
 return view("admin.inv_stores_transfer_incoming.load_cancel_one_details", ['parent_pill_data' => $parent_pill_data, 'data' => $data]);
-
 }
 }
-
 //اعتماد وترحيل فاتورة المشتريات 
 function do_cancel_one_details($id,$id_parent, Request $request)
 {
@@ -207,27 +194,23 @@ if (empty($data)) {
 return redirect()->route("admin.inv_stores_transfer_incoming.index")->with(['error' => "عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
 }
 if ($data['is_approved'] == 1) {
-    return redirect()->route("admin.suppliers_orders.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
-    }
-
+return redirect()->route("admin.suppliers_orders.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد فاتورة معتمده من قبل !!"]);
+}
 $dataDetails = get_cols_where_row(new inv_stores_transfer_details(), array( "is_approved"), array("id" => $id, "com_code" => $com_code));
 if (empty($dataDetails)) {
 return redirect()->route("admin.inv_stores_transfer_incoming.index")->with(['error' => "عفوا غير قادر علي الوصول الي البيانات المطلوبة !!"]);
 }
 if ($dataDetails['is_approved'] == 1) {
-    return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
-    }
-    if ($dataDetails['is_canceld_receive'] == 1) {
-        return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
-        }
+return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
+}
+if ($dataDetails['is_canceld_receive'] == 1) {
+return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['error' => "عفوا لايمكن اعتماد صنف تم اعتمادة من   قبل !!"]);
+}
 $dataToUpdateDetails['canceld_cause']=$request->canceld_cause;
 $dataToUpdateDetails['is_canceld_receive']=1;
 $dataToUpdateDetails['canceld_by']=auth()->user()->id;
 $dataToUpdateDetails['canceld_at']=date("Y-m-d H:i:s");
 update(new inv_stores_transfer_details(),$dataToUpdateDetails,array("id"=>$id,"com_code"=>$com_code));
 return redirect()->route("admin.inv_stores_transfer_incoming.show", $id_parent)->with(['success' => "لقد تم الالغاء  بنجاح"]);
-
-
-
 }
 }
