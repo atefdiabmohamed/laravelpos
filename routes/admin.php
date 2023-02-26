@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\Inv_production_linesController;
 use App\Http\Controllers\Admin\Inv_production_exchangeController;
 use App\Http\Controllers\Admin\inv_production_ReceiveController;
 use App\Http\Controllers\Admin\Inv_stores_transferController;
+use App\Http\Controllers\Admin\Inv_stores_transferIncomingController;
 
 
 
@@ -437,7 +438,7 @@ Route::post('/inv_production_Receive/get_item_batches', [inv_production_ReceiveC
 Route::get('/inv_production_Receive/printsaleswina4/{id}/{size}', [inv_production_ReceiveController::class, 'printsaleswina4'])->name('admin.inv_production_Receive.printsaleswina4');
 /*           end  inv_production_Receive               */
 
-/*         start  inv_stores_transfer       التحويل بين المخازن    */
+/*         start  inv_stores_transfer         أوامر تحويل مخزنية صادرة    */
 Route::get('/inv_stores_transfer/index', [Inv_stores_transferController::class, 'index'])->name('admin.inv_stores_transfer.index');
 Route::get('/inv_stores_transfer/create', [Inv_stores_transferController::class, 'create'])->name('admin.inv_stores_transfer.create');
 Route::post('/inv_stores_transfer/store', [Inv_stores_transferController::class, 'store'])->name('admin.inv_stores_transfer.store');
@@ -462,7 +463,17 @@ Route::get('/inv_stores_transfer/printsaleswina4/{id}/{size}', [Inv_stores_trans
 /*           end  inv_stores_transfer               */
 
 
+/*         start  inv_stores_transfer_incoming         أوامر تحويل مخزنية واردة    */
+Route::get('/inv_stores_transfer_incoming/index', [Inv_stores_transferIncomingController::class, 'index'])->name('admin.inv_stores_transfer_incoming.index');
+Route::post('/inv_stores_transfer_incoming/ajax_search', [Inv_stores_transferIncomingController::class, 'ajax_search'])->name('admin.inv_stores_transfer_incoming.ajax_search');
+Route::get('/inv_stores_transfer_incoming/show/{id}', [Inv_stores_transferIncomingController::class, 'show'])->name('admin.inv_stores_transfer_incoming.show');
+Route::get('/inv_stores_transfer_incoming/printsaleswina4/{id}/{size}', [Inv_stores_transferIncomingController::class, 'printsaleswina4'])->name('admin.inv_stores_transfer_incoming.printsaleswina4');
+Route::get('/inv_stores_transfer_incoming/approve_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'approve_one_details'])->name('admin.inv_stores_transfer_incoming.approve_one_details');
+Route::get('/inv_stores_transfer_incoming/cancel_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'cancel_one_details'])->name('admin.inv_stores_transfer_incoming.cancel_one_details');
+Route::post('/inv_stores_transfer_incoming/load_cancel_one_details', [Inv_stores_transferIncomingController::class, 'load_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.load_cancel_one_details');
+Route::post('/inv_stores_transfer_incoming/do_cancel_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'do_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.do_cancel_one_details');
 
+/*           end  inv_stores_transfer_incoming               */
 
 
 });
