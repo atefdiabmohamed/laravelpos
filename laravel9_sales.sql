@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2023 at 12:15 AM
+-- Generation Time: Mar 02, 2023 at 01:32 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -58,7 +58,7 @@ INSERT INTO `accounts` (`id`, `name`, `account_type`, `is_parent`, `parent_accou
 (3, 'العملاء الاب', 9, 1, NULL, 3, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-09-22 22:44:13', '2022-09-22 22:44:13', 1, 1, '2022-09-22'),
 (4, 'عاطف دياب محمد', 2, 0, 1, 4, 1, '-5000.00', '-86600.00', 1, NULL, 1, 1, '2022-09-22 22:45:06', '2022-12-19 01:27:46', 1, 1, '2022-09-22'),
 (5, 'بنك فيصل الاسلامي', 6, 0, 2, 5, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-09-22 23:00:51', '2022-10-09 04:23:21', 1, 1, '2022-09-22'),
-(6, 'محمود محمد', 2, 0, 1, 6, 3, '0.00', '-18900.00', 2, NULL, 1, 1, '2022-09-22 23:29:29', '2022-09-30 09:14:22', 1, 1, '2022-09-22'),
+(6, 'محمود محمد', 2, 0, 1, 6, 3, '0.00', '-10000.00', 2, NULL, 1, 1, '2022-09-22 23:29:29', '2023-02-26 07:19:54', 1, 1, '2022-09-22'),
 (7, 'المريوطي للبقالة', 3, 0, 3, 7, 2, '5000.00', '5000.00', 3, NULL, 1, 1, '2022-10-03 06:07:00', '2022-11-19 10:39:00', 1, 1, '2022-10-03'),
 (8, 'الحساب الاب للمناديب', 9, 1, NULL, 8, 3, '0.00', '0.00', NULL, NULL, 1, 1, '2022-10-06 02:52:13', '2022-10-06 14:30:09', 1, 1, '2022-10-06'),
 (9, 'الموظفين الاب', 9, 1, NULL, 9, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-10-06 02:52:31', '2022-10-06 02:52:31', 1, 1, '2022-10-06'),
@@ -396,9 +396,9 @@ CREATE TABLE `inv_itemcard` (
 --
 
 INSERT INTO `inv_itemcard` (`id`, `item_code`, `barcode`, `name`, `item_type`, `inv_itemcard_categories_id`, `parent_inv_itemcard_id`, `does_has_retailunit`, `retail_uom_id`, `uom_id`, `retail_uom_quntToParent`, `added_by`, `created_at`, `updated_at`, `updated_by`, `active`, `date`, `com_code`, `price`, `nos_gomla_price`, `gomla_price`, `price_retail`, `nos_gomla_price_retail`, `gomla_price_retail`, `cost_price`, `cost_price_retail`, `has_fixced_price`, `All_QUENTITY`, `QUENTITY`, `QUENTITY_Retail`, `QUENTITY_all_Retails`, `photo`) VALUES
-(1, 1, 'item1', 'الواح حديد مستوي متر في متر', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-02-17 00:53:22', 1, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '300.00', NULL, 1, '820.00', '820.000', NULL, NULL, NULL),
-(2, 2, 'item2', 'مقابض', 2, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-11 03:50:59', '2023-02-11 03:50:59', NULL, 1, '2023-02-11', 1, '30.00', '25.00', '22.00', NULL, NULL, NULL, '15.00', NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 3, 'item3', 'فرن بلدي متوسط', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-17 00:57:49', '2023-02-17 01:01:20', NULL, 1, '2023-02-17', 1, '5000.00', '4700.00', '4500.00', NULL, NULL, NULL, '2000.00', NULL, 1, '5.00', '5.000', NULL, NULL, NULL);
+(1, 1, 'item1', 'الواح حديد مستوي متر في متر', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-03-02 01:36:45', 1, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '300.00', NULL, 1, '819.00', '819.000', NULL, NULL, NULL),
+(2, 2, 'item2', 'مقابض', 2, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-11 03:50:59', '2023-02-26 07:24:22', NULL, 1, '2023-02-11', 1, '30.00', '25.00', '22.00', NULL, NULL, NULL, '100.00', NULL, 1, '90.00', '90.000', NULL, NULL, NULL),
+(3, 3, 'item3', 'فرن بلدي متوسط', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-17 00:57:49', '2023-02-25 03:11:46', NULL, 1, '2023-02-17', 1, '5000.00', '4700.00', '4500.00', NULL, NULL, NULL, '2000.00', NULL, 1, '0.00', '0.000', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -430,10 +430,14 @@ CREATE TABLE `inv_itemcard_batches` (
 --
 
 INSERT INTO `inv_itemcard_batches` (`id`, `store_id`, `item_code`, `inv_uoms_id`, `unit_cost_price`, `quantity`, `total_cost_price`, `production_date`, `expired_date`, `com_code`, `auto_serial`, `added_by`, `created_at`, `updated_at`, `updated_by`, `is_send_to_archived`) VALUES
-(1, 1, 1, 10, '14.00', '790.00', '11060.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2023-02-17 00:53:21', 1, 0),
+(1, 1, 1, 10, '14.00', '787.00', '11018.00', NULL, NULL, 1, 1, 1, '2022-12-19 01:27:46', '2023-03-02 01:36:45', 1, 0),
 (2, 1, 1, 10, '300.00', '20.00', '6000.00', NULL, NULL, 1, 2, 1, '2023-02-15 22:45:44', '2023-02-15 22:45:45', 1, 0),
-(3, 1, 1, 10, '300.00', '10.00', '3000.00', NULL, NULL, 1, 3, 1, '2023-02-15 22:45:46', '2023-02-15 22:45:46', NULL, 0),
-(4, 1, 3, 10, '2000.00', '5.00', '10000.00', NULL, NULL, 1, 4, 1, '2023-02-17 01:01:20', '2023-02-17 01:01:20', NULL, 0);
+(3, 1, 1, 10, '300.00', '0.00', '0.00', NULL, NULL, 1, 3, 1, '2023-02-15 22:45:46', '2023-02-26 06:30:22', 1, 0),
+(4, 1, 3, 10, '2000.00', '0.00', '0.00', NULL, NULL, 1, 4, 1, '2023-02-17 01:01:20', '2023-02-25 03:11:46', 1, 0),
+(5, 5, 1, 10, '300.00', '10.00', '3000.00', NULL, NULL, 1, 5, 1, '2023-02-26 07:16:21', '2023-02-26 07:16:21', NULL, 0),
+(6, 1, 2, 10, '100.00', '70.00', '7000.00', '2023-02-01', '2023-02-26', 1, 6, 1, '2023-02-26 07:19:54', '2023-02-26 07:24:22', 1, 0),
+(7, 5, 2, 10, '100.00', '20.00', '2000.00', '2023-02-01', '2023-02-26', 1, 7, 1, '2023-02-26 07:21:40', '2023-02-26 07:23:23', 1, 0),
+(8, 5, 1, 10, '14.00', '2.00', '28.00', NULL, NULL, 1, 8, 1, '2023-03-02 01:27:31', '2023-03-02 01:30:18', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -532,7 +536,28 @@ INSERT INTO `inv_itemcard_movements` (`id`, `inv_itemcard_movements_categories`,
 (36, 4, 1, 1, 19, 1, 2, 'نظير فاتورة استلام انتاج تام من خط الانتاج   خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  900 وحده', 'عدد  910 وحده', 1, '2023-02-15', '2023-02-15 22:45:45', 1, 'عدد  900 وحده', 'عدد  910 وحده'),
 (37, 4, 1, 1, 19, 1, 3, 'نظير فاتورة استلام انتاج تام من خط الانتاج   خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  910 وحده', 'عدد  920 وحده', 1, '2023-02-15', '2023-02-15 22:45:46', 1, 'عدد  910 وحده', 'عدد  920 وحده'),
 (38, 4, 1, 1, 17, 1, 1, ' نظير ًرف خامات   الي خط انتاج  خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  920 وحده', 'عدد  820 وحده', 1, '2023-02-17', '2023-02-17 00:53:22', 1, 'عدد  920 وحده', 'عدد  820 وحده'),
-(39, 4, 3, 1, 19, 1, 4, 'نظير فاتورة استلام انتاج تام من خط الانتاج   خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  0 وحده', 'عدد  5 وحده', 1, '2023-02-17', '2023-02-17 01:01:20', 1, 'عدد  0 وحده', 'عدد  5 وحده');
+(39, 4, 3, 1, 19, 1, 4, 'نظير فاتورة استلام انتاج تام من خط الانتاج   خط انتاج الافران الكبيره فاتورة رقم 1', 'عدد  0 وحده', 'عدد  5 وحده', 1, '2023-02-17', '2023-02-17 01:01:20', 1, 'عدد  0 وحده', 'عدد  5 وحده'),
+(40, 3, 3, 1, 20, 1, 1, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  5 وحده', 'عدد  0 وحده', 1, '2023-02-25', '2023-02-25 03:11:46', 1, 'عدد  5 وحده', 'عدد  0 وحده'),
+(41, 3, 1, 1, 20, 1, 2, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  815 وحده', 1, '2023-02-25', '2023-02-25 03:19:58', 1, 'عدد  820 وحده', 'عدد  815 وحده'),
+(42, 4, 1, 1, 18, 1, 2, ' نظير حذف سطر الصنف من أمر تحويل من المخزن             الرئيسي  الي المخزناللحوم المجمدة امر تحويل 1', 'عدد  815 وحده', 'عدد  820 وحده', 1, '2023-02-26', '2023-02-26 06:27:20', 1, 'عدد  815 وحده', 'عدد  820 وحده'),
+(43, 3, 1, 1, 20, 1, 3, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  810 وحده', 1, '2023-02-26', '2023-02-26 06:29:21', 1, 'عدد  820 وحده', 'عدد  810 وحده'),
+(44, 3, 1, 1, 21, 1, 3, ' نظير حذف سطر الصنف من أمر تحويل من المخزن             الرئيسي  الي المخزناللحوم المجمدة امر تحويل 1', 'عدد  810 وحده', 'عدد  820 وحده', 1, '2023-02-26', '2023-02-26 06:29:41', 1, 'عدد  810 وحده', 'عدد  820 وحده'),
+(45, 3, 1, 1, 20, 1, 4, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  810 وحده', 1, '2023-02-26', '2023-02-26 06:30:22', 1, 'عدد  820 وحده', 'عدد  810 وحده'),
+(46, 3, 1, 1, 20, 1, 5, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  810 وحده', 1, '2023-02-26', '2023-02-26 07:18:07', 1, 'عدد  810 وحده', 'عدد  800 وحده'),
+(47, 3, 1, 1, 21, 1, 5, ' نظير حذف سطر الصنف من أمر تحويل من المخزن             الرئيسي  الي المخزناللحوم المجمدة امر تحويل 1', 'عدد  810 وحده', 'عدد  820 وحده', 1, '2023-02-26', '2023-02-26 07:18:37', 1, 'عدد  800 وحده', 'عدد  810 وحده'),
+(48, 1, 2, 1, 1, 1, 3, 'نظير مشتريات من المورد  محمود محمد فاتورة رقم 1', 'عدد  0 وحده', 'عدد  100 وحده', 1, '2023-02-26', '2023-02-26 07:19:54', 1, 'عدد  0 وحده', 'عدد  100 وحده'),
+(49, 3, 2, 1, 20, 1, 6, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  100 وحده', 'عدد  90 وحده', 1, '2023-02-26', '2023-02-26 07:20:19', 1, 'عدد  100 وحده', 'عدد  90 وحده'),
+(50, 3, 2, 5, 22, 1, 6, 'نظير اعتماد واستلام امر تحويل وارد من المخزن    الرئيسي امر تحويل رقم 1', 'عدد  90 وحده', 'عدد  100 وحده', 1, '2023-02-26', '2023-02-26 07:21:40', 1, 'عدد  0 وحده', 'عدد  10 وحده'),
+(51, 3, 2, 1, 20, 1, 7, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  100 وحده', 'عدد  90 وحده', 1, '2023-02-26', '2023-02-26 07:22:42', 1, 'عدد  90 وحده', 'عدد  80 وحده'),
+(52, 3, 2, 5, 22, 1, 7, 'نظير اعتماد واستلام امر تحويل وارد من المخزن    الرئيسي امر تحويل رقم 1', 'عدد  90 وحده', 'عدد  100 وحده', 1, '2023-02-26', '2023-02-26 07:23:23', 1, 'عدد  10 وحده', 'عدد  20 وحده'),
+(53, 3, 2, 1, 20, 1, 8, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  100 وحده', 'عدد  90 وحده', 1, '2023-02-26', '2023-02-26 07:24:22', 1, 'عدد  80 وحده', 'عدد  70 وحده'),
+(54, 3, 1, 1, 20, 1, 9, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  819 وحده', 1, '2023-03-02', '2023-03-02 01:24:08', 1, 'عدد  810 وحده', 'عدد  809 وحده'),
+(55, 3, 1, 5, 22, 1, 9, 'نظير اعتماد واستلام امر تحويل وارد من المخزن    الرئيسي امر تحويل رقم 1', 'عدد  819 وحده', 'عدد  820 وحده', 1, '2023-03-02', '2023-03-02 01:27:31', 1, 'عدد  10 وحده', 'عدد  11 وحده'),
+(56, 3, 1, 1, 20, 1, 10, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  820 وحده', 'عدد  819 وحده', 1, '2023-03-02', '2023-03-02 01:29:12', 1, 'عدد  809 وحده', 'عدد  808 وحده'),
+(57, 3, 1, 1, 20, 1, 11, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  819 وحده', 'عدد  818 وحده', 1, '2023-03-02', '2023-03-02 01:29:58', 1, 'عدد  808 وحده', 'عدد  807 وحده'),
+(58, 3, 1, 5, 22, 1, 10, 'نظير اعتماد واستلام امر تحويل وارد من المخزن    الرئيسي امر تحويل رقم 1', 'عدد  818 وحده', 'عدد  819 وحده', 1, '2023-03-02', '2023-03-02 01:30:18', 1, 'عدد  11 وحده', 'عدد  12 وحده'),
+(59, 3, 1, 1, 20, 1, 12, ' نظير صرف أصناف  الي مخزن الاستلام  اللحوم المجمدة أمر تحويل رقم 1', 'عدد  819 وحده', 'عدد  818 وحده', 1, '2023-03-02', '2023-03-02 01:34:17', 1, 'عدد  807 وحده', 'عدد  806 وحده'),
+(60, 3, 1, 1, 21, 1, 12, ' نظير حذف سطر الصنف من أمر تحويل من المخزن             الرئيسي  الي المخزناللحوم المجمدة امر تحويل 1', 'عدد  818 وحده', 'عدد  819 وحده', 1, '2023-03-02', '2023-03-02 01:36:45', 1, 'عدد  806 وحده', 'عدد  807 وحده');
 
 -- --------------------------------------------------------
 
@@ -589,7 +614,10 @@ INSERT INTO `inv_itemcard_movements_types` (`id`, `type`) VALUES
 (16, 'حذف الصنف من تفاصيل فاتورة مرتجع مبيعات عام مفتوحة'),
 (17, 'صرف خامات لخط الانتاج'),
 (18, 'حذف صنف مضاف علي فاتورة صرف خامات لخط الانتاج'),
-(19, 'اعتماد فاتورة استلام انتاج تام من خط الانتاج');
+(19, 'اعتماد فاتورة استلام انتاج تام من خط الانتاج'),
+(20, 'صرف كمية بأمر تحويل بين المخازن'),
+(21, 'حذف صنف بأمر تحويل بين المخازن'),
+(22, 'اعتماد واستلام كمية صنف بأمر تحويل مخزني وارد');
 
 -- --------------------------------------------------------
 
@@ -895,13 +923,22 @@ CREATE TABLE `inv_stores_transfer` (
   `is_approved` tinyint(1) NOT NULL DEFAULT 0,
   `com_code` int(11) NOT NULL,
   `notes` varchar(225) DEFAULT NULL COMMENT 'اجمالي الفاتورة قبل الخصم',
+  `items_counter` decimal(10,2) NOT NULL DEFAULT 0.00,
   `total_cost_items` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT 'اجمالي الاصناف فقط',
   `added_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
-  `approved_by` int(11) DEFAULT NULL
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
+
+--
+-- Dumping data for table `inv_stores_transfer`
+--
+
+INSERT INTO `inv_stores_transfer` (`id`, `auto_serial`, `transfer_from_store_id`, `transfer_to_store_id`, `order_date`, `is_approved`, `com_code`, `notes`, `items_counter`, `total_cost_items`, `added_by`, `created_at`, `updated_at`, `updated_by`, `approved_by`, `approved_at`) VALUES
+(3, 1, 1, 5, '2023-02-25', 1, 1, NULL, '43.00', '6042.00', 1, '2023-02-25 02:42:57', '2023-03-02 01:39:29', 1, 1, '2023-03-02 01:39:29');
 
 -- --------------------------------------------------------
 
@@ -929,8 +966,28 @@ CREATE TABLE `inv_stores_transfer_details` (
   `expire_date` date DEFAULT NULL,
   `item_card_type` tinyint(1) NOT NULL,
   `transfer_from_batch_id` bigint(20) NOT NULL,
-  `transfer_to_batch_id` bigint(20) NOT NULL
+  `transfer_to_batch_id` bigint(20) DEFAULT NULL,
+  `is_approved` tinyint(1) DEFAULT 0,
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `is_canceld_receive` tinyint(1) DEFAULT 0,
+  `canceld_by` int(11) DEFAULT NULL,
+  `canceld_at` datetime DEFAULT NULL,
+  `canceld_cause` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل اصناف امر الصرف  الخامات  لخط الانتاج';
+
+--
+-- Dumping data for table `inv_stores_transfer_details`
+--
+
+INSERT INTO `inv_stores_transfer_details` (`id`, `inv_stores_transfer_id`, `inv_stores_transfer_auto_serial`, `com_code`, `deliverd_quantity`, `uom_id`, `isparentuom`, `unit_price`, `total_price`, `order_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `item_code`, `production_date`, `expire_date`, `item_card_type`, `transfer_from_batch_id`, `transfer_to_batch_id`, `is_approved`, `approved_by`, `approved_at`, `is_canceld_receive`, `canceld_by`, `canceld_at`, `canceld_cause`) VALUES
+(4, 3, 1, 1, '10.00', 10, 1, '300.00', '3000.00', '2023-02-25', 1, '2023-02-26 06:30:22', NULL, '2023-02-26 07:16:21', 1, NULL, NULL, 1, 3, 5, 1, 1, '2023-02-26 07:16:21', 0, NULL, NULL, NULL),
+(6, 3, 1, 1, '10.00', 10, 1, '100.00', '1000.00', '2023-02-25', 1, '2023-02-26 07:20:18', NULL, '2023-02-26 07:21:40', 2, '2023-02-01', '2023-02-26', 2, 6, 7, 1, 1, '2023-02-26 07:21:40', 0, NULL, NULL, NULL),
+(7, 3, 1, 1, '10.00', 10, 1, '100.00', '1000.00', '2023-02-25', 1, '2023-02-26 07:22:41', NULL, '2023-02-26 07:23:23', 2, '2023-02-01', '2023-02-26', 2, 6, 7, 1, 1, '2023-02-26 07:23:23', 0, NULL, NULL, NULL),
+(8, 3, 1, 1, '10.00', 10, 1, '100.00', '1000.00', '2023-02-25', 1, '2023-02-26 07:24:22', NULL, '2023-02-26 07:58:30', 2, '2023-02-01', '2023-02-26', 2, 6, NULL, 0, NULL, NULL, 1, 1, '2023-02-26 07:58:30', 'عدم تطابق'),
+(9, 3, 1, 1, '1.00', 10, 1, '14.00', '14.00', '2023-02-25', 1, '2023-03-02 01:24:07', NULL, '2023-03-02 01:27:31', 1, NULL, NULL, 1, 1, NULL, 1, 1, '2023-03-02 01:27:31', 0, NULL, NULL, NULL),
+(10, 3, 1, 1, '1.00', 10, 1, '14.00', '14.00', '2023-02-25', 1, '2023-03-02 01:29:12', NULL, '2023-03-02 01:30:18', 1, NULL, NULL, 1, 1, NULL, 1, 1, '2023-03-02 01:30:18', 0, NULL, NULL, NULL),
+(11, 3, 1, 1, '1.00', 10, 1, '14.00', '14.00', '2023-02-25', 1, '2023-03-02 01:29:57', NULL, '2023-03-02 01:30:15', 1, NULL, NULL, 1, 1, NULL, 0, NULL, NULL, 1, 1, '2023-03-02 01:30:15', 'معطوبه');
 
 -- --------------------------------------------------------
 
@@ -1422,6 +1479,13 @@ CREATE TABLE `suppliers_with_orders` (
   `approved_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='جدول مشتريات ومترجعات المودين ';
 
+--
+-- Dumping data for table `suppliers_with_orders`
+--
+
+INSERT INTO `suppliers_with_orders` (`id`, `order_type`, `auto_serial`, `DOC_NO`, `order_date`, `suuplier_code`, `is_approved`, `com_code`, `notes`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `total_cost_items`, `tax_value`, `total_befor_discount`, `total_cost`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `Supplier_balance_befor`, `Supplier_balance_after`, `added_by`, `created_at`, `updated_at`, `updated_by`, `store_id`, `approved_by`) VALUES
+(3, 1, 1, '1', '2023-02-26', 2, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '10000.00', '0.00', '10000.00', '10000.00', 6, '-10000.00', 2, '0.00', '10000.00', NULL, NULL, NULL, 1, '2023-02-26 07:18:56', '2023-02-26 07:19:54', 1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1450,6 +1514,13 @@ CREATE TABLE `suppliers_with_orders_details` (
   `expire_date` date DEFAULT NULL,
   `item_card_type` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='تفاصيل انصاف فاتورة المشتريات والمرتجعات';
+
+--
+-- Dumping data for table `suppliers_with_orders_details`
+--
+
+INSERT INTO `suppliers_with_orders_details` (`id`, `suppliers_with_order_id`, `suppliers_with_orders_auto_serial`, `order_type`, `com_code`, `deliverd_quantity`, `uom_id`, `isparentuom`, `unit_price`, `total_price`, `order_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `item_code`, `batch_auto_serial`, `production_date`, `expire_date`, `item_card_type`) VALUES
+(3, 3, 1, 1, 1, '100.00', 10, 1, '100.00', '10000.00', '2023-02-26', 1, '2023-02-26 07:19:18', NULL, '2023-02-26 07:19:18', 2, NULL, '2023-02-01', '2023-02-26', 2);
 
 -- --------------------------------------------------------
 
@@ -1484,7 +1555,7 @@ CREATE TABLE `suupliers` (
 
 INSERT INTO `suupliers` (`id`, `suuplier_code`, `suppliers_categories_id`, `name`, `account_number`, `start_balance_status`, `start_balance`, `current_balance`, `notes`, `added_by`, `updated_by`, `created_at`, `updated_at`, `active`, `com_code`, `date`, `address`, `phones`) VALUES
 (1, 1, 1, 'عاطف دياب محمد', 4, 1, '-5000.00', '-86600.00', NULL, 1, NULL, '2022-09-22 22:45:06', '2022-12-19 01:27:46', 1, 1, '2022-09-22', NULL, NULL),
-(2, 2, 2, 'محمود محمد', 6, 3, '0.00', '-18900.00', NULL, 1, NULL, '2022-09-22 23:29:29', '2022-09-30 09:14:22', 1, 1, '2022-09-22', NULL, NULL),
+(2, 2, 2, 'محمود محمد', 6, 3, '0.00', '-10000.00', NULL, 1, NULL, '2022-09-22 23:29:29', '2023-02-26 07:19:54', 1, 1, '2022-09-22', NULL, NULL),
 (3, 3, 2, 'الاحمدي للفراخ المجمده', 17, 1, '-5000.00', '-5000.00', 'بانتظار طلبية رقم 15', 1, NULL, '2022-10-06 15:00:21', '2022-10-08 01:57:43', 1, 1, '2022-10-06', 'ش النصر', '0569585285'),
 (4, 4, 2, 'ابو مازن  للفراخ المجمده', 18, 1, '-5000.00', '-5000.00', 'بانتظار طلبية', 1, 1, '2022-10-06 15:02:02', '2022-10-06 15:03:11', 0, 1, '2022-10-06', 'ش  النصر', '096258258'),
 (5, 5, 1, 'البدري للحوم المجمده', 21, 1, '-5000.00', '-48100.00', NULL, 1, 1, '2022-10-07 23:56:14', '2022-12-18 01:44:06', 1, 1, '2022-10-07', 'ش سيتي', '0152658');
@@ -1965,7 +2036,7 @@ ALTER TABLE `inv_itemcard`
 -- AUTO_INCREMENT for table `inv_itemcard_batches`
 --
 ALTER TABLE `inv_itemcard_batches`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_categories`
@@ -1977,7 +2048,7 @@ ALTER TABLE `inv_itemcard_categories`
 -- AUTO_INCREMENT for table `inv_itemcard_movements`
 --
 ALTER TABLE `inv_itemcard_movements`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_movements_categories`
@@ -1989,7 +2060,7 @@ ALTER TABLE `inv_itemcard_movements_categories`
 -- AUTO_INCREMENT for table `inv_itemcard_movements_types`
 --
 ALTER TABLE `inv_itemcard_movements_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `inv_production_exchange`
@@ -2043,13 +2114,13 @@ ALTER TABLE `inv_stores_inventory_details`
 -- AUTO_INCREMENT for table `inv_stores_transfer`
 --
 ALTER TABLE `inv_stores_transfer`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inv_stores_transfer_details`
 --
 ALTER TABLE `inv_stores_transfer_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `inv_uoms`
@@ -2139,13 +2210,13 @@ ALTER TABLE `suppliers_categories`
 -- AUTO_INCREMENT for table `suppliers_with_orders`
 --
 ALTER TABLE `suppliers_with_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `suppliers_with_orders_details`
 --
 ALTER TABLE `suppliers_with_orders_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `suupliers`

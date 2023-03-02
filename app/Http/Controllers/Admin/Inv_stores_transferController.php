@@ -89,6 +89,8 @@ $data['to_store_name'] = Store::where('id', $data['transfer_to_store_id'])->valu
 if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
 $data['updated_by_admin'] = Admin::where('id', $data['updated_by'])->value('name');
 }
+$data['notgiveStatecounter_details']=get_count_where(new inv_stores_transfer_details(),array("com_code"=>$com_code,"inv_stores_transfer_auto_serial"=>$data['auto_serial'],'is_approved'=>0,'is_canceld_receive'=>0));
+
 $details = get_cols_where(new inv_stores_transfer_details(), array("*"), array('inv_stores_transfer_auto_serial' => $data['auto_serial'],  'com_code' => $com_code), 'id', 'DESC');
 if (!empty($details)) {
 foreach ($details as $info) {
@@ -179,6 +181,7 @@ return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
+
 public function load_modal_add_details(Request $request)
 {
 if ($request->ajax()) {
@@ -392,7 +395,8 @@ if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
 $data = get_cols_where_row(new inv_stores_transfer(), array("*"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code));
 if (!empty($data)) {
-$data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+    $data['notgiveStatecounter_details']=get_count_where(new inv_stores_transfer_details(),array("com_code"=>$com_code,"inv_stores_transfer_auto_serial"=>$data['auto_serial'],'is_approved'=>0,'is_canceld_receive'=>0));
+    $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
 $data['from_store_name'] = Store::where('id', $data['transfer_from_store_id'])->value('name');
 $data['to_store_name'] = Store::where('id', $data['transfer_to_store_id'])->value('name');$data['store_name'] = Store::where('id', $data['store_id'])->value('name');
 if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
@@ -553,6 +557,42 @@ return redirect()->back()
 } catch (\Exception $ex) {
 return redirect()->back()
 ->with(['error' => '5عفوا حدث خطأ ما' . $ex->getMessage()]);
+}
+}
+public function do_approve($id)
+{
+try {
+$com_code = auth()->user()->com_code;
+$parent_pill_data = get_cols_where_row(new inv_stores_transfer(), array("is_approved", "auto_serial"), array("id" => $id, "com_code" => $com_code));
+if (empty($parent_pill_data)) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما']);
+}
+if ($parent_pill_data['is_approved'] == 1) {
+if (empty($parent_pill_data)) {
+return redirect()->back()
+->with(['error' => 'عفوا  لايمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
+}
+}
+$added_counter_details=get_count_where(new inv_stores_transfer_details(),array("com_code"=>$com_code,"inv_stores_transfer_auto_serial"=>$parent_pill_data['auto_serial']));
+if($added_counter_details==0){
+return redirect()->back()
+->with(['error' => 'عفوا لايمكن اغلاق وارشفة الامر قبل اضافة الاصناف عليه!   ']);   
+}
+$notgiveStatecounter_details=get_count_where(new inv_stores_transfer_details(),array("com_code"=>$com_code,"inv_stores_transfer_auto_serial"=>$parent_pill_data['auto_serial'],'is_approved'=>0,'is_canceld_receive'=>0));
+if($notgiveStatecounter_details>0){
+    return redirect()->back()
+    ->with(['error' => 'عفوا هناك اصناف مازالت لم تأخذ اي حركة اعتماد او الغاء الاستلام !!  ']);   
+    }
+
+$DataToUpdate['is_approved']=1;
+$DataToUpdate["approved_at"] = date("Y-m-d H:i:s");
+$DataToUpdate["approved_by"] = auth()->user()->id;
+$flag = update(new inv_stores_transfer(),$DataToUpdate, array("id" => $id, "com_code" => $com_code));
+return redirect()->route('admin.inv_stores_transfer.index')->with(['success' => 'لقد تم اغلاق وأرشفة الامر بنجاح  البيانات بنجاح']);
+} catch (\Exception $ex) {
+return redirect()->back()
+->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
 }
 }
 

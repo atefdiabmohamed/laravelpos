@@ -7,12 +7,10 @@
    <tr>
       <td class="width30">   تاريخ الامر </td>
       <td > {{ $data['order_date'] }}</td>
-
    <tr>
       <td class="width30">  اسم  مخزن الصرف </td>
       <td > {{ $data['from_store_name'] }}</td>
    </tr>
-
    <tr>
       <td class="width30">     اسم مخزن الاستلام  </td>
       <td > {{ $data['to_store_name'] }}</td>
@@ -66,9 +64,13 @@
          لايوجد تحديث
          @endif
          @if($data['is_approved']==0)
+         @if($data['items_counter']==0) 
          <a href="{{ route('admin.inv_stores_transfer.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+         @endif
          <a href="{{ route('admin.inv_stores_transfer.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
-         <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
+         @if($data['items_counter']>0 and $data['notgiveStatecounter_details']==0) 
+         <a href="{{ route('admin.inv_stores_transfer.do_approve',$data['id']) }}"  class="btn btn-sm btn-primary are_you_shue">  اغلاق وأرشفة الامر</a>
+         @endif
          @endif
       </td>
    </tr>
