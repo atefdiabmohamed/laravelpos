@@ -31,8 +31,14 @@
             <td>{{ $info->unit_price*(1) }}</td>
             <td>{{ $info->total_price*(1) }}</td>
             <td>
-               @if($info->is_approved==0 and $data['is_approved']==0)
+               @if($info->is_approved==0 and $data['is_approved']==0 and $info->is_canceld_receive==0)
                <a href="{{ route('admin.inv_stores_transfer.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>   
+               @endif
+               @if($info->is_canceld_receive==1)
+               تم الالغاء لهذا الصنف من خلال مخزن الاستلام ,
+               <br>
+               بسبب 
+               <span style="color:brown;">{{ $info->canceld_cause }}</span>
                @endif
             </td>
          </tr>

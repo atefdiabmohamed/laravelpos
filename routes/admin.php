@@ -455,9 +455,7 @@ Route::post('/inv_stores_transfer/reload_parent_pill', [Inv_stores_transferContr
 Route::post('/inv_stores_transfer/load_edit_item_details', [Inv_stores_transferController::class, 'load_edit_item_details'])->name('admin.inv_stores_transfer.load_edit_item_details');
 Route::post('/inv_stores_transfer/edit_item_details', [Inv_stores_transferController::class, 'edit_item_details'])->name('admin.inv_stores_transfer.edit_item_details');
 Route::get('/inv_stores_transfer/delete_details/{id}/{id_parent}', [Inv_stores_transferController::class, 'delete_details'])->name('admin.inv_stores_transfer.delete_details');
-Route::post('/inv_stores_transfer/do_approve/{id}', [Inv_stores_transferController::class, 'do_approve'])->name('admin.inv_stores_transfer.do_approve');
-Route::post('/inv_stores_transfer/load_modal_approve_invoice', [Inv_stores_transferController::class, 'load_modal_approve_invoice'])->name('admin.inv_stores_transfer.load_modal_approve_invoice');
-Route::post('/inv_stores_transfer/load_usershiftDiv', [Inv_stores_transferController::class, 'load_usershiftDiv'])->name('admin.inv_stores_transfer.load_usershiftDiv');
+Route::get('/inv_stores_transfer/do_approve/{id}', [Inv_stores_transferController::class, 'do_approve'])->name('admin.inv_stores_transfer.do_approve');
 Route::post('/inv_stores_transfer/get_item_batches', [Inv_stores_transferController::class, 'get_item_batches'])->name('admin.inv_stores_transfer.get_item_batches');
 Route::get('/inv_stores_transfer/printsaleswina4/{id}/{size}', [Inv_stores_transferController::class, 'printsaleswina4'])->name('admin.inv_stores_transfer.printsaleswina4');
 /*           end  inv_stores_transfer               */

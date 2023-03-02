@@ -92,9 +92,13 @@
                         لايوجد تحديث
                         @endif
                         @if($data['is_approved']==0)
+                        @if($data['items_counter']==0) 
                         <a href="{{ route('admin.inv_stores_transfer.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>   
+                        @endif
                         <a href="{{ route('admin.inv_stores_transfer.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
-                        <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button>
+                        @if($data['items_counter']>0 and $data['notgiveStatecounter_details']==0) 
+                        <a href="{{ route('admin.inv_stores_transfer.do_approve',$data['id']) }}"  class="btn btn-sm btn-primary are_you_shue">  اغلاق وأرشفة الامر</a>
+                        @endif
                         @endif
                      </td>
                   </tr>
@@ -118,8 +122,6 @@
                <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.inv_stores_transfer.load_edit_item_details') }}">
                <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.inv_stores_transfer.load_modal_add_details') }}">
                <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.inv_stores_transfer.edit_item_details') }}">
-               <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.inv_stores_transfer.load_modal_approve_invoice') }}">
-               <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.inv_stores_transfer.load_usershiftDiv') }}">
                <input type="hidden" id="ajax_get_item_batches" value="{{ route('admin.inv_stores_transfer.get_item_batches') }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
             </div>
