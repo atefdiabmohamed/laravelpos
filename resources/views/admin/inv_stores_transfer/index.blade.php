@@ -29,28 +29,27 @@
       <div class="row">
          <div class="col-md-4">
             <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود الآلي
-            <input  type="radio" name="searchbyradio" id="searchbyradio" value="inv_production_order"> بكود التشغيل 
 
             <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
          </div>
+   
          <div class="col-md-4">
             <div class="form-group">
-               <label>    بحث بخطوط الانتاج (الورش)</label>
-               <select name="production_lines_code_search" id="production_lines_code_search" class="form-control select2">
-                  <option value="all">بحث بالكل</option>
-                  @if (@isset($Inv_production_lines) && !@empty($Inv_production_lines))
-                  @foreach ($Inv_production_lines as $info )
-                  <option  value="{{ $info->production_lines_code }}"> {{ $info->name }} </option>
+               <label>    بحث بمخزن التحويل</label>
+               <select name="transfer_from_store_id_search" id="transfer_from_store_id_search" class="form-control select2">
+                  <option value="all">بحث بكل المخازن</option>
+                  @if (@isset($stores) && !@empty($stores))
+                  @foreach ($stores as $info )
+                  <option  value="{{ $info->id }}"> {{ $info->name }} </option>
                   @endforeach
                   @endif
                </select>
-             
             </div>
          </div>
          <div class="col-md-4">
             <div class="form-group">
-               <label>    بيانات المخازن</label>
-               <select name="store_id_search" id="store_id_search" class="form-control select2">
+               <label>    بحث بمخزن الاستلام </label>
+               <select name="transfer_to_store_id_search" id="transfer_to_store_id_search" class="form-control select2">
                   <option value="all">بحث بكل المخازن</option>
                   @if (@isset($stores) && !@empty($stores))
                   @foreach ($stores as $info )
