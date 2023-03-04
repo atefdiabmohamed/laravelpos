@@ -671,9 +671,9 @@ $(document).ready(function() {
       var token_search = $("#token_search").val();
       var ajax_search_url = $("#ajax_search_url").val();
       var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
-      var production_lines_code = $("#production_lines_code_search").val();
       var search_by_text = $("#search_by_text").val();
-      var store_id = $("#store_id_search").val();
+      var transfer_from_store_id_search = $("#transfer_from_store_id_search").val();
+      var transfer_to_store_id_search = $("#transfer_to_store_id_search").val();
       var order_date_form = $("#order_date_form").val();
       var order_date_to = $("#order_date_to").val();
       var is_approved = $("#is_approved_serach").val();
@@ -685,8 +685,8 @@ $(document).ready(function() {
           data: {
               "_token": token_search,
               searchbyradio: searchbyradio,
-              production_lines_code: production_lines_code,
-              store_id: store_id,
+              transfer_from_store_id_search: transfer_from_store_id_search,
+              transfer_to_store_id_search: transfer_to_store_id_search,
               order_date_form: order_date_form,
               order_date_to: order_date_to,
               search_by_text: search_by_text,
@@ -700,10 +700,12 @@ $(document).ready(function() {
   }
   $(document).on('click', '#ajax_pagination_in_search a ', function(e) {
       e.preventDefault();
+      var token_search = $("#token_search").val();
+      var ajax_search_url = $("#ajax_search_url").val();
       var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
-      var production_lines_code = $("#production_lines_code_search").val();
       var search_by_text = $("#search_by_text").val();
-      var store_id = $("#store_id_search").val();
+      var transfer_from_store_id_search = $("#transfer_from_store_id_search").val();
+      var transfer_to_store_id_search = $("#transfer_to_store_id_search").val();
       var order_date_form = $("#order_date_form").val();
       var order_date_to = $("#order_date_to").val();
       var is_approved = $("#is_approved_serach").val();
@@ -715,28 +717,28 @@ $(document).ready(function() {
           dataType: 'html',
           cache: false,
           data: {
-              "_token": token_search,
-              searchbyradio: searchbyradio,
-              production_lines_code: production_lines_code,
-              store_id: store_id,
-              order_date_form: order_date_form,
-              order_date_to: order_date_to,
-              search_by_text: search_by_text,
-              is_approved: is_approved
-          },
+            "_token": token_search,
+            searchbyradio: searchbyradio,
+            transfer_from_store_id_search: transfer_from_store_id_search,
+            transfer_to_store_id_search: transfer_to_store_id_search,
+            order_date_form: order_date_form,
+            order_date_to: order_date_to,
+            search_by_text: search_by_text,
+            is_approved: is_approved
+        },
           success: function(data) {
               $("#ajax_responce_serarchDiv").html(data);
           },
           error: function() {}
       });
   });
-  $(document).on('change', '#production_lines_code_search', function(e) {
+  $(document).on('change', '#transfer_from_store_id_search', function(e) {
       make_search();
   });
   $(document).on('input', '#search_by_text', function(e) {
       make_search();
   });
-  $(document).on('change', '#store_id_search', function(e) {
+  $(document).on('change', '#transfer_to_store_id_search', function(e) {
       make_search();
   });
   $(document).on('change', '#order_date_form', function(e) {

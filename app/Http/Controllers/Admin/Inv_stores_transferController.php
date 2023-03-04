@@ -597,4 +597,126 @@ return redirect()->back()
 }
 
 
+public function ajax_search(Request $request)
+{
+if ($request->ajax()) {
+$search_by_text = $request->search_by_text;
+$transfer_from_store_id_search = $request->transfer_from_store_id_search;
+$transfer_to_store_id_search = $request->transfer_to_store_id_search;
+$order_date_form = $request->order_date_form;
+$order_date_to = $request->order_date_to;
+$searchbyradio = $request->searchbyradio;
+$is_approved = $request->is_approved;
+
+if ($transfer_from_store_id_search == 'all') {
+//دائما  true
+$field1 = "id";
+$operator1 = ">";
+$value1 = 0;
+} else {
+$field1 = "transfer_from_store_id";
+$operator1 = "=";
+$value1 = $transfer_from_store_id_search;
+}
+if ($transfer_to_store_id_search == 'all') {
+//دائما  true
+$field2 = "id";
+$operator2 = ">";
+$value2 = 0;
+} else {
+$field2 = "transfer_to_store_id";
+$operator2 = "=";
+$value2 = $transfer_to_store_id_search;
+}
+if ($order_date_form == '') {
+//دائما  true
+$field3 = "id";
+$operator3 = ">";
+$value3 = 0;
+} else {
+$field3 = "order_date";
+$operator3 = ">=";
+$value3 = $order_date_form;
+}
+if ($order_date_to == '') {
+//دائما  true
+$field4 = "id";
+$operator4 = ">";
+$value4 = 0;
+} else {
+$field4 = "order_date";
+$operator4 = "<=";
+$value4 = $order_date_to;
+}
+if ($search_by_text != '') {
+$field5 = "auto_serial";
+$operator5 = "=";
+$value5 = $search_by_text;
+} else {
+//true 
+$field5 = "id";
+$operator5 = ">";
+$value5 = 0;
+}
+
+if ($is_approved == 'all') {
+  //دائما  true
+  $field6 = "id";
+  $operator6 = ">";
+  $value6 = 0;
+  } else {
+  $field6 = "is_approved";
+  $operator6 = "=";
+  $value6 = $is_approved;
+  }
+
+$data = inv_stores_transfer::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)->where($field6, $operator6, $value6)->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+if (!empty($data)) {
+    foreach ($data as $info) {
+    $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+    $info->from_store_name = Store::where('id', $info->transfer_from_store_id)->value('name');
+    $info->to_store_name = Store::where('id', $info->transfer_to_store_id)->value('name');
+    if ($info->updated_by > 0 and $info->updated_by != null) {
+    $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+    }
+    }
+    }
+return view('admin.inv_stores_transfer.ajax_search', ['data' => $data]);
+}
+}
+
+public function printsaleswina4($id,$size){
+
+    try {
+    $com_code = auth()->user()->com_code;
+    $invoice_data = get_cols_where_row(new inv_stores_transfer(), array("*"), array("id" => $id, "com_code" => $com_code));
+    if (empty($invoice_data)) {
+    return redirect()->route('admin.inv_stores_transfer.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+    }
+ $invoice_data['added_by_admin'] = Admin::where('id', $invoice_data['added_by'])->value('name');
+$invoice_data['from_store_name'] = Store::where('id', $invoice_data['transfer_from_store_id'])->value('name');
+$invoice_data['to_store_name'] = Store::where('id', $invoice_data['transfer_to_store_id'])->value('name');
+
+  $invoices_details = get_cols_where(new inv_stores_transfer_details(), array("*"), array('inv_stores_transfer_auto_serial' => $invoice_data['auto_serial'], 'com_code' => $com_code), 'id', 'ASC');
+    if (!empty($invoices_details)) {
+    foreach ($invoices_details as $info) {
+    $info->item_card_name = Inv_itemCard::where('item_code', $info->item_code)->value('name');
+    $info->uom_name = get_field_value(new Inv_uom(), "name", array("id" => $info->uom_id));
+    }
+    }
+    $systemData=get_cols_where_row(new Admin_panel_setting(),array("system_name","phone","address","photo"),array("com_code"=>$com_code));
+    
+    if($size=="A4"){
+        return view('admin.inv_stores_transfer.printsaleswina4',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+    }else{
+        return view('admin.inv_stores_transfer.printsaleswina6',['data'=>$invoice_data,'systemData'=>$systemData,'sales_invoices_details'=>$invoices_details]);
+    
+    }
+    } catch (\Exception $ex) {
+    return redirect()->back()
+    ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()]);
+    }
+    }
+    
+
 }

@@ -3,7 +3,7 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <title> طباعة فاتورة صرف خامات لخط انتاج </title>
+      <title> طباعة أمر تحويل مخزني صادر     </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
@@ -14,25 +14,22 @@
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود خط الانتاج 
-               <span style="margin-right: 10px;">/ {{ $data["production_lines_code"] }}</span>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> كود أمر التحويل  
+               <span style="margin-right: 10px;">/ {{ $data["auto_serial"] }}</span>
            
             </td>
          </tr>
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم خط الانتاج  <span style="margin-right: 10px;">/ {{ $data['production_lines_name'] }}</span></td>
+      
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الامر  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['production_lines_phones']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الصرف  <span style="margin-right: 10px;">/ {{ $data['from_store_name']}}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الاستلام  <span style="margin-right: 10px;">/ {{ $data['to_store_name']}}</span></td>
          </tr>
          <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الفاتورة  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
-         </tr>
-         <tr>
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
+            <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الامر  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) مؤرشف @else غير مؤرشف @endif</span></td>
          </tr>
       </table>
       <br>
@@ -43,7 +40,7 @@
                height: 30px;
                text-align: center;
                background: yellow !important;
-               border: 1px solid black; border-radius: 15px;font-weight: bold;">فاتورة صرف خامات لخط الانتاج </span></td>
+               border: 1px solid black; border-radius: 15px;font-weight: bold;">أمر تحويل مخزني     </span></td>
          </tr>
          <tr>
             <td style="text-align: center;padding: 5px;font-weight: bold;">  <span style=" display: inline-block;
@@ -53,14 +50,7 @@
                color: red;
                border: 1px solid black; "> رقم : {{ $data['auto_serial'] }} </span></td>
          </tr>
-         <tr>
-            <td style="text-align: center;padding: 5px;">  <span style=" display: inline-block;
-               width: 200px;
-               height: 30px;
-               text-align: center;
-               color: blue;
-               border: 1px solid blue;font-weight: bold; "> @if($data['pill_type']==1) كاش @else آجل @endif</span></td>
-         </tr>
+        
       </table>
       <table style="width: 35%;float: right; margin-left: 5px; " dir="rtl">
          <tr>
@@ -122,20 +112,14 @@
       <br>
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr >
-            <td style="font-weight: bold;">اجمالي الفاتورة</td>
-            <td style="font-weight: bold;">خصم</td>
-            <td style="font-weight: bold;">قيمة مضافة</td>
-            <td style="font-weight: bold;">صافي الفاتورة </td>
-            <td style="font-weight: bold;">مدفوع</td>
-            <td  style="font-weight: bold;">متبقي</td>
+            <td style="font-weight: bold;">عدد الاصناف المضافة للأمر</td>
+            <td style="font-weight: bold;">اجمالي قيمة الاصناف</td>
+    
          </tr>
          <tr>
-            <td>{{ $data["total_befor_discount"]*(1)}}</td>
-            <td>{{$data['discount_value']*(1)}}</td>
-            <td>{{$data['tax_value']*(1)}}</td>
-            <td>{{$data['total_cost']*(1)}}</td>
-            <td>{{$data['what_paid']*(1)}}</td>
-            <td>{{$data['what_remain']*(1)}}</td>
+            <td>{{ $data["items_counter"]*(1)}}</td>
+            <td>{{$data['total_cost_items']*(1)}}</td>
+        
          </tr>
       </table>
       <p style="position: fixed;
