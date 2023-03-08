@@ -1,5 +1,7 @@
 <?php
 //لاتنسونا من صالح الدعاء
+//هذا الكود الي الفيدو رقم 190 وباقي  الأكود موجوده ببقية الفيدوهات ولابد ان تكتبها بنفسك لأهميتها 
+
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use App\Models\inv_stores_transfer;
