@@ -29,7 +29,6 @@
          <div class="col-md-4">
             <input checked type="radio" name="searchbyradio" id="searchbyradio" value="auto_serial"> بالكود الآلي
             <input  type="radio" name="searchbyradio" id="searchbyradio" value="inv_production_order"> بكود التشغيل 
-
             <input style="margin-top: 6px !important;" type="text" id="search_by_text" placeholder="" class="form-control"> <br>
          </div>
          <div class="col-md-4">
@@ -43,7 +42,6 @@
                   @endforeach
                   @endif
                </select>
-             
             </div>
          </div>
          <div class="col-md-4">
@@ -72,18 +70,18 @@
             </div>
          </div>
          <div class="col-md-4">
-         <div class="form-group">
-            <label>    حالة الاعتماد والارشفة</label>
-            <select name="is_approved_serach" id="is_approved_serach" class="form-control">
-               <option value="all">بحث بكل الحالات</option>
-               <option    value="1">  معتمد</option>
-               <option    value="0">  مفتوح</option>
-            </select>
-            @error('pill_type')
-            <span class="text-danger">{{ $message }}</span>
-            @enderror
+            <div class="form-group">
+               <label>    حالة الاعتماد والارشفة</label>
+               <select name="is_approved_serach" id="is_approved_serach" class="form-control">
+                  <option value="all">بحث بكل الحالات</option>
+                  <option    value="1">  معتمد</option>
+                  <option    value="0">  مفتوح</option>
+               </select>
+               @error('pill_type')
+               <span class="text-danger">{{ $message }}</span>
+               @enderror
+            </div>
          </div>
-      </div>
          <div class="clearfix"></div>
          <div class="col-md-12">
             <div id="ajax_responce_serarchDiv">
@@ -111,7 +109,6 @@
                         <td>{{ $info->total_cost_items*(1) }}</td>
                         <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
                         <td>
-                      
                            <a href="{{ route('admin.inv_stores_transfer_incoming.show',$info->id) }}" class="btn btn-sm   btn-info">التفاصيل</a>   
                            <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.inv_stores_transfer_incoming.printsaleswina4',[$info->id,'A4']) }}" class="btn btn-primary btn-xs"> WA4</a>
                            <a style="font-size: .875rem; padding: 0.25rem 0.5rem;color:white" target="_blank" href="{{ route('admin.inv_stores_transfer_incoming.printsaleswina4',[$info->id,'A6']) }}" class="btn btn-warning btn-xs"> WA6</a>
@@ -146,5 +143,4 @@
    });
 </script>
 <script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
-
 @endsection

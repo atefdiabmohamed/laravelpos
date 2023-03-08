@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 @section('contentheader')
- استلام منتج
+استلام منتج
 @endsection
 @section('contentheaderlink')
 <a href="{{ route('admin.inv_production_Receive.index') }}">     استلام انتاج تام من الورش</a>

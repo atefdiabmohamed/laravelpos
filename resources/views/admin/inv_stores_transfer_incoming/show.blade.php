@@ -29,7 +29,6 @@
                <input type="hidden" id="ajax_load_cancel_one_details" value="{{ route('admin.inv_stores_transfer_incoming.load_cancel_one_details') }}">
                <input type="hidden" id="token_search" value="{{csrf_token() }}">
                <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
-
                @if (@isset($data) && !@empty($data))
                <table id="example2" class="table table-bordered table-hover">
                   <tr>
@@ -95,7 +94,6 @@
                         @else
                         لايوجد تحديث
                         @endif
-                   
                      </td>
                   </tr>
                </table>
@@ -104,9 +102,7 @@
             <div class="card-header">
                <h3 class="card-title card_title_center">
                   الاصناف المضافة للفاتورة
-            
                </h3>
-         
             </div>
             <div id="ajax_responce_serarchDivDetails">
                @if (@isset($details) && !@empty($details) && count($details)>0)
@@ -144,15 +140,12 @@
                            <a href="{{ route('admin.inv_stores_transfer_incoming.approve_one_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-success">اعتماد واستلام الكمية</a>   
                            <button data-id="{{ $info->id }}"  class="btn btn-sm  ajax_load_cancel_one_details   btn-danger"> رفض استلام الكمية</button>   
                            @endif
-                          @if($info->is_canceld_receive==1)
-                            تم الالغاء لهذا الصنف من خلال مخزن الاستلام ,
-                            <br>
-                            بسبب 
-                            <span style="color:brown;">{{ $info->canceld_cause }}</span>
-
-
-                          @endif
-
+                           @if($info->is_canceld_receive==1)
+                           تم الالغاء لهذا الصنف من خلال مخزن الاستلام ,
+                           <br>
+                           بسبب 
+                           <span style="color:brown;">{{ $info->canceld_cause }}</span>
+                           @endif
                         </td>
                      </tr>
                      @php
@@ -177,7 +170,6 @@
       </div>
    </div>
 </div>
-
 <div class="modal fade " id="load_cancel_one_details">
    <div class="modal-dialog modal-xl" >
       <div class="modal-content bg-info">
@@ -187,8 +179,6 @@
             <span aria-hidden="true">&times;</span></button>
          </div>
          <div class="modal-body" id="load_cancel_one_details_body" style="background-color: white !important; color:black;">
-       
-       
          </div>
          <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
@@ -198,7 +188,6 @@
    </div>
    <!-- /.modal-dialog -->
 </div>
-
 @endsection
 @section("script")
 <script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>

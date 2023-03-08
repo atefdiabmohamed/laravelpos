@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 @section('contentheader')
- التحويل
+التحويل
 @endsection
 @section('contentheaderlink')
 <a href="{{ route('admin.inv_stores_transfer.index') }}">     التحويل بين المخازن</a>
@@ -36,41 +36,34 @@
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
                </div>
-
-
-
-
                <div class="form-group">
                   <label>     التحويل من مخزن الصرف</label>
                   <select  @if($added_counter_details>0)  disabled @endif name="transfer_from_store_id" id="transfer_from_store_id" class="form-control select2">
-                     <option value=""> اختر   مخزن الصرف </option>
-                     @if (@isset($stores) && !@empty($stores))
-                     @foreach ($stores as $info )
-                     <option @if(old('transfer_from_store_id',$data['transfer_from_store_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
-                     @endforeach
-                     @endif
+                  <option value=""> اختر   مخزن الصرف </option>
+                  @if (@isset($stores) && !@empty($stores))
+                  @foreach ($stores as $info )
+                  <option @if(old('transfer_from_store_id',$data['transfer_from_store_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                  @endforeach
+                  @endif
                   </select>
                   @error('transfer_from_store_id')
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
                </div>
-
-
                <div class="form-group">
                   <label>     التحويل الي مخزن الاستلام</label>
                   <select @if($added_counter_details>0)  disabled @endif  name="transfer_to_store_id" id="transfer_to_store_id" class="form-control select2">
-                     <option value=""> اختر   مخزن الاستلام </option>
-                     @if (@isset($stores) && !@empty($stores))
-                     @foreach ($stores as $info )
-                     <option @if(old('transfer_to_store_id',$data['transfer_to_store_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
-                     @endforeach
-                     @endif
+                  <option value=""> اختر   مخزن الاستلام </option>
+                  @if (@isset($stores) && !@empty($stores))
+                  @foreach ($stores as $info )
+                  <option @if(old('transfer_to_store_id',$data['transfer_to_store_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                  @endforeach
+                  @endif
                   </select>
                   @error('transfer_to_store_id')
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
                </div>
-
                <div class="form-group">
                   <label>  ملاحظات</label>
                   <input name="notes" id="notes" class="form-control" value="{{ old('notes',$data['notes']) }}"    >

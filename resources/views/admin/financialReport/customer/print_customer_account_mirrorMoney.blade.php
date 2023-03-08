@@ -83,17 +83,15 @@
          </tr>
       </table>
       <br>
-    
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">رقم الحساب المالي للعميل</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; ">{{ $data['account_number'] }}</td>
          </tr>
-   
-            <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للعميل</td>
-            <td style="width: 75%;text-align: right; padding-right: 5px; "> 
-               ({{ $data['treasuries_transactionsExchange']*1 }}) جنيه
-            </td>
+         <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للعميل</td>
+         <td style="width: 75%;text-align: right; padding-right: 5px; "> 
+            ({{ $data['treasuries_transactionsExchange']*1 }}) جنيه
+         </td>
          </tr>
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي تحصيل النقدية من للعميل</td>

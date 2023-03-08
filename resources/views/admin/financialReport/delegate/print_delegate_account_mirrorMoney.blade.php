@@ -83,7 +83,6 @@
          </tr>
       </table>
       <br>
-    
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">رقم الحساب المالي للمندوب</td>
@@ -110,7 +109,7 @@
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    عمولة المندوب بالمبيعات</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
-           ({{ $data['total_delegate_commission_value']*1*(-1) }}) جنيه
+               ({{ $data['total_delegate_commission_value']*1*(-1) }}) جنيه
             </td>
          </tr>
          <tr>
@@ -138,7 +137,6 @@
             </td>
          </tr>
       </table>
-      
       <!--  حركة النقدية-->
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة النقدية علي حساب  المندوب خلال الفترة</h3>
       @if (@isset($details['Treasuries_transactions']) && !@empty($details['Treasuries_transactions']) && count($details['Treasuries_transactions'])>0)
