@@ -15,13 +15,12 @@
       <div class="form-group">
          <label>    نوع الفاتورة</label>
          <select @if(!@empty($sales_invoices_details) and count($sales_invoices_details)>0) disabled @endif        name="sales_item_type_mainUpdate" id="sales_item_type_mainUpdate" class="form-control ">
-            <option @if($invoice_data['sales_item_type']==1) selected @endif value="1">قطاعي</option>
-            <option  @if($invoice_data['sales_item_type']==2) selected @endif  value="2">نص جملة</option>
-            <option  @if($invoice_data['sales_item_type']==3) selected @endif  value="3">جملة</option>
+         <option @if($invoice_data['sales_item_type']==1) selected @endif value="1">قطاعي</option>
+         <option  @if($invoice_data['sales_item_type']==2) selected @endif  value="2">نص جملة</option>
+         <option  @if($invoice_data['sales_item_type']==3) selected @endif  value="3">جملة</option>
          </select>
       </div>
    </div>
-
    <div class="col-md-4" >
       <div class="form-group">
          <label>    فئات الفواتير</label>
@@ -95,19 +94,16 @@
          </select>
       </div>
    </div>
-
-
    <div class="col-md-3" >
       <div class="form-group">
          <label>    نوع البيع</label>
          <select disabled name="sales_item_type" id="sales_item_type" class="form-control ">
-            <option @if($invoice_data['sales_item_type']==1) selected @endif value="1">قطاعي</option>
-            <option  @if($invoice_data['sales_item_type']==2) selected @endif  value="2">نص جملة</option>
-            <option  @if($invoice_data['sales_item_type']==3) selected @endif  value="3">جملة</option>
+         <option @if($invoice_data['sales_item_type']==1) selected @endif value="1">قطاعي</option>
+         <option  @if($invoice_data['sales_item_type']==2) selected @endif  value="2">نص جملة</option>
+         <option  @if($invoice_data['sales_item_type']==3) selected @endif  value="3">جملة</option>
          </select>
       </div>
    </div>
-
    <div class="col-md-3">
       <div class="form-group">
          <input id="searchforitem" class="form-control" type="text" placeholder="باركود - كود -اسم" >

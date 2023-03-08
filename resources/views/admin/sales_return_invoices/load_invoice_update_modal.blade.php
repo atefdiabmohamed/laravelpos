@@ -107,9 +107,8 @@
    <!--  الوحدات للصنف-->
    <div class="col-md-3  " style="display: none;" id="UomDiv">
    </div>
-  <!--   باتشات الكميات بالمخازن-->
-  <div class="col-md-6  " style="display: none;" id="inv_itemcard_batchesDiv">
-</div>
+   <!--   باتشات الكميات بالمخازن-->
+   <div class="col-md-6  " style="display: none;" id="inv_itemcard_batchesDiv"></div>
    <div class="col-md-3  "
    <div class="form-group">
       <label> الكمية المرتجعة</label>
@@ -132,24 +131,23 @@
       </div>
    </div>
    <div class="col-md-3  " id="unit_cost_priceDiv">
-   <div class="form-group">
-      <label> سعر تكلفة شراء الوحدة</label>
-      <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="unit_cost_price" id="unit_cost_price" class="form-control"  value=""   >
+      <div class="form-group">
+         <label> سعر تكلفة شراء الوحدة</label>
+         <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="unit_cost_price" id="unit_cost_price" class="form-control"  value=""   >
+      </div>
    </div>
-</div>
    <div class="col-md-3 relatedtoDateproExp" style="display: none;">
       <div class="form-group">
-       <label>   تاريخ الانتاج</label>
-       <input type="date"    id="production_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-       </div>
-     </div>
-  
-     <div class="col-md-3 relatedtoDateproExp" style="display: none;">
+         <label>   تاريخ الانتاج</label>
+         <input type="date"    id="production_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+      </div>
+   </div>
+   <div class="col-md-3 relatedtoDateproExp" style="display: none;">
       <div class="form-group">
-       <label>   تاريخ انتهاء الصلاحية</label>
-       <input type="date"    id="expire_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
-       </div>
-     </div>
+         <label>   تاريخ انتهاء الصلاحية</label>
+         <input type="date"    id="expire_date" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+      </div>
+   </div>
    <div class="col-md-3  "
    <div class="form-group">
       <label> الاجمالي</label>

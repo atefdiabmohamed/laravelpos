@@ -83,7 +83,6 @@
          </tr>
       </table>
       <br>
-    
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">رقم الحساب المالي للعميل</td>
@@ -113,7 +112,6 @@
                عدد  ({{ $data['SalesReturnCounter']*1 }}) فاتورة مرتجع مبيعات بقيمة ({{ $data['salesReturnTotalMoney']*1 }}) جنيه
             </td>
          </tr>
-
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    فواتير مقدمة لنا من العميل</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
@@ -126,7 +124,6 @@
                عدد  ({{ $data['ServicesForotherCounter']*1 }}) فاتورة خدمات قدمناها للعميل   بقيمة ({{ $data['ServicesForothermoney']*1 }}) جنيه
             </td>
          </tr>
-
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للعميل</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
@@ -152,7 +149,6 @@
             </td>
          </tr>
       </table>
-      
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold"> المبيعات  للعميل خلال الفترة</h3>
       @if (@isset($details['sales']) && !@empty($details['sales']) && count($details['sales'])>0)
       <table  dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
@@ -216,9 +212,6 @@
          عفوا لاتوجد بيانات لعرضها !!
       </div>
       @endif
-
-
-
       <!--  حركة الخدمات-->
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة الخدمات الداخلية والخارجية علي حساب  المورد خلال الفترة</h3>
       @if (@isset($details['services_orders']) && !@empty($details['services_orders']) && count($details['services_orders'])>0)
@@ -257,12 +250,6 @@
          عفوا لاتوجد بيانات لعرضها !!
       </div>
       @endif
-      
-
-
-
-
-
       <!--  حركة النقدية-->
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة النقدية علي حساب  العميل خلال الفترة</h3>
       @if (@isset($details['Treasuries_transactions']) && !@empty($details['Treasuries_transactions']) && count($details['Treasuries_transactions'])>0)

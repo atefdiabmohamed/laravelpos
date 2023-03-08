@@ -1,6 +1,6 @@
 <?php
 // لاتنسونا من صالح دعائكم 
-
+//لو جبنا اربع مبرمجين وعطينا لك واحد منهم تاسك - حنلاقي كل واحد عملها بشكل مختلف وكلاهما صحيح من حيث التطبيق انما الفكرة واحده  -  وهنا قدمنا الفكرة للمشروع علي قدر الجهد والوقت والمعلومة المتاحة  ولم نكتم معلومة واحدة
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -36,9 +36,6 @@ use App\Http\Controllers\Admin\Inv_production_exchangeController;
 use App\Http\Controllers\Admin\inv_production_ReceiveController;
 use App\Http\Controllers\Admin\Inv_stores_transferController;
 use App\Http\Controllers\Admin\Inv_stores_transferIncomingController;
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,7 +53,7 @@ Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
 Route::get('/adminpanelsetting/index', [Admin_panel_settingsController::class, 'index'])->name('admin.adminPanelSetting.index');
 Route::get('/adminpanelsetting/edit', [Admin_panel_settingsController::class, 'edit'])->name('admin.adminPanelSetting.edit');
 Route::post('/adminpanelsetting/update', [Admin_panel_settingsController::class, 'update'])->name('admin.adminPanelSetting.update');
-/*         start treasuries                */
+/*   ═══════ ೋღ  start treasuries  ღೋ ═══════                */
 Route::get('/treasuries/index', [TreasuriesController::class, 'index'])->name('admin.treasuries.index');
 Route::get('/treasuries/create', [TreasuriesController::class, 'create'])->name('admin.treasuries.create');
 Route::post('/treasuries/store', [TreasuriesController::class, 'store'])->name('admin.treasuries.store');
@@ -67,24 +64,27 @@ Route::get('/treasuries/details/{id}', [TreasuriesController::class, 'details'])
 Route::get('/treasuries/Add_treasuries_delivery/{id}', [TreasuriesController::class, 'Add_treasuries_delivery'])->name('admin.treasuries.Add_treasuries_delivery');
 Route::post('/treasuries/store_treasuries_delivery/{id}', [TreasuriesController::class, 'store_treasuries_delivery'])->name('admin.treasuries.store_treasuries_delivery');
 Route::get('/treasuries/delete_treasuries_delivery/{id}', [TreasuriesController::class, 'delete_treasuries_delivery'])->name('admin.treasuries.delete_treasuries_delivery');
-/*           end treasuries                */
-/*         start sales_matrial_types                */
+/*     ═══════ ೋღ  end treasuries    ღೋ ═══════                 */
+
+/*   ═══════ ೋღ  start sales_matrial_types  ღೋ ═══════                  */
 Route::get('/sales_matrial_types/index', [Sales_matrial_typesController::class, 'index'])->name('admin.sales_matrial_types.index');
 Route::get('/sales_matrial_types/create', [Sales_matrial_typesController::class, 'create'])->name('admin.sales_matrial_types.create');
 Route::post('/sales_matrial_types/store', [Sales_matrial_typesController::class, 'store'])->name('admin.sales_matrial_types.store');
 Route::get('/sales_matrial_types/edit/{id}', [Sales_matrial_typesController::class, 'edit'])->name('admin.sales_matrial_types.edit');
 Route::post('/sales_matrial_types/update/{id}', [Sales_matrial_typesController::class, 'update'])->name('admin.sales_matrial_types.update');
 Route::get('/sales_matrial_types/delete/{id}', [Sales_matrial_typesController::class, 'delete'])->name('admin.sales_matrial_types.delete');
-/*           end sales_matrial_types                */
-/*         start stores                */
+/*   ═══════ ೋღ  end sales_matrial_types ღೋ ═══════                     */
+
+/*   ═══════ ೋღ  start stores   ღೋ ═══════                 */
 Route::get('/stores/index', [StoresController::class, 'index'])->name('admin.stores.index');
 Route::get('/stores/create', [StoresController::class, 'create'])->name('admin.stores.create');
 Route::post('/stores/store', [StoresController::class, 'store'])->name('admin.stores.store');
 Route::get('/stores/edit/{id}', [StoresController::class, 'edit'])->name('admin.stores.edit');
 Route::post('/stores/update/{id}', [StoresController::class, 'update'])->name('admin.stores.update');
 Route::get('/stores/delete/{id}', [StoresController::class, 'delete'])->name('admin.stores.delete');
-/*           end stores                */
-/*         start  Uoms                */
+/*     ═══════ ೋღ  end stores ღೋ ═══════                 */
+
+/*     ═══════ ೋღ  start  Uoms  ღೋ ═══════                */
 Route::get('/uoms/index', [Inv_UomController::class, 'index'])->name('admin.uoms.index');
 Route::get('/uoms/create', [Inv_UomController::class, 'create'])->name('admin.uoms.create');
 Route::post('/uoms/store', [Inv_UomController::class, 'store'])->name('admin.uoms.store');
@@ -92,13 +92,16 @@ Route::get('/uoms/edit/{id}', [Inv_UomController::class, 'edit'])->name('admin.u
 Route::post('/uoms/update/{id}', [Inv_UomController::class, 'update'])->name('admin.uoms.update');
 Route::get('/uoms/delete/{id}', [Inv_UomController::class, 'delete'])->name('admin.uoms.delete');
 Route::post('/uoms/ajax_search', [Inv_UomController::class, 'ajax_search'])->name('admin.uoms.ajax_search');
-/*           end Uoms                */
-/*         start  inv_itemcard_categories */
+
+/*    ═══════ ೋღ  ღೋ ═══════       end Uoms    ═══════ ೋღ  ღೋ ═══════            */
+
+/*  ═══════ ೋღ  ღೋ ═══════       start  inv_itemcard_categories  ═══════ ೋღ  ღೋ ═══════ */
 Route::get('/inv_itemcard_categories/delete/{id}', [Inv_itemcard_categories::class, 'delete'])->name('inv_itemcard_categories.delete');
 Route::resource('/inv_itemcard_categories', Inv_itemcard_categories::class);
-/*         End inv_itemcard_categories
-*/
-/*         start  Item Card                */
+
+/*    ═══════ ೋღ  End inv_itemcard_categories ღೋ ═══════       */ 
+
+/*      ═══════ ೋღ   start  Item Card   ღೋ ═══════             */
 Route::get('/itemcard/index', [InvItemCardController::class, 'index'])->name('admin.itemcard.index');
 Route::get('/itemcard/create', [InvItemCardController::class, 'create'])->name('admin.itemcard.create');
 Route::post('/itemcard/store', [InvItemCardController::class, 'store'])->name('admin.itemcard.store');
@@ -110,12 +113,14 @@ Route::get('/itemcard/show/{id}', [InvItemCardController::class, 'show'])->name(
 Route::post('/itemcard/ajax_search_movements', [InvItemCardController::class, 'ajax_search_movements'])->name('admin.itemcard.ajax_search_movements');
 Route::post('/itemcard/ajax_check_barcode', [InvItemCardController::class, 'ajax_check_barcode'])->name('admin.itemcard.ajax_check_barcode');
 Route::post('/itemcard/ajax_check_name', [InvItemCardController::class, 'ajax_check_name'])->name('admin.itemcard.ajax_check_name');
+/*      ═══════ ೋღ  end Item Card  ღೋ ═══════              */
 
-/*           end Item Card                */
-/*         start  account types              */
+/*     ═══════ ೋღ start  account types  ღೋ ═══════              */
 Route::get('/accountTypes/index', [Account_types_controller::class, 'index'])->name('admin.accountTypes.index');
-/*           end account types                */
-/*         start  accounts                */
+/*       ═══════ ೋღ  end account types ღೋ ═══════                 */
+
+
+/*    ═══════ ೋღ start  accounts  ღೋ ═══════                    */
 Route::get('/accounts/index', [AccountsController::class, 'index'])->name('admin.accounts.index');
 Route::get('/accounts/create', [AccountsController::class, 'create'])->name('admin.accounts.create');
 Route::post('/accounts/store', [AccountsController::class, 'store'])->name('admin.accounts.store');
@@ -124,8 +129,10 @@ Route::post('/accounts/update/{id}', [AccountsController::class, 'update'])->nam
 Route::get('/accounts/delete/{id}', [AccountsController::class, 'delete'])->name('admin.accounts.delete');
 Route::post('/accounts/ajax_search', [AccountsController::class, 'ajax_search'])->name('admin.accounts.ajax_search');
 Route::get('/accounts/show/{id}', [AccountsController::class, 'show'])->name('admin.accounts.show');
-/*           end accounts                */
-/*         start  customer                */
+/*      ═══════ ೋღ end accounts  ღೋ ═══════               */
+
+
+/*    ═══════ ೋღ  start  customer   ღೋ ═══════                 */
 Route::get('/customer/index', [CustomerController::class, 'index'])->name('admin.customer.index');
 Route::get('/customer/create', [CustomerController::class, 'create'])->name('admin.customer.create');
 Route::post('/customer/store', [CustomerController::class, 'store'])->name('admin.customer.store');
@@ -134,16 +141,19 @@ Route::post('/customer/update/{id}', [CustomerController::class, 'update'])->nam
 Route::get('/customer/delete/{id}', [CustomerController::class, 'delete'])->name('admin.customer.delete');
 Route::post('/customer/ajax_search', [CustomerController::class, 'ajax_search'])->name('admin.customer.ajax_search');
 Route::get('/customer/show/{id}', [CustomerController::class, 'show'])->name('admin.customer.show');
-/*           end customer                */
-/*         start suppliers_categories                */
+
+/*      ═══════ ೋღ end customer   ღೋ ═══════                    */
+
+/*      ═══════ ೋღ start suppliers_categories  ღೋ ═══════                 */
 Route::get('/suppliers_categories/index', [SupplierCategoriesController::class, 'index'])->name('admin.suppliers_categories.index');
 Route::get('/suppliers_categories/create', [SupplierCategoriesController::class, 'create'])->name('admin.suppliers_categories.create');
 Route::post('/suppliers_categories/store', [SupplierCategoriesController::class, 'store'])->name('admin.suppliers_categories.store');
 Route::get('/suppliers_categories/edit/{id}', [SupplierCategoriesController::class, 'edit'])->name('admin.suppliers_categories.edit');
 Route::post('/suppliers_categories/update/{id}', [SupplierCategoriesController::class, 'update'])->name('admin.suppliers_categories.update');
 Route::get('/suppliers_categories/delete/{id}', [SupplierCategoriesController::class, 'delete'])->name('admin.suppliers_categories.delete');
-/*           end suppliers_categories                */
-/*         start  suppliers                */
+/*         ═══════ ೋღ end suppliers_categories   ღೋ ═══════                  */
+
+/*       ═══════ ೋღ start  suppliers  ღೋ ═══════                 */
 Route::get('/supplier/index', [SuppliersController::class, 'index'])->name('admin.supplier.index');
 Route::get('/supplier/create', [SuppliersController::class, 'create'])->name('admin.supplier.create');
 Route::post('/supplier/store', [SuppliersController::class, 'store'])->name('admin.supplier.store');
@@ -152,8 +162,9 @@ Route::post('/supplier/update/{id}', [SuppliersController::class, 'update'])->na
 Route::get('/supplier/delete/{id}', [SuppliersController::class, 'delete'])->name('admin.supplier.delete');
 Route::post('/supplier/ajax_search', [SuppliersController::class, 'ajax_search'])->name('admin.supplier.ajax_search');
 Route::get('/supplier/show/{id}', [SuppliersController::class, 'show'])->name('admin.supplier.show');
-/*           end suppliers                */
-/*         start  suppliers_orders   المشتريات             */
+/*     ═══════ ೋღ  end suppliers  ღೋ ═══════                     */
+
+/*     ═══════ ೋღ start  suppliers_orders   المشتريات  ღೋ ═══════                */
 Route::get('/suppliers_orders/index', [Suppliers_with_ordersController::class, 'index'])->name('admin.suppliers_orders.index');
 Route::get('/suppliers_orders/create', [Suppliers_with_ordersController::class, 'create'])->name('admin.suppliers_orders.create');
 Route::post('/suppliers_orders/store', [Suppliers_with_ordersController::class, 'store'])->name('admin.suppliers_orders.store');
@@ -174,8 +185,9 @@ Route::post('/suppliers_orders/do_approve/{id}', [Suppliers_with_ordersControlle
 Route::post('/suppliers_orders/load_modal_approve_invoice', [Suppliers_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.suppliers_orders.load_modal_approve_invoice');
 Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersController::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
 Route::get('/suppliers_orders/printsaleswina4/{id}/{size}', [Suppliers_with_ordersController::class, 'printsaleswina4'])->name('admin.suppliers_orders.printsaleswina4');
-/*           end suppliers_orders               */
-/*         start treasuries                */
+/*     ═══════ ೋღ end suppliers_orders ღೋ ═══════                     */
+
+/*    ═══════ ೋღ start treasuries ღೋ ═══════                    */
 Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
 Route::get('/admins_accounts/create', [AdminController::class, 'create'])->name('admin.admins_accounts.create');
 Route::post('/admins_accounts/store', [AdminController::class, 'store'])->name('admin.admins_accounts.store');
@@ -186,27 +198,31 @@ Route::get('/admins_accounts/details/{id}', [AdminController::class, 'details'])
 Route::get('/admins_accounts/Add_treasuries_delivery/{id}', [AdminController::class, 'Add_treasuries_delivery'])->name('admin.admins_accounts.Add_treasuries_delivery');
 Route::post('/admins_accounts/Add_treasuries_To_Admin/{id}', [AdminController::class, 'Add_treasuries_To_Admin'])->name('admin.admins_accounts.Add_treasuries_To_Admin');
 Route::get('/admins_accounts/delete_treasuries_delivery/{id}', [AdminController::class, 'delete_treasuries_delivery'])->name('admin.admins_accounts.delete_treasuries_delivery');
-/*           end treasuries                */
-/*         start admins shifts                */
+/*     ═══════ ೋღ end treasuries  ღೋ ═══════                     */
+
+/*     ═══════ ೋღ  start admins shifts  ღೋ ═══════                  */
 Route::get('/admin_shift/index', [Admins_ShiftsContoller::class, 'index'])->name('admin.admin_shift.index');
 Route::get('/admin_shift/create', [Admins_ShiftsContoller::class, 'create'])->name('admin.admin_shift.create');
 Route::post('/admin_shift/store', [Admins_ShiftsContoller::class, 'store'])->name('admin.admin_shift.store');
-/*           end admins shifts                  */
-/*         start  collect_transaction                */
+/*     ═══════ ೋღ end admins shifts    ღೋ ═══════                     */
+
+/*     ═══════ ೋღ  start  collect_transaction ღೋ ═══════                   */
 Route::get('/collect_transaction/index', [CollectController::class, 'index'])->name('admin.collect_transaction.index');
 Route::get('/collect_transaction/create', [CollectController::class, 'create'])->name('admin.collect_transaction.create');
 Route::post('/collect_transaction/store', [CollectController::class, 'store'])->name('admin.collect_transaction.store');
 Route::post('/collect_transaction/get_account_blance', [CollectController::class, 'get_account_blance'])->name('admin.collect_transaction.get_account_blance');
 Route::post('/collect_transaction/ajax_search', [CollectController::class, 'ajax_search'])->name('admin.collect_transaction.ajax_search');
-/*           end  collect_transaction                  */
-/*         start  exchange_transaction                */
+/*     ═══════ ೋღ  end  collect_transaction ღೋ ═══════                       */
+
+/*     ═══════ ೋღ start  exchange_transaction  ღೋ ═══════                   */
 Route::get('/exchange_transaction/index', [ExchangeController::class, 'index'])->name('admin.exchange_transaction.index');
 Route::get('/exchange_transaction/create', [ExchangeController::class, 'create'])->name('admin.exchange_transaction.create');
 Route::post('/exchange_transaction/store', [ExchangeController::class, 'store'])->name('admin.exchange_transaction.store');
 Route::post('/exchange_transaction/get_account_blance', [ExchangeController::class, 'get_account_blance'])->name('admin.exchange_transaction.get_account_blance');
 Route::post('/exchange_transaction/ajax_search', [ExchangeController::class, 'ajax_search'])->name('admin.exchange_transaction.ajax_search');
-/*           end  exchange_transaction                  */
-/*         start  sales Invoices   المبيعات             */
+/*      ═══════ ೋღ   end  exchange_transaction  ღೋ ═══════                    */
+
+/*     ═══════ ೋღ start  sales Invoices   المبيعات  ღೋ ═══════                */
 Route::get('/SalesInvoices/index', [SalesInvoicesController::class, 'index'])->name('admin.SalesInvoices.index');
 Route::get('/SalesInvoices/create', [SalesInvoicesController::class, 'create'])->name('admin.SalesInvoices.create');
 Route::post('/SalesInvoices/store', [SalesInvoicesController::class, 'store'])->name('admin.SalesInvoices.store');
@@ -235,8 +251,9 @@ Route::post('/SalesInvoices/get_last_added_customer', [SalesInvoicesController::
 Route::post('/SalesInvoices/searchforcustomer', [SalesInvoicesController::class, 'searchforcustomer'])->name('admin.SalesInvoices.searchforcustomer');
 Route::post('/SalesInvoices/searchforitems', [SalesInvoicesController::class, 'searchforitems'])->name('admin.SalesInvoices.searchforitems');
 Route::get('/SalesInvoices/printsaleswina4/{id}/{size}', [SalesInvoicesController::class, 'printsaleswina4'])->name('admin.SalesInvoices.printsaleswina4');
-/*           sales Invoices   المبيعات                   */
-/*         start  delegates                */
+/*       ═══════ ೋღ sales Invoices   المبيعات   ღೋ ═══════                     */
+
+/*      ═══════ ೋღ start  delegates   ღೋ ═══════                 */
 Route::get('/delegates/index', [DelegatesController::class, 'index'])->name('admin.delegates.index');
 Route::get('/delegates/create', [DelegatesController::class, 'create'])->name('admin.delegates.create');
 Route::post('/delegates/store', [DelegatesController::class, 'store'])->name('admin.delegates.store');
@@ -245,9 +262,9 @@ Route::post('/delegates/update/{id}', [DelegatesController::class, 'update'])->n
 Route::get('/delegates/delete/{id}', [DelegatesController::class, 'delete'])->name('admin.delegates.delete');
 Route::post('/delegates/ajax_search', [DelegatesController::class, 'ajax_search'])->name('admin.delegates.ajax_search');
 Route::post('/delegates/show', [DelegatesController::class, 'show'])->name('admin.delegates.show');
-/*           end delegates                */
+/*     ═══════ ೋღ      end delegates       ღೋ ═══════           */
 
-/*         start  suppliers_orders Gernal Return   مرتجع المشتريات العام             */
+/*     ═══════ ೋღ start  suppliers_orders Gernal Return   مرتجع المشتريات العام  ღೋ ═══════                */
 Route::get('/suppliers_orders_general_return/index', [Suppliers_with_ordersGeneralRetuen::class, 'index'])->name('admin.suppliers_orders_general_return.index');
 Route::get('/suppliers_orders_general_return/create', [Suppliers_with_ordersGeneralRetuen::class, 'create'])->name('admin.suppliers_orders_general_return.create');
 Route::post('/suppliers_orders_general_return/store', [Suppliers_with_ordersGeneralRetuen::class, 'store'])->name('admin.suppliers_orders_general_return.store');
@@ -269,15 +286,14 @@ Route::post('/suppliers_orders_general_return/load_modal_approve_invoice', [Supp
 Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_with_ordersGeneralRetuen::class, 'load_usershiftDiv'])->name('admin.suppliers_orders_general_return.load_usershiftDiv');
 Route::post('/suppliers_orders_general_return/get_item_batches', [Suppliers_with_ordersGeneralRetuen::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_item_batches');
 Route::get('/suppliers_orders_general_return/printsaleswina4/{id}/{size}', [Suppliers_with_ordersGeneralRetuen::class, 'printsaleswina4'])->name('admin.suppliers_orders_general_return.printsaleswina4');
-/*           end  suppliers_orders Gernal Return                */
+/*        ═══════ ೋღ end  suppliers_orders Gernal Return  ღೋ ═══════                  */
 
-
-
-/*          start    itemcardBalance               */
+/*      ═══════ ೋღ  start    itemcardBalance  ღೋ ═══════                 */
 Route::get('/itemcardBalance/index', [ItemcardBalanceController::class, 'index'])->name('admin.itemcardBalance.index');
 Route::post('/itemcardBalance/ajax_search', [ItemcardBalanceController::class, 'ajax_search'])->name('admin.itemcardBalance.ajax_search');
-/*          end    itemcardBalance               */
-/*         start  sales Invoices   مرتجع المبيعات العام             */
+/*     ═══════ ೋღ   end    itemcardBalance     ღೋ ═══════              */
+
+/*     ═══════ ೋღ start  sales Invoices   مرتجع المبيعات العام  ღೋ ═══════                */
 Route::get('/SalesReturnInvoices/index', [SalesReturnInvoicesController::class, 'index'])->name('admin.SalesReturnInvoices.index');
 Route::get('/SalesReturnInvoices/create', [SalesReturnInvoicesController::class, 'create'])->name('admin.SalesReturnInvoices.create');
 Route::post('/SalesReturnInvoices/store', [SalesReturnInvoicesController::class, 'store'])->name('admin.SalesReturnInvoices.store');
@@ -306,9 +322,9 @@ Route::post('/SalesReturnInvoices/get_last_added_customer', [SalesReturnInvoices
 Route::post('/SalesReturnInvoices/searchforcustomer', [SalesReturnInvoicesController::class, 'searchforcustomer'])->name('admin.SalesReturnInvoices.searchforcustomer');
 Route::post('/SalesReturnInvoices/searchforitems', [SalesReturnInvoicesController::class, 'searchforitems'])->name('admin.SalesReturnInvoices.searchforitems');
 Route::get('/SalesReturnInvoices/printsaleswina4/{id}/{size}', [SalesReturnInvoicesController::class, 'printsaleswina4'])->name('admin.SalesReturnInvoices.printsaleswina4');
-/*         
-sales Invoices   المبيعات                   */
-/* start  FinancialReportController تقاير الحسابات */
+/*  ═══════ ೋღ  sales Invoices   المبيعات                ღೋ ═══════        */
+
+/*  ═══════ ೋღ start  FinancialReportController تقاير الحسابات  ღೋ ═══════ */
 Route::get('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
 Route::post('/FinancialReport/supplieraccountmirror', [FinancialReportController::class, 'supplier_account_mirror'])->name('admin.FinancialReport.supplieraccountmirror');
 Route::get('/FinancialReport/customeraccountmirror', [FinancialReportController::class, 'customer_account_mirror'])->name('admin.FinancialReport.customeraccountmirror');
@@ -316,8 +332,9 @@ Route::post('/FinancialReport/customeraccountmirror', [FinancialReportController
 Route::post('/FinancialReport/searchforcustomer', [FinancialReportController::class, 'searchforcustomer'])->name('admin.FinancialReport.searchforcustomer');
 Route::get('/FinancialReport/delegateaccountmirror', [FinancialReportController::class, 'delegate_account_mirror'])->name('admin.FinancialReport.delegateaccountmirror');
 Route::post('/FinancialReport/delegateaccountmirror', [FinancialReportController::class, 'delegate_account_mirror'])->name('admin.FinancialReport.delegateaccountmirror');
-/*  end  FinancialReportController */
-/*         start  Services                */
+/*  ═══════ ೋღ end  FinancialReportController ღೋ ═══════  */
+
+/*  ═══════ ೋღ start  Services  ღೋ ═══════                      */
 Route::get('/Services/index', [ServicesController::class, 'index'])->name('admin.Services.index');
 Route::get('/Services/create', [ServicesController::class, 'create'])->name('admin.Services.create');
 Route::post('/Services/store', [ServicesController::class, 'store'])->name('admin.Services.store');
@@ -325,8 +342,9 @@ Route::get('/Services/edit/{id}', [ServicesController::class, 'edit'])->name('ad
 Route::post('/Services/update/{id}', [ServicesController::class, 'update'])->name('admin.Services.update');
 Route::get('/Services/delete/{id}', [ServicesController::class, 'delete'])->name('admin.Services.delete');
 Route::post('/Services/ajax_search', [ServicesController::class, 'ajax_search'])->name('admin.Services.ajax_search');
-/*           end Services                */
-/*         start  sservices_orders   خدمات مقدمة لنا ونقدمها للغير             */
+/*      ═══════ ೋღ end Services  ღೋ ═══════                    */
+
+/*      ═══════ ೋღ  start  services_orders    ღೋ ═══════            */
 Route::get('/Services_orders/index', [Services_with_ordersController::class, 'index'])->name('admin.Services_orders.index');
 Route::get('/Services_orders/create', [Services_with_ordersController::class, 'create'])->name('admin.Services_orders.create');
 Route::post('/Services_orders/store', [Services_with_ordersController::class, 'store'])->name('admin.Services_orders.store');
@@ -346,8 +364,9 @@ Route::post('/Services_orders/do_approve/{id}', [Services_with_ordersController:
 Route::post('/Services_orders/load_modal_approve_invoice', [Services_with_ordersController::class, 'load_modal_approve_invoice'])->name('admin.Services_orders.load_modal_approve_invoice');
 Route::post('/Services_orders/load_usershiftDiv', [Services_with_ordersController::class, 'load_usershiftDiv'])->name('admin.Services_orders.load_usershiftDiv');
 Route::get('/Services_orders/printsaleswina4/{id}/{size}', [Services_with_ordersController::class, 'printsaleswina4'])->name('admin.Services_orders.printsaleswina4');
-/*           end services_orders               */
-/*         start  inv_stores_inventory  جرد المخازن            */
+/*     ═══════ ೋღ  end services_orders       ღೋ ═══════              */
+
+/*      ═══════ ೋღ start  inv_stores_inventory  ღೋ ═══════              */
 Route::get('/stores_inventory/index', [Inv_stores_inventoryController::class, 'index'])->name('admin.stores_inventory.index');
 Route::get('/stores_inventory/create', [Inv_stores_inventoryController::class, 'create'])->name('admin.stores_inventory.create');
 Route::post('/stores_inventory/store', [Inv_stores_inventoryController::class, 'store'])->name('admin.stores_inventory.store');
@@ -363,8 +382,9 @@ Route::get('/stores_inventory/delete_details/{id}/{id_parent}', [Inv_stores_inve
 Route::get('/stores_inventory/close_one_details/{id}/{id_parent}', [Inv_stores_inventoryController::class, 'close_one_details'])->name('admin.stores_inventory.close_one_details');
 Route::get('/stores_inventory/do_close_parent/{id}', [Inv_stores_inventoryController::class, 'do_close_parent'])->name('admin.stores_inventory.do_close_parent');
 Route::get('/stores_inventory/printsaleswina4/{id}/{size}', [Inv_stores_inventoryController::class, 'printsaleswina4'])->name('admin.stores_inventory.printsaleswina4');
-/*           end sservices_orders               */
-/*         start  inv_production_order                */
+/*     ═══════ ೋღ end sservices_orders   ღೋ ═══════                   */
+
+/*      ═══════ ೋღ start  inv_production_order ღೋ ═══════                   */
 Route::get('/inv_production_order/index', [Inv_production_orderController::class, 'index'])->name('admin.inv_production_order.index');
 Route::get('/inv_production_order/create', [Inv_production_orderController::class, 'create'])->name('admin.inv_production_order.create');
 Route::post('/inv_production_order/store', [Inv_production_orderController::class, 'store'])->name('admin.inv_production_order.store');
@@ -375,10 +395,9 @@ Route::post('/inv_production_order/ajax_search', [Inv_production_orderController
 Route::post('/inv_production_order/show_more_detials', [Inv_production_orderController::class, 'show_more_detials'])->name('admin.inv_production_order.show_more_detials');
 Route::get('/inv_production_order/do_approve/{id}', [Inv_production_orderController::class, 'do_approve'])->name('admin.inv_production_order.do_approve');
 Route::get('/inv_production_order/do_closes_archive/{id}', [Inv_production_orderController::class, 'do_closes_archive'])->name('admin.inv_production_order.do_closes_archive');
-/*           end inv_production_order                */
+/*    ═══════ ೋღ  end inv_production_order  ღೋ ═══════                     */
 
-
-/*         start  inv_production_lines                */
+/*     ═══════ ೋღ start  inv_production_lines    ღೋ ═══════                  */
 Route::get('/inv_production_lines/index', [Inv_production_linesController::class, 'index'])->name('admin.inv_production_lines.index');
 Route::get('/inv_production_lines/create', [Inv_production_linesController::class, 'create'])->name('admin.inv_production_lines.create');
 Route::post('/inv_production_lines/store', [Inv_production_linesController::class, 'store'])->name('admin.inv_production_lines.store');
@@ -387,11 +406,9 @@ Route::post('/inv_production_lines/update/{id}', [Inv_production_linesController
 Route::get('/inv_production_lines/delete/{id}', [Inv_production_linesController::class, 'delete'])->name('admin.inv_production_lines.delete');
 Route::post('/inv_production_lines/ajax_search', [Inv_production_linesController::class, 'ajax_search'])->name('admin.inv_production_lines.ajax_search');
 Route::get('/inv_production_lines/show/{id}', [Inv_production_linesController::class, 'show'])->name('admin.inv_production_lines.show');
-/*           end inv_production_lines                */
+/*   ═══════ ೋღ end inv_production_lines    ღೋ ═══════                      */
 
-
-
-/*         start  Inv_production_exchange    صرف الخامات لخطوط الانتاج - الورش            */
+/*    ═══════ ೋღ start  Inv_production_exchange  ღೋ ═══════                  */
 Route::get('/inv_production_exchange/index', [Inv_production_exchangeController::class, 'index'])->name('admin.inv_production_exchange.index');
 Route::get('/inv_production_exchange/create', [Inv_production_exchangeController::class, 'create'])->name('admin.inv_production_exchange.create');
 Route::post('/inv_production_exchange/store', [Inv_production_exchangeController::class, 'store'])->name('admin.inv_production_exchange.store');
@@ -413,11 +430,9 @@ Route::post('/inv_production_exchange/load_modal_approve_invoice', [Inv_producti
 Route::post('/inv_production_exchange/load_usershiftDiv', [Inv_production_exchangeController::class, 'load_usershiftDiv'])->name('admin.inv_production_exchange.load_usershiftDiv');
 Route::post('/inv_production_exchange/get_item_batches', [Inv_production_exchangeController::class, 'get_item_batches'])->name('admin.inv_production_exchange.get_item_batches');
 Route::get('/inv_production_exchange/printsaleswina4/{id}/{size}', [Inv_production_exchangeController::class, 'printsaleswina4'])->name('admin.inv_production_exchange.printsaleswina4');
-/*           end  Inv_production_exchange               */
+/*      ═══════ ೋღ end  Inv_production_exchange   ღೋ ═══════                  */
 
-
-
-/*         start  inv_production_Receive    استلام منتج تام من خط الانتاج الانتاج - الورش            */
+/*     ═══════ ೋღ  start  inv_production_Receive        ღೋ ═══════      */
 Route::get('/inv_production_Receive/index', [inv_production_ReceiveController::class, 'index'])->name('admin.inv_production_Receive.index');
 Route::get('/inv_production_Receive/create', [inv_production_ReceiveController::class, 'create'])->name('admin.inv_production_Receive.create');
 Route::post('/inv_production_Receive/store', [inv_production_ReceiveController::class, 'store'])->name('admin.inv_production_Receive.store');
@@ -439,9 +454,9 @@ Route::post('/inv_production_Receive/load_modal_approve_invoice', [inv_productio
 Route::post('/inv_production_Receive/load_usershiftDiv', [inv_production_ReceiveController::class, 'load_usershiftDiv'])->name('admin.inv_production_Receive.load_usershiftDiv');
 Route::post('/inv_production_Receive/get_item_batches', [inv_production_ReceiveController::class, 'get_item_batches'])->name('admin.inv_production_Receive.get_item_batches');
 Route::get('/inv_production_Receive/printsaleswina4/{id}/{size}', [inv_production_ReceiveController::class, 'printsaleswina4'])->name('admin.inv_production_Receive.printsaleswina4');
-/*           end  inv_production_Receive               */
+/*      ═══════ ೋღ end  inv_production_Receive   ღೋ ═══════                   */
 
-/*         start  inv_stores_transfer         أوامر تحويل مخزنية صادرة    */
+/*     ═══════ ೋღ   start  inv_stores_transfer   ღೋ ═══════          أوامر تحويل مخزنية صادرة    */
 Route::get('/inv_stores_transfer/index', [Inv_stores_transferController::class, 'index'])->name('admin.inv_stores_transfer.index');
 Route::get('/inv_stores_transfer/create', [Inv_stores_transferController::class, 'create'])->name('admin.inv_stores_transfer.create');
 Route::post('/inv_stores_transfer/store', [Inv_stores_transferController::class, 'store'])->name('admin.inv_stores_transfer.store');
@@ -461,10 +476,9 @@ Route::get('/inv_stores_transfer/delete_details/{id}/{id_parent}', [Inv_stores_t
 Route::get('/inv_stores_transfer/do_approve/{id}', [Inv_stores_transferController::class, 'do_approve'])->name('admin.inv_stores_transfer.do_approve');
 Route::post('/inv_stores_transfer/get_item_batches', [Inv_stores_transferController::class, 'get_item_batches'])->name('admin.inv_stores_transfer.get_item_batches');
 Route::get('/inv_stores_transfer/printsaleswina4/{id}/{size}', [Inv_stores_transferController::class, 'printsaleswina4'])->name('admin.inv_stores_transfer.printsaleswina4');
-/*           end  inv_stores_transfer               */
+/*   ═══════ ೋღ end  inv_stores_transfer  ღೋ ═══════                      */
 
-
-/*         start  inv_stores_transfer_incoming         أوامر تحويل مخزنية واردة    */
+/*    ═══════ ೋღ  start  inv_stores_transfer_incoming  ღೋ ═══════            أوامر تحويل مخزنية واردة    */
 Route::get('/inv_stores_transfer_incoming/index', [Inv_stores_transferIncomingController::class, 'index'])->name('admin.inv_stores_transfer_incoming.index');
 Route::post('/inv_stores_transfer_incoming/ajax_search', [Inv_stores_transferIncomingController::class, 'ajax_search'])->name('admin.inv_stores_transfer_incoming.ajax_search');
 Route::get('/inv_stores_transfer_incoming/show/{id}', [Inv_stores_transferIncomingController::class, 'show'])->name('admin.inv_stores_transfer_incoming.show');
@@ -473,10 +487,7 @@ Route::get('/inv_stores_transfer_incoming/approve_one_details/{id}/{id_parent}',
 Route::get('/inv_stores_transfer_incoming/cancel_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'cancel_one_details'])->name('admin.inv_stores_transfer_incoming.cancel_one_details');
 Route::post('/inv_stores_transfer_incoming/load_cancel_one_details', [Inv_stores_transferIncomingController::class, 'load_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.load_cancel_one_details');
 Route::post('/inv_stores_transfer_incoming/do_cancel_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'do_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.do_cancel_one_details');
-
-/*           end  inv_stores_transfer_incoming               */
-
-
+/*     ═══════ ೋღ  end  inv_stores_transfer_incoming   ღೋ ═══════                   */
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');

@@ -8,38 +8,26 @@
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
          td{font-size: 15px !important;text-align: center;}
- 
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ امر الجرد  <span style="margin-right: 10px;">/ {{ $data['inventory_date']}}</span></td>
          </tr>
-     
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">    مخزن الجرد  <span style="margin-right: 10px;">/ {{ $data['store_name']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">  نوع الجرد 
                <span style="margin-right: 10px;">/
-                  @if($data['inventory_type']==1)جرد يومي 
-                  @elseif($data['inventory_type']==2)جرد اسبوعي  
-                  @elseif($data['inventory_type']==3)جرد شهري  
-                  @elseif($data['inventory_type']==4)جرد سنوي  
-                  @else     لم يحدد @endif
-                  
-                  
-                  
-                  </span>
-           
+               @if($data['inventory_type']==1)جرد يومي 
+               @elseif($data['inventory_type']==2)جرد اسبوعي  
+               @elseif($data['inventory_type']==3)جرد شهري  
+               @elseif($data['inventory_type']==4)جرد سنوي  
+               @else     لم يحدد @endif
+               </span>
             </td>
          </tr>
-    
-
-
-       
-       
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة امر الجرد  <span style="margin-right: 10px;">/ @if($data['is_closed']==1) مغلق ومرحل @else  مفتوح @endif</span></td>
          </tr>
@@ -62,7 +50,6 @@
                color: red;
                border: 1px solid black; "> رقم : {{ $data['auto_serial'] }} </span></td>
          </tr>
-     
       </table>
       <table style="width: 35%;float: right; margin-left: 5px; " dir="rtl">
          <tr>
@@ -72,24 +59,21 @@
             </td>
          </tr>
       </table>
- <div class="clearfix"></div>
- <p></p>
- @if(!@empty($invoices_details) and count($invoices_details)>0)
+      <div class="clearfix"></div>
+      <p></p>
+      @if(!@empty($invoices_details) and count($invoices_details)>0)
       <table  dir="rtl" border="1" style="width: 98%;  margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
-         
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
             <td  style="font-weight: bold;">كود باتش</td>
             <td  style="font-weight: bold;">اسم الصنف </td>
-               <td  style="font-weight: bold;"> الكمية بالباتش</td>
-                  <td  style="font-weight: bold;"> الكمية الدفترية</td>
-                     <td  style="font-weight: bold;"> الفرق</td>
-                        <td  style="font-weight: bold;"> تكلفة الوحدة</td>
-                           <td  style="font-weight: bold;"> اجمالي التكلفة</td>
-                              <td  style="font-weight: bold;">  سبب النقص / الزيادة</td>
-
+            <td  style="font-weight: bold;"> الكمية بالباتش</td>
+            <td  style="font-weight: bold;"> الكمية الدفترية</td>
+            <td  style="font-weight: bold;"> الفرق</td>
+            <td  style="font-weight: bold;"> تكلفة الوحدة</td>
+            <td  style="font-weight: bold;"> اجمالي التكلفة</td>
+            <td  style="font-weight: bold;">  سبب النقص / الزيادة</td>
          </tr>
-       
          @php $i=1;  @endphp
          @foreach($invoices_details as $info)
          <tr>
@@ -108,11 +92,8 @@
             <td>{{ $info->unit_cost_price*(1) }}</td>
             <td>{{ $info->total_cost_price*(1) }}</td>
             <td>{{ $info->notes }}</td>
-         
          </tr>
          <?php $i++; endforeach;?>
-        
-     
       </table>
       @endif
       <p style="position: fixed;

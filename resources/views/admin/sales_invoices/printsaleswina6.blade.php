@@ -5,47 +5,43 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title> طباعة فاتورة مبيعات </title>
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-      
       <style>
-  td{font-size: 15px !important;text-align: center;}
- .mainheadtable{
-   width: 30%; margin-right: 5px; float: right;  border: 1px dashed black 
- }
- .tdhead{
-   padding: 3px; text-align: right;font-weight: bold;
- }
- .mainheadtable2{
-   width: 30%;float: right;  margin-right: 5px;
- }
- .headimg{
-   width: 35%;float: right; margin-left: 5px;
- }
- .headimg_img{
-   width: 150px; height: 110px; border-radius: 10px;
- }
-  @media print {        
-@page {
-  size: 105mm 148mm;
-}
-td{font-size: 9px !important;text-align: center;} 
-table{margin: 0 auto;}   
-.mainheadtable{
-   width: 50%; margin-right: 1px; float: right;  border: 1 solid black 
- }
- .tdhead{
-   padding: 3px; text-align: right;font-weight: bold;
- }
- .headimg{
-   width: 45%;float: right; margin-left: 1px;
- }
- .headimg_img{
-   width: 70px; height: 70px; float: left;
- }
-}
-
- 
+         td{font-size: 15px !important;text-align: center;}
+         .mainheadtable{
+         width: 30%; margin-right: 5px; float: right;  border: 1px dashed black 
+         }
+         .tdhead{
+         padding: 3px; text-align: right;font-weight: bold;
+         }
+         .mainheadtable2{
+         width: 30%;float: right;  margin-right: 5px;
+         }
+         .headimg{
+         width: 35%;float: right; margin-left: 5px;
+         }
+         .headimg_img{
+         width: 150px; height: 110px; border-radius: 10px;
+         }
+         @media print {        
+         @page {
+         size: 105mm 148mm;
+         }
+         td{font-size: 9px !important;text-align: center;} 
+         table{margin: 0 auto;}   
+         .mainheadtable{
+         width: 50%; margin-right: 1px; float: right;  border: 1 solid black 
+         }
+         .tdhead{
+         padding: 3px; text-align: right;font-weight: bold;
+         }
+         .headimg{
+         width: 45%;float: right; margin-left: 1px;
+         }
+         .headimg_img{
+         width: 70px; height: 70px; float: left;
+         }
+         }
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table class="mainheadtable"  cellspacing="0"   dir="rtl">
          <tr>
@@ -64,7 +60,6 @@ table{margin: 0 auto;}
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم العميل  <span style="margin-right: 10px;">/ {{ $data['customer_name'] }}</span></td>
          </tr>
-      
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['customer_phones'];}}</span></td>
          </tr>
@@ -80,7 +75,6 @@ table{margin: 0 auto;}
          </tr>
       </table>
       <br>
-
       <table class="headimg"  dir="rtl" style="margin-bottom: 5px;">
          <tr>
             <td style="text-align:left !important;padding: 5px;">
@@ -89,7 +83,6 @@ table{margin: 0 auto;}
             </td>
          </tr>
       </table>
-   
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>

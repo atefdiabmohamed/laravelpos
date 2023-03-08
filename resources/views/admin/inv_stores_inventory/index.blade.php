@@ -41,22 +41,20 @@
                   @endforeach
                   @endif
                </select>
-            
             </div>
          </div>
          <div class="col-md-4">
-         <div class="form-group">
-            <label>    بحث بنوع الجرد</label>
-            <select name="inventory_type_search" id="inventory_type_search" class="form-control">
-               <option value="all">   بحث بالكل </option>
-               <option value="1">   جرد يومي</option>
-               <option value="2">   جرد اسبوعي</option>
-               <option value="3">   جرد شهري</option>
-               <option  value="4">   جرد سنوي</option>
-            </select>
-     
+            <div class="form-group">
+               <label>    بحث بنوع الجرد</label>
+               <select name="inventory_type_search" id="inventory_type_search" class="form-control">
+                  <option value="all">   بحث بالكل </option>
+                  <option value="1">   جرد يومي</option>
+                  <option value="2">   جرد اسبوعي</option>
+                  <option value="3">   جرد شهري</option>
+                  <option  value="4">   جرد سنوي</option>
+               </select>
+            </div>
          </div>
-      </div>
          <div class="col-md-4">
             <div class="form-group">
                <label>    حالة امر الجرد</label>
@@ -67,7 +65,6 @@
                </select>
             </div>
          </div>
-     
          <div class="col-md-4">
             <div class="form-group">
                <label>   بحث  من تاريخ</label>
@@ -87,7 +84,6 @@
                @php
                $i=1;   
                @endphp
-
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>كود</th>

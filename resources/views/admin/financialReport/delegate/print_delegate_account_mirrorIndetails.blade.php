@@ -83,7 +83,6 @@
          </tr>
       </table>
       <br>
-    
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">رقم الحساب المالي للمندوب</td>
@@ -110,7 +109,7 @@
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    عمولة المندوب بالمبيعات</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
-           ({{ $data['total_delegate_commission_value']*1*(-1) }}) جنيه
+               ({{ $data['total_delegate_commission_value']*1*(-1) }}) جنيه
             </td>
          </tr>
          <tr>
@@ -125,8 +124,6 @@
                عدد  ({{ $data['ServicesForotherCounter']*1 }}) فاتورة خدمات قدمناها للمندوب   بقيمة ({{ $data['ServicesForothermoney']*1 }}) جنيه
             </td>
          </tr>
-
-
          <tr>
             <td style="width: 25%; text-align: right; font-weight: bold">    اجمالي صرف النقدية للمندوب</td>
             <td style="width: 75%;text-align: right; padding-right: 5px; "> 
@@ -152,7 +149,6 @@
             </td>
          </tr>
       </table>
-      
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold"> المبيعات  طرف المندوب خلال الفترة</h3>
       @if (@isset($details['sales']) && !@empty($details['sales']) && count($details['sales'])>0)
       <table  dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
@@ -177,7 +173,6 @@
                <td>{{ $info->what_remain*1 }}</td>
                <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
                <td>{{ $info->delegate_commission_value*1*(-1) }}</td>
-               
             </tr>
             @endforeach
          </tbody>
@@ -187,50 +182,44 @@
          عفوا لاتوجد بيانات لعرضها !!
       </div>
       @endif
-      
-
-
- <!--  حركة الخدمات-->
- <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة الخدمات الداخلية والخارجية علي حساب  المورد للمندوب الفترة</h3>
- @if (@isset($details['services_orders']) && !@empty($details['services_orders']) && count($details['services_orders'])>0)
- <table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
-    <thead style="background-color: lightgrey">
-       <th>كود</th>
-       <th>  فئة الفاتورة</th>
-       <th> الحساب المالي /الجهة</th>
-       <th> تاريخ الفاتورة</th>
-       <th>  نوع الفاتورة</th>
-       <th>    اجمالي الفاتورة</th>
-       <th>حالة الفاتورة</th>
-    </thead>
-    <tbody>
-       @foreach ($details['services_orders'] as $info )
-       <tr >
-          <td>{{ $info->auto_serial }}</td>
-          <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات نقدمها للغير @endif</td>
-          <td>
-             @if ($info->is_account_number==1)
-             {{ $info->account_name }}
-             @else
-             جهة <br>  {{ $info->entity_name }}
-             @endif
-          </td>
-          <td>{{ $info->order_date }}</td>
-          <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
-          <td>{{ $info->total_cost*(1) }}</td>
-          <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
-       </tr>
-       @endforeach
-    </tbody>
- </table>
- @else
- <div class="alert alert-danger">
-    عفوا لاتوجد بيانات لعرضها !!
- </div>
- @endif
-
-
-
+      <!--  حركة الخدمات-->
+      <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة الخدمات الداخلية والخارجية علي حساب  المورد للمندوب الفترة</h3>
+      @if (@isset($details['services_orders']) && !@empty($details['services_orders']) && count($details['services_orders'])>0)
+      <table dir="rtl" id="example2" class="table table-bordered table-hover" style="width: 99%;margin: 0 auto;">
+         <thead style="background-color: lightgrey">
+            <th>كود</th>
+            <th>  فئة الفاتورة</th>
+            <th> الحساب المالي /الجهة</th>
+            <th> تاريخ الفاتورة</th>
+            <th>  نوع الفاتورة</th>
+            <th>    اجمالي الفاتورة</th>
+            <th>حالة الفاتورة</th>
+         </thead>
+         <tbody>
+            @foreach ($details['services_orders'] as $info )
+            <tr >
+               <td>{{ $info->auto_serial }}</td>
+               <td>@if($info->order_type==1)  خدمات مقدمة لنا   @else   خدمات نقدمها للغير @endif</td>
+               <td>
+                  @if ($info->is_account_number==1)
+                  {{ $info->account_name }}
+                  @else
+                  جهة <br>  {{ $info->entity_name }}
+                  @endif
+               </td>
+               <td>{{ $info->order_date }}</td>
+               <td>@if($info->pill_type==1)  كاش  @elseif($info->pill_type==2)  اجل  @else  غير محدد @endif</td>
+               <td>{{ $info->total_cost*(1) }}</td>
+               <td>@if($info->is_approved==1)  معتمدة   @else   مفتوحة @endif</td>
+            </tr>
+            @endforeach
+         </tbody>
+      </table>
+      @else
+      <div class="alert alert-danger">
+         عفوا لاتوجد بيانات لعرضها !!
+      </div>
+      @endif
       <!--  حركة النقدية-->
       <h3 style="font-size: 16px; text-align: center; margin-top: 5px;font-weight: bold">   حركة النقدية علي حساب  المندوب خلال الفترة</h3>
       @if (@isset($details['Treasuries_transactions']) && !@empty($details['Treasuries_transactions']) && count($details['Treasuries_transactions'])>0)

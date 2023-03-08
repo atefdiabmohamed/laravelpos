@@ -40,7 +40,6 @@ $i=1;
       @endforeach
    </tbody>
 </table>
-
 @else
 <div class="alert alert-danger">
    عفوا لاتوجد بيانات لعرضها !!

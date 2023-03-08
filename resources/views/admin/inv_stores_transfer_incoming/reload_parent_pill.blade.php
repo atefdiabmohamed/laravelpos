@@ -7,12 +7,10 @@
    <tr>
       <td class="width30">   تاريخ الامر </td>
       <td > {{ $data['order_date'] }}</td>
-
    <tr>
       <td class="width30">  اسم  مخزن الصرف </td>
       <td > {{ $data['from_store_name'] }}</td>
    </tr>
-
    <tr>
       <td class="width30">     اسم مخزن الاستلام  </td>
       <td > {{ $data['to_store_name'] }}</td>
@@ -78,4 +76,3 @@
    عفوا لاتوجد بيانات لعرضها !!
 </div>
 @endif
-

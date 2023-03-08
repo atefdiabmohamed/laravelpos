@@ -38,24 +38,17 @@
                <div class="form-group"> 
                   <label>    فئة الفاتورة @if($Services_Added_Counter>0) (لايمكن تحديث الفئة لوجود خدمات مضافة علي الفاتورة)  @endif </label>
                   <select name="order_type" id="order_type" class="form-control">
-                 
-                    @if($Services_Added_Counter>0) 
-                   @if($data['order_type']==1)
-                   <option   @if(old('order_type',$data['order_type'])==1) selected="selected"  @endif value="1">  خدمات مقدمة لنا</option>
-                   @else
-                   <option  @if(old('order_type',$data['order_type'])==2) selected="selected"   @endif value="2">  خدمات نقدمها للغير</option>
-
-                    @endif
-
-
-                    @else
-                    <option   @if(old('order_type',$data['order_type'])==1) selected="selected"  @endif value="1">  خدمات مقدمة لنا</option>
-                    <option  @if(old('order_type',$data['order_type'])==2) selected="selected"   @endif value="2">  خدمات نقدمها للغير</option>
-                  
-                    @endif 
-                
-                
-                </select>
+                  @if($Services_Added_Counter>0) 
+                  @if($data['order_type']==1)
+                  <option   @if(old('order_type',$data['order_type'])==1) selected="selected"  @endif value="1">  خدمات مقدمة لنا</option>
+                  @else
+                  <option  @if(old('order_type',$data['order_type'])==2) selected="selected"   @endif value="2">  خدمات نقدمها للغير</option>
+                  @endif
+                  @else
+                  <option   @if(old('order_type',$data['order_type'])==1) selected="selected"  @endif value="1">  خدمات مقدمة لنا</option>
+                  <option  @if(old('order_type',$data['order_type'])==2) selected="selected"   @endif value="2">  خدمات نقدمها للغير</option>
+                  @endif 
+                  </select>
                   @error('order_type')
                   <span class="text-danger">{{ $message }}</span>
                   @enderror
@@ -86,8 +79,8 @@
                @enderror
          </div>
          <div class="form-group" id="entity_nameDiv" @if( old('is_account_number',$data['is_account_number'])==1) style="display: none;"   @endif >
-            <label>   اسم الجهة ( طياري )</label>
-            <input name="entity_name" class="form-control" id="entity_name" type="text"  value="{{ old('entity_name',$data['entity_name']) }}"    >
+         <label>   اسم الجهة ( طياري )</label>
+         <input name="entity_name" class="form-control" id="entity_name" type="text"  value="{{ old('entity_name',$data['entity_name']) }}"    >
          @error('entity_name')
          <span class="text-danger">{{ $message }}</span>
          @enderror

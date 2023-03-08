@@ -131,7 +131,6 @@
                      </td>
                   </tr>
                </table>
-               
             </div>
             <!--  treasuries_delivery   -->
             <div class="card-header">
@@ -156,12 +155,10 @@
                <input type="hidden" id="id_parent_pill" value="{{ $data['id'] }}">
             </div>
             <div id="ajax_responce_serarchDivDetails">
-
                @if (@isset($details) && !@empty($details) && count($details)>0)
                @php
                $i=1;   
                @endphp
-
                <table id="example2" class="table table-bordered table-hover">
                   <thead class="custom_thead">
                      <th>مسلسل</th>
@@ -229,8 +226,6 @@
                   عفوا لاتوجد بيانات لعرضها !!
                </div>
                @endif
-
-               
             </div>
             <!--  End treasuries_delivery   -->
             @else

@@ -8,40 +8,31 @@
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
          td{font-size: 15px !important;text-align: center;}
- 
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
-        
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">  نوع الفاتورة 
                <span style="margin-right: 10px;">/ @if($data["order_type"] ==1) خدمات مقدمة لنا @else خدمات نقدمها للغير @endif</span>
-           
             </td>
          </tr>
          @if($data["is_account_number"] ==1)
-        
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> كود الحساب المالي 
                <span style="margin-right: 10px;">/ {{ $data["account_number"] }}</span>
-           
             </td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الحساب المالي  <span style="margin-right: 10px;">/ {{ $data['account_name'] }}</span></td>
          </tr>
-       @else
-       <tr>
-         <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الجهة الخارجية   <span style="margin-right: 10px;">/ {{ $data['entity_name'] }}</span></td>
-      </tr>
-       @endif
-
-
+         @else
+         <tr>
+            <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم الجهة الخارجية   <span style="margin-right: 10px;">/ {{ $data['entity_name'] }}</span></td>
+         </tr>
+         @endif
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
-       
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   حالة الفاتورة  <span style="margin-right: 10px;">/ @if($data['is_approved']==1) معتمدة @else غير معتمدة @endif</span></td>
          </tr>
@@ -81,16 +72,14 @@
             </td>
          </tr>
       </table>
- <div class="clearfix"></div>
- <p></p>
+      <div class="clearfix"></div>
+      <p></p>
       <table  dir="rtl" border="1" style="width: 98%;  auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
-         
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
             <td  style="font-weight: bold;">الخدمة</td>
             <td style="font-weight: bold;">اجمالي</td>
             <td style="font-weight: bold;">ملاحظات</td>
-
          </tr>
          @if(!@empty($invoices_details) and count($invoices_details)>0)
          @php $i=1;  @endphp
@@ -99,20 +88,15 @@
             <td>
                {{ $i }}
             </td>
-           
             <td>
                {{ $info->service_name }}
-           
             </td>
             <td>
                {{$info->total*1  }}
             </td>
-         
-           
             <td>
                {{$info->notes }}                                  
             </td>
-         
          </tr>
          <?php $i++; endforeach;?>
          <tr>
@@ -122,7 +106,6 @@
          </tr>
          @endif
       </table>
-      
       <br>
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr >

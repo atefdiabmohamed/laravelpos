@@ -1,4 +1,3 @@
-
 @if (@isset($data) && !@empty($data))
 <table id="example2" class="table table-bordered table-hover">
    <tr>
@@ -108,7 +107,6 @@
       </td>
    </tr>
 </table>
-
 @else
 <div class="alert alert-danger">
    عفوا لاتوجد بيانات لعرضها !!

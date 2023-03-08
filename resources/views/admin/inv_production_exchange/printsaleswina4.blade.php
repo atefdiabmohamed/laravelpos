@@ -8,15 +8,12 @@
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
          td{font-size: 15px !important;text-align: center;}
- 
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> كود خط الانتاج 
                <span style="margin-right: 10px;">/ {{ $data["production_lines_code"] }}</span>
-           
             </td>
          </tr>
          <tr>
@@ -70,8 +67,8 @@
             </td>
          </tr>
       </table>
- <div class="clearfix"></div>
- <p></p>
+      <div class="clearfix"></div>
+      <p></p>
       <table  dir="rtl" border="1" style="width: 98%;  auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
@@ -94,7 +91,6 @@
             </td>
             <td>
                {{ $info->item_card_name }}
-           
             </td>
             <td>
                {{$info->uom_name  }}
@@ -108,7 +104,6 @@
             <td>
                {{$info->total_price*1  }}                                  
             </td>
-         
          </tr>
          <?php $i++; endforeach;?>
          <tr>
@@ -118,7 +113,6 @@
          </tr>
          @endif
       </table>
-      
       <br>
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr >

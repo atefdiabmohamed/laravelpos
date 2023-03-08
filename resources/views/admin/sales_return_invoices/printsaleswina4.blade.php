@@ -8,9 +8,7 @@
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
          td{font-size: 15px !important;text-align: center;}
- 
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
@@ -24,23 +22,20 @@
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> اسم العميل  
-
                <span style="margin-right: 10px;">/
-                  @if($data['is_has_customer']==1)
-                   {{ $data['customer_name'] }}
-                   @else
-                   لايوجد عميل
-                   @endif
-                  </span>
-            
+               @if($data['is_has_customer']==1)
+               {{ $data['customer_name'] }}
+               @else
+               لايوجد عميل
+               @endif
+               </span>
             </td>
          </tr>
          @if($data['is_has_customer']==1)
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">  رقم التيلفون  <span style="margin-right: 10px;">/ {{ $data['customer_phones'];}}</span></td>
          </tr>
-              @endif
-
+         @endif
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الفاتورة  <span style="margin-right: 10px;">/ {{ $data['invoice_date'];}}</span></td>
          </tr>

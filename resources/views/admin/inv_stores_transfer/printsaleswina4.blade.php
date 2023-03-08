@@ -8,19 +8,15 @@
       <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap_rtl-v4.2.1/bootstrap.min.css')}}">
       <style>
          td{font-size: 15px !important;text-align: center;}
- 
       </style>
-
    <body style="padding-top: 10px;font-family: tahoma;">
       <table  cellspacing="0" style="width: 30%; margin-right: 5px; float: right;  border: 1px dashed black "  dir="rtl">
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;"> كود أمر التحويل  
                <span style="margin-right: 10px;">/ {{ $data["auto_serial"] }}</span>
-           
             </td>
          </tr>
-      
-            <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الامر  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
+         <td style="padding: 5px; text-align: right;font-weight: bold;">   تاريخ الامر  <span style="margin-right: 10px;">/ {{ $data['order_date']}}</span></td>
          </tr>
          <tr>
             <td style="padding: 5px; text-align: right;font-weight: bold;">   مخزن الصرف  <span style="margin-right: 10px;">/ {{ $data['from_store_name']}}</span></td>
@@ -50,7 +46,6 @@
                color: red;
                border: 1px solid black; "> رقم : {{ $data['auto_serial'] }} </span></td>
          </tr>
-        
       </table>
       <table style="width: 35%;float: right; margin-left: 5px; " dir="rtl">
          <tr>
@@ -60,8 +55,8 @@
             </td>
          </tr>
       </table>
- <div class="clearfix"></div>
- <p></p>
+      <div class="clearfix"></div>
+      <p></p>
       <table  dir="rtl" border="1" style="width: 98%;  auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr style="background-color: gainsboro">
             <td style="font-weight: bold;">م</td>
@@ -84,7 +79,6 @@
             </td>
             <td>
                {{ $info->item_card_name }}
-           
             </td>
             <td>
                {{$info->uom_name  }}
@@ -98,7 +92,6 @@
             <td>
                {{$info->total_price*1  }}                                  
             </td>
-         
          </tr>
          <?php $i++; endforeach;?>
          <tr>
@@ -108,18 +101,15 @@
          </tr>
          @endif
       </table>
-      
       <br>
       <table  dir="rtl" border="1" style="width: 98%; margin: 0 auto;"  id="example2" cellpadding="1" cellspacing="0"  aria-describedby="example2_info" >
          <tr >
             <td style="font-weight: bold;">عدد الاصناف المضافة للأمر</td>
             <td style="font-weight: bold;">اجمالي قيمة الاصناف</td>
-    
          </tr>
          <tr>
             <td>{{ $data["items_counter"]*(1)}}</td>
             <td>{{$data['total_cost_items']*(1)}}</td>
-        
          </tr>
       </table>
       <p style="position: fixed;

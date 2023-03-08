@@ -1,7 +1,6 @@
 @if (@isset($data) && !@empty($data))
 <style>
-td{text-align: right}
-
+   td{text-align: right}
 </style>
 @php
 $i=1;   
