@@ -108,6 +108,9 @@ Route::get('/itemcard/delete/{id}', [InvItemCardController::class, 'delete'])->n
 Route::post('/itemcard/ajax_search', [InvItemCardController::class, 'ajax_search'])->name('admin.itemcard.ajax_search');
 Route::get('/itemcard/show/{id}', [InvItemCardController::class, 'show'])->name('admin.itemcard.show');
 Route::post('/itemcard/ajax_search_movements', [InvItemCardController::class, 'ajax_search_movements'])->name('admin.itemcard.ajax_search_movements');
+Route::post('/itemcard/ajax_check_barcode', [InvItemCardController::class, 'ajax_check_barcode'])->name('admin.itemcard.ajax_check_barcode');
+Route::post('/itemcard/ajax_check_name', [InvItemCardController::class, 'ajax_check_name'])->name('admin.itemcard.ajax_check_name');
+
 /*           end Item Card                */
 /*         start  account types              */
 Route::get('/accountTypes/index', [Account_types_controller::class, 'index'])->name('admin.accountTypes.index');

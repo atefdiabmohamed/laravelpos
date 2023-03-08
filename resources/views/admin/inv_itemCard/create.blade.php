@@ -20,14 +20,17 @@
         <!-- /.card-header -->
         <div class="card-body">
        
-      
+      <input type="hidden" id="ajax_url_ajax_check_barcode" value="{{ route('admin.itemcard.ajax_check_barcode') }}" >
+      <input type="hidden" id="ajax_url_ajax_check_name" value="{{ route('admin.itemcard.ajax_check_name') }}" >
+      <input type="hidden" id="token_search" value="{{csrf_token() }}">
+
       <form action="{{ route('admin.itemcard.store') }}" method="post" enctype="multipart/form-data" >
         <div class="row">
         @csrf
     <div class="col-md-6">    
       <div class="form-group">
-<label>  باركود الصنف - في حالة عدم الادخال سيولد بشكل الي</label>
-<input name="barcode" id="barcode" class="form-control" value="{{ old('barcode') }}" placeholder="ادخل  باركود الصنف"  >
+<label>  باركود الصنف - في حالة عدم الادخال سيولد بشكل الي</label> <span id="barcodeCheckMessage"> </span>
+<input name="barcode" id="barcode" autofocus class="form-control" value="{{ old('barcode') }}" placeholder="ادخل  باركود الصنف"  >
 @error('barcode')
 <span class="text-danger">{{ $message }}</span>
 @enderror
@@ -35,7 +38,7 @@
 </div>
 <div class="col-md-6">   
 <div class="form-group">
-  <label>اسم  الصنف</label>
+  <label>اسم  الصنف</label>  <span id="nameCheckMessage"> </span>
   <input name="name" id="name" class="form-control" value="{{ old('name') }}" placeholder="ادخل اسم الصنف"   >
   @error('name')
   <span class="text-danger">{{ $message }}</span>

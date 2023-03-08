@@ -22,6 +22,7 @@ $(document).ready(function() {
                   } else {
                       $(".relatied_to_date").hide();
                   }
+                  $("#quantity_add").focus();
               },
               error: function() {
                   $(".relatied_to_itemCard").hide();
@@ -42,8 +43,9 @@ $(document).ready(function() {
   $(document).on('input', '#price_add', function(e) {
       recaluclate_Add();
   });
-  $(document).on('click', '#AddToBill', function(e) {
-      var item_code_add = $("#item_code_add").val();
+
+function make_enter(){
+    var item_code_add = $("#item_code_add").val();
       if (item_code_add == "") {
           alert("من فضلك  اختر الصنف");
           $("#item_code_add").focus();
@@ -119,14 +121,64 @@ $(document).ready(function() {
               type: type
           },
           success: function(data) {
-              alert("تم الاضافة بنجاح");
+           var itemName=$("#item_code_add option:selected").text(); 
+        
+          $("#AddEventMessage").text("تمت اضافة الصنف "+itemName+" بنجاح");
+          $("#AddEventMessage").css('color','green');
+          $("#item_code_add").val(0);
+          $(".select2").select2();
+          $("#total_add").val(0);
+          $("#UomDivAdd").html("");
+          $("#UomDivAdd").hide();
+          $("#price_add").val("");
+          $("#quantity_add").val("");
+          $("#item_code_add").select2("open");
               reload_parent_pill();
               reload_itemsdetials();
           },
-          error: function() {}
+          error: function() {
+            $("#AddEventMessage").text("    عفوا هناك خطأ");
+            $("#AddEventMessage").css('color','red');
+
+
+          }
       });
+      
+}
+
+
+  $(document).on('click', '#AddToBill', function(e) {
+    make_enter();
+  
   });
 
+  $(document).on('keyup', '#quantity_add', function(e) {
+   if(e.key=="Enter" || e.keycode==13){
+   if($(this).val()!=''){
+    $("#price_add").focus();
+   }else{
+    alert("من فضلك ادخل الكمية المستلمة !");
+    $("#quantity_add").focus();
+    return false;
+   }
+   }
+  
+  });
+
+  $(document).on('keyup', '#price_add', function(e) {
+    if(e.key=="Enter" || e.keycode==13){
+    if($(this).val()!=''){
+     make_enter();
+    }else{
+     alert("من فضلك ادخل سعر الوحدة  !");
+     $("#price_add").focus();
+     return false;
+    }
+    }
+   
+   });
+ 
+  
   function recaluclate_Add() {
       var quantity_add = $("#quantity_add").val();
       var price_add = $("#price_add").val();
@@ -218,6 +270,8 @@ $(document).ready(function() {
               $("#Add_item_Modal").modal("show");
               $("#edit_item_Modal_body").html("");
               $("#edit_item_Modal").modal("hide");
+              $(".select2").select2(); 
+
           },
           error: function() {}
       });

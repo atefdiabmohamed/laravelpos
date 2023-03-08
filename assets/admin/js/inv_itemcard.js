@@ -425,4 +425,77 @@ $(document).ready(function() {
   $(document).on('change', '#moveDateorderType', function(e) {
       make_search_movements();
   });
+
+
+  $(document).on('click', '#do_add_item_cardd', function(e) {
+   var name=$("#name").val();
+   if(name==''){
+    $("#name").focus();
+    e.preventDefault();
+    return false;
+   }
+});
+
+   $(document).on('change', '#barcode', function(e) {
+    var barcode=$(this).val();
+    var token_search = $("#token_search").val();
+
+    var ajax_search_url = $("#ajax_url_ajax_check_barcode").val();
+    jQuery.ajax({
+        url: ajax_search_url,
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        data: {
+            barcode: barcode,
+            "_token": token_search
+     
+        },
+        success: function(data) {
+        if(data=='allowed'){
+        $("#barcodeCheckMessage").text("(متاح)");
+        $("#barcodeCheckMessage").css('color','green');
+        }else{
+            $("#barcodeCheckMessage").text("(مسجل من قبل)");
+            $("#barcodeCheckMessage").css('color','red');
+        }
+        },
+        error: function() {}
+    });
+
+    
+});
+
+$(document).on('change', '#name', function(e) {
+    var name=$(this).val();
+    var token_search = $("#token_search").val();
+
+    var ajax_search_url = $("#ajax_url_ajax_check_name").val();
+    jQuery.ajax({
+        url: ajax_search_url,
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        data: {
+            name: name,
+            "_token": token_search
+     
+        },
+        success: function(data) {
+        if(data=='allowed'){
+        $("#nameCheckMessage").text("(متاح)");
+        $("#nameCheckMessage").css('color','green');
+        }else{
+            $("#nameCheckMessage").text("(مسجل من قبل)");
+            $("#nameCheckMessage").css('color','red');
+        }
+        },
+        error: function() {}
+    });
+
+    
+});
+
+
+
 });

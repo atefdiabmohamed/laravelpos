@@ -55,6 +55,7 @@ $data_insert['item_code'] = $row['item_code'] + 1;
 } else {
 $data_insert['item_code'] = 1;
 }
+
 //check if not exsits for barcode
 if ($request->barcode != '') {
 $checkExists_barcode = Inv_itemCard::where(['barcode' => $request->barcode, 'com_code' => $com_code])->first();
@@ -409,4 +410,36 @@ $info->store_name = get_field_value(new Store(), 'name', array('id' => $info->st
 return view('admin.inv_itemCard.ajax_search_movements', ['data' => $data]);
 }
 }
+
+public function ajax_check_barcode (Request $request)
+{
+if ($request->ajax()) {
+$barcode = $request->barcode;
+$com_code=auth()->user()->com_code;
+$checkExists_barcode = Inv_itemCard::where(['barcode' => $request->barcode, 'com_code' => $com_code])->first();
+if (!empty($checkExists_barcode)) {
+return json_encode('not_allowed');
+}else{
+    return json_encode('allowed');
+}
+
+}
+}
+
+
+public function ajax_check_name (Request $request)
+{
+if ($request->ajax()) {
+$name = $request->name;
+$com_code=auth()->user()->com_code;
+$checkExists_name = Inv_itemCard::where(['name' => $request->name, 'com_code' => $com_code])->first();
+if (!empty($checkExists_name)) {
+return json_encode('not_allowed');
+}else{
+    return json_encode('allowed');
+}
+
+}
+}
+
 }
