@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2023 at 01:32 AM
+-- Generation Time: Mar 08, 2023 at 10:06 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `sales`
@@ -88,7 +82,8 @@ INSERT INTO `accounts` (`id`, `name`, `account_type`, `is_parent`, `parent_accou
 (33, 'شركة الرميزان للأجهزة الثقيله', 9, 0, 10, 33, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2022-11-22 17:41:58', '2022-12-02 13:39:13', 1, 1, '2022-11-22'),
 (34, 'الحساب المالي الاب لخطوط الانتاج', 9, 1, NULL, 34, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2023-01-04 02:48:02', '2023-01-04 02:48:02', 1, 1, '2023-01-04'),
 (36, 'خط انتاج الافران الكبيره', 5, 0, 34, 35, 3, '0.00', '0.00', 1, NULL, 1, 1, '2023-01-04 02:55:26', '2023-02-17 01:01:20', 1, 1, '2023-01-04'),
-(37, 'خط اننتاج غسالات عادية', 5, 0, 34, 36, 3, '0.00', '0.00', 2, NULL, 1, NULL, '2023-01-07 01:10:00', '2023-01-07 01:10:00', 1, 1, '2023-01-07');
+(37, 'خط اننتاج غسالات عادية', 5, 0, 34, 36, 3, '0.00', '0.00', 2, NULL, 1, NULL, '2023-01-07 01:10:00', '2023-01-07 01:10:00', 1, 1, '2023-01-07'),
+(38, 'كافتريا الهلال', 9, 1, NULL, 37, 3, '0.00', '0.00', NULL, NULL, 1, NULL, '2023-03-04 23:52:44', '2023-03-04 23:52:44', 1, 1, '2023-03-04');
 
 -- --------------------------------------------------------
 
@@ -398,7 +393,9 @@ CREATE TABLE `inv_itemcard` (
 INSERT INTO `inv_itemcard` (`id`, `item_code`, `barcode`, `name`, `item_type`, `inv_itemcard_categories_id`, `parent_inv_itemcard_id`, `does_has_retailunit`, `retail_uom_id`, `uom_id`, `retail_uom_quntToParent`, `added_by`, `created_at`, `updated_at`, `updated_by`, `active`, `date`, `com_code`, `price`, `nos_gomla_price`, `gomla_price`, `price_retail`, `nos_gomla_price_retail`, `gomla_price_retail`, `cost_price`, `cost_price_retail`, `has_fixced_price`, `All_QUENTITY`, `QUENTITY`, `QUENTITY_Retail`, `QUENTITY_all_Retails`, `photo`) VALUES
 (1, 1, 'item1', 'الواح حديد مستوي متر في متر', 1, 6, 0, 0, NULL, 10, NULL, 1, '2022-12-19 01:27:11', '2023-03-02 01:36:45', 1, 1, '2022-12-19', 1, '20.00', '18.00', '16.00', NULL, NULL, NULL, '300.00', NULL, 1, '819.00', '819.000', NULL, NULL, NULL),
 (2, 2, 'item2', 'مقابض', 2, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-11 03:50:59', '2023-02-26 07:24:22', NULL, 1, '2023-02-11', 1, '30.00', '25.00', '22.00', NULL, NULL, NULL, '100.00', NULL, 1, '90.00', '90.000', NULL, NULL, NULL),
-(3, 3, 'item3', 'فرن بلدي متوسط', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-17 00:57:49', '2023-02-25 03:11:46', NULL, 1, '2023-02-17', 1, '5000.00', '4700.00', '4500.00', NULL, NULL, NULL, '2000.00', NULL, 1, '0.00', '0.000', NULL, NULL, NULL);
+(3, 3, 'item3', 'فرن بلدي متوسط', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-02-17 00:57:49', '2023-02-25 03:11:46', NULL, 1, '2023-02-17', 1, '5000.00', '4700.00', '4500.00', NULL, NULL, NULL, '2000.00', NULL, 1, '0.00', '0.000', NULL, NULL, NULL),
+(4, 4, 'item-415', 'مقبض نحاس متوسط', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-03-07 07:10:31', '2023-03-07 07:10:31', NULL, 1, '2023-03-07', 1, '100.00', '90.00', '80.00', NULL, NULL, NULL, '50.00', NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(5, 5, '6221025030733', 'مسامير 4 سم صلب', 1, 6, 0, 0, NULL, 10, NULL, 1, '2023-03-08 10:19:36', '2023-03-08 10:19:36', NULL, 1, '2023-03-08', 1, '6.00', '5.00', '4.00', NULL, NULL, NULL, '2.00', NULL, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -938,7 +935,8 @@ CREATE TABLE `inv_stores_transfer` (
 --
 
 INSERT INTO `inv_stores_transfer` (`id`, `auto_serial`, `transfer_from_store_id`, `transfer_to_store_id`, `order_date`, `is_approved`, `com_code`, `notes`, `items_counter`, `total_cost_items`, `added_by`, `created_at`, `updated_at`, `updated_by`, `approved_by`, `approved_at`) VALUES
-(3, 1, 1, 5, '2023-02-25', 1, 1, NULL, '43.00', '6042.00', 1, '2023-02-25 02:42:57', '2023-03-02 01:39:29', 1, 1, '2023-03-02 01:39:29');
+(3, 1, 1, 5, '2023-02-25', 1, 1, NULL, '43.00', '6042.00', 1, '2023-02-25 02:42:57', '2023-03-02 01:39:29', 1, 1, '2023-03-02 01:39:29'),
+(4, 2, 3, 4, '2023-03-04', 0, 1, NULL, '0.00', '0.00', 1, '2023-03-04 00:57:22', '2023-03-04 00:57:22', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1484,7 +1482,8 @@ CREATE TABLE `suppliers_with_orders` (
 --
 
 INSERT INTO `suppliers_with_orders` (`id`, `order_type`, `auto_serial`, `DOC_NO`, `order_date`, `suuplier_code`, `is_approved`, `com_code`, `notes`, `discount_type`, `discount_percent`, `discount_value`, `tax_percent`, `total_cost_items`, `tax_value`, `total_befor_discount`, `total_cost`, `account_number`, `money_for_account`, `pill_type`, `what_paid`, `what_remain`, `treasuries_transactions_id`, `Supplier_balance_befor`, `Supplier_balance_after`, `added_by`, `created_at`, `updated_at`, `updated_by`, `store_id`, `approved_by`) VALUES
-(3, 1, 1, '1', '2023-02-26', 2, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '10000.00', '0.00', '10000.00', '10000.00', 6, '-10000.00', 2, '0.00', '10000.00', NULL, NULL, NULL, 1, '2023-02-26 07:18:56', '2023-02-26 07:19:54', 1, 1, 1);
+(3, 1, 1, '1', '2023-02-26', 2, 1, 1, NULL, NULL, '0.00', '0.00', '0.00', '10000.00', '0.00', '10000.00', '10000.00', 6, '-10000.00', 2, '0.00', '10000.00', NULL, NULL, NULL, 1, '2023-02-26 07:18:56', '2023-02-26 07:19:54', 1, 1, 1),
+(4, 1, 2, '5', '2023-03-08', 5, 0, 1, NULL, NULL, '0.00', '0.00', '0.00', '260.00', '0.00', '260.00', '260.00', 21, NULL, 1, '0.00', '0.00', NULL, NULL, NULL, 1, '2023-03-08 10:03:28', '2023-03-08 11:01:53', 1, 5, NULL);
 
 -- --------------------------------------------------------
 
@@ -1520,7 +1519,21 @@ CREATE TABLE `suppliers_with_orders_details` (
 --
 
 INSERT INTO `suppliers_with_orders_details` (`id`, `suppliers_with_order_id`, `suppliers_with_orders_auto_serial`, `order_type`, `com_code`, `deliverd_quantity`, `uom_id`, `isparentuom`, `unit_price`, `total_price`, `order_date`, `added_by`, `created_at`, `updated_by`, `updated_at`, `item_code`, `batch_auto_serial`, `production_date`, `expire_date`, `item_card_type`) VALUES
-(3, 3, 1, 1, 1, '100.00', 10, 1, '100.00', '10000.00', '2023-02-26', 1, '2023-02-26 07:19:18', NULL, '2023-02-26 07:19:18', 2, NULL, '2023-02-01', '2023-02-26', 2);
+(3, 3, 1, 1, 1, '100.00', 10, 1, '100.00', '10000.00', '2023-02-26', 1, '2023-02-26 07:19:18', NULL, '2023-02-26 07:19:18', 2, NULL, '2023-02-01', '2023-02-26', 2),
+(4, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:45:09', NULL, '2023-03-08 10:45:09', 5, NULL, NULL, NULL, 1),
+(5, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:45:32', NULL, '2023-03-08 10:45:32', 5, NULL, NULL, NULL, 1),
+(6, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:49:51', NULL, '2023-03-08 10:49:51', 5, NULL, NULL, NULL, 1),
+(7, 4, 2, 1, 1, '10.00', 10, 1, '1.00', '10.00', '2023-03-08', 1, '2023-03-08 10:50:30', NULL, '2023-03-08 10:50:30', 5, NULL, NULL, NULL, 1),
+(8, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:51:35', NULL, '2023-03-08 10:51:35', 5, NULL, NULL, NULL, 1),
+(9, 4, 2, 1, 1, '10.00', 10, 1, '1.00', '10.00', '2023-03-08', 1, '2023-03-08 10:53:32', NULL, '2023-03-08 10:53:32', 5, NULL, NULL, NULL, 1),
+(10, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:54:26', NULL, '2023-03-08 10:54:26', 5, NULL, NULL, NULL, 1),
+(11, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:55:03', NULL, '2023-03-08 10:55:03', 5, NULL, NULL, NULL, 1),
+(12, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:56:17', NULL, '2023-03-08 10:56:17', 5, NULL, NULL, NULL, 1),
+(13, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:58:23', NULL, '2023-03-08 10:58:23', 5, NULL, NULL, NULL, 1),
+(14, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 10:59:36', NULL, '2023-03-08 10:59:36', 5, NULL, NULL, NULL, 1),
+(15, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 11:00:26', NULL, '2023-03-08 11:00:26', 5, NULL, NULL, NULL, 1),
+(16, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 11:01:41', NULL, '2023-03-08 11:01:41', 5, NULL, NULL, NULL, 1),
+(17, 4, 2, 1, 1, '10.00', 10, 1, '2.00', '20.00', '2023-03-08', 1, '2023-03-08 11:01:52', NULL, '2023-03-08 11:01:52', 5, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1976,7 +1989,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `account_types`
@@ -2030,7 +2043,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inv_itemcard`
 --
 ALTER TABLE `inv_itemcard`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `inv_itemcard_batches`
@@ -2114,7 +2127,7 @@ ALTER TABLE `inv_stores_inventory_details`
 -- AUTO_INCREMENT for table `inv_stores_transfer`
 --
 ALTER TABLE `inv_stores_transfer`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inv_stores_transfer_details`
@@ -2210,13 +2223,13 @@ ALTER TABLE `suppliers_categories`
 -- AUTO_INCREMENT for table `suppliers_with_orders`
 --
 ALTER TABLE `suppliers_with_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `suppliers_with_orders_details`
 --
 ALTER TABLE `suppliers_with_orders_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `suupliers`
@@ -2300,7 +2313,3 @@ ALTER TABLE `services_with_orders_details`
 ALTER TABLE `suppliers_with_orders_details`
   ADD CONSTRAINT `suppliers_with_orders_details_ibfk_1` FOREIGN KEY (`suppliers_with_order_id`) REFERENCES `suppliers_with_orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
