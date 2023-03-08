@@ -1,4 +1,9 @@
-  <div class="row">
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+@endsection
+<div class="row">
    <div class="col-md-4">
     <div class="form-group"> 
       <label>   بيانات الاصناف</label>
@@ -6,7 +11,7 @@
         <option value="">اختر الصنف</option>
         @if (@isset($item_cards) && !@empty($item_cards))
        @foreach ($item_cards as $info )
-         <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} </option>
+         <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} - {{ $info->barcode }} </option>
        @endforeach
         @endif
       </select>
@@ -55,8 +60,13 @@
    <div class="col-md-12">
     <div class="form-group text-center">
     <button type="button" class="btn btn-sm btn-danger" id="AddToBill">اضف للفاتورة</button>
+    <p  id="AddEventMessage"></p>
   </div>
    </div>
 
       </div>
+
+   @section("script")
+<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+@endsection
 

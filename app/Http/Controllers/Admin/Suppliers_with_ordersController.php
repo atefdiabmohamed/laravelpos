@@ -294,7 +294,7 @@ $com_code = auth()->user()->com_code;
 $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1));
 if (!empty($parent_pill_data)) {
 if ($parent_pill_data['is_approved'] == 0) {
-$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
+$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type",'barcode'), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
 return view("admin.suppliers_with_orders.load_add_new_itemdetails", ['parent_pill_data' => $parent_pill_data, 'item_cards' => $item_cards]);
 }
 }

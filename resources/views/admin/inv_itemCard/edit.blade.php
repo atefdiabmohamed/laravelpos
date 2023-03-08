@@ -19,14 +19,16 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-       
+          <input type="hidden" id="ajax_url_ajax_check_barcode" value="{{ route('admin.itemcard.ajax_check_barcode') }}" >
+          <input type="hidden" id="ajax_url_ajax_check_name" value="{{ route('admin.itemcard.ajax_check_name') }}" >
+          <input type="hidden" id="token_search" value="{{csrf_token() }}">
       
       <form action="{{ route('admin.itemcard.update',$data['id']) }}" method="post" enctype="multipart/form-data" >
         <div class="row">
         @csrf
     <div class="col-md-6">    
       <div class="form-group">
-<label>  باركود الصنف   </label>
+<label>  باركود الصنف   <span id="barcodeCheckMessage"> </span></label>
 <input name="barcode" id="barcode" class="form-control" value="{{ old('name',$data['barcode']) }}" placeholder="ادخل  باركود الصنف"  >
 @error('barcode')
 <span class="text-danger">{{ $message }}</span>
@@ -35,7 +37,7 @@
 </div>
 <div class="col-md-6">   
 <div class="form-group">
-  <label>اسم  الصنف</label>
+  <label>اسم  الصنف  <span id="nameCheckMessage"> </span></label>
   <input name="name" id="name" class="form-control" value="{{ old('name',$data['name']) }}" placeholder="ادخل اسم الصنف"   >
   @error('name')
   <span class="text-danger">{{ $message }}</span>
