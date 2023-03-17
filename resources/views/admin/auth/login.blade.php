@@ -33,9 +33,15 @@
    </head>
    <body class="hold-transition login-page" style="background-image: url({{ asset('assets/admin/imgs/login.jpg') }}) ;background-size:cover;background-repeate:ni-repeate; min-height:600px;">
       <div class="login-box">
+ 
          <!-- /.login-logo -->
          <div class="card">
             <div class="card-body login-card-body">
+               @if(Session::has('error'))
+               <div class="alert alert-danger" role="alert">
+                  {{  Session::get('error') }}
+               </div>
+               @endif
                <p class="login-box-msg">تسجيل الدخول</p>
                <form action="{{ route('admin.login') }}" method="post">
                   @csrf
