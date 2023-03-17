@@ -16,7 +16,8 @@ if(auth()->guard('admin')->attempt(['username'=>$request->input('username'),'pas
 {
 return redirect()->route('admin.dashboard'); 
 }else{
-return redirect()->route('admin.showlogin'); 
+ 
+return redirect()->route('admin.showlogin')->with(['error' => 'عفوا بيانات تسجيل الدخول غير صحيحة !!']);; 
 }
 }
 public function logout(){
