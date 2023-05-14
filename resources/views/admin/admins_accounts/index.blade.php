@@ -6,7 +6,7 @@
 المستخدمين
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.treasuries.index') }}"> المستخدمين </a>
+<a href="{{ route('admin.admins_accounts.index') }}"> المستخدمين </a>
 @endsection
 @section('contentheaderactive')
 عرض
@@ -23,9 +23,29 @@
          </div>
          <!-- /.card-header -->
          <div class="card-body">
+            <div class="row">
             <div class="col-md-4">
-               <input type="text" id="search_by_text" placeholder="بحث بالاسم" class="form-control"> <br>
+               <div class="form-group">
+                  <label>  بحث  بالاسم</label>
+               <input style="margin-top: 6px !important;" type="text" id="search_by_name" placeholder=" اسم المستخدم" class="form-control"> <br>
             </div>
+         </div>
+            <div class="col-md-4">
+               <div class="form-group">
+                  <label>    بحث بأدوار الصلاحيات </label>
+                  <select name="permission_roles_id_search" id="permission_roles_id_search" class="form-control ">
+                     <option value="all">بحث بالكل     </option>
+                     @if (@isset($Permission_rols) && !@empty($Permission_rols))
+                     @foreach ($Permission_rols as $info )
+                     <option @if(old('permission_roles_id')==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                     @endforeach
+                     @endif
+                  </select>
+                
+               </div>
+            </div>
+            </div>
+            <div class="clearfix"></div>
             <div id="ajax_responce_serarchDiv">
                @if (@isset($data) && !@empty($data))
                @php
@@ -35,6 +55,7 @@
                   <thead class="custom_thead">
                      <th>مسلسل</th>
                      <th>اسم المستخدم</th>
+                     <th>دور صلاحية المستخدم </th>
                      <th>حالة التفعيل</th>
                      <th></th>
                   </thead>
@@ -43,6 +64,7 @@
                      <tr>
                         <td>{{ $i }}</td>
                         <td>{{ $info->name }}</td>
+                        <td>{{ $info->permission_roles_name }}</td>
                         <td>@if($info->active==1) مفعل @else معطل @endif</td>
                         <td>
                            <a href="{{ route('admin.admins_accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
@@ -69,5 +91,5 @@
 </div>
 @endsection
 @section('script')
-<script src="{{ asset('assets/admin/js/treasuries.js') }}"></script>
+<script src="{{ asset('assets/admin/js/admins.js') }}"></script>
 @endsection

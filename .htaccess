@@ -22,7 +22,7 @@
 # Disable Directory listing
 Options -Indexes
 # block files which needs to be hidden // in here specify .example extension of the file
-<Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock)$">
+<Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock|front)$">
     Order allow,deny
     Deny from all
 </Files>

@@ -22,6 +22,7 @@
    <!-- /.card-header -->
    <div class="card-body">
       <div class="row">
+         
          <div class="col-md-4">
             <label>    بحث بالاسم</label>
             <input type="text" id="search_by_text" placeholder="بحث بالاسم" class="form-control"> <br>

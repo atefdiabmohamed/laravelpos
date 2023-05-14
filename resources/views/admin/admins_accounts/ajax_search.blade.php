@@ -1,14 +1,12 @@
-@if (@isset($data) && !@empty($data))
+@if (@isset($data) && !@empty($data) && count($data) >0)
 @php
 $i=1;   
 @endphp
 <table id="example2" class="table table-bordered table-hover">
    <thead class="custom_thead">
       <th>مسلسل</th>
-      <th>اسم الخزنة</th>
-      <th>هل رئيسية</th>
-      <th>اخر ايصال صرف</th>
-      <th>اخر ايصال تحصيل</th>
+      <th>اسم المستخدم</th>
+      <th>دور صلاحية المستخدم </th>
       <th>حالة التفعيل</th>
       <th></th>
    </thead>
@@ -17,13 +15,11 @@ $i=1;
       <tr>
          <td>{{ $i }}</td>
          <td>{{ $info->name }}</td>
-         <td>@if($info->is_master==1) رئيسية @else فرعية @endif</td>
-         <td>{{ $info->last_isal_exhcange }}</td>
-         <td>{{ $info->last_isal_collect }}</td>
+         <td>{{ $info->permission_roles_name }}</td>
          <td>@if($info->active==1) مفعل @else معطل @endif</td>
          <td>
-            <a href="{{ route('admin.treasuries.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
-            <button data-id="{{ $info->id }}" class="btn btn-sm  btn-info">المذيد</button>   
+            <a href="{{ route('admin.admins_accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
+            <a href="{{ route('admin.admins_accounts.details',$info->id) }}" class="btn btn-sm  btn-info">صلاحيات خاصة</a>   
          </td>
       </tr>
       @php
@@ -37,6 +33,7 @@ $i=1;
    {{ $data->links() }}
 </div>
 @else
+<div class="clearfix"></div>
 <div class="alert alert-danger">
    عفوا لاتوجد بيانات لعرضها !!
 </div>

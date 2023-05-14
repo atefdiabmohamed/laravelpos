@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -237,13 +237,14 @@ public function Add_item_to_invoice(Request $request)
 try {
 if ($request->ajax()) {
 $com_code = auth()->user()->com_code;
-$invoice_data = get_cols_where_row(new SalesReturn(), array("is_approved", "invoice_date", "is_has_customer", "customer_code"), array("com_code" => $com_code, "auto_serial" => $request->invoiceautoserial));
+$invoice_data = get_cols_where_row(new SalesReturn(), array("is_approved", "invoice_date", "is_has_customer", "customer_code","id"), array("com_code" => $com_code, "auto_serial" => $request->invoiceautoserial));
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit"), array("com_code" => $com_code, "item_code" => $request->item_code));
 if (!empty($itemCard_Data)) {
 $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 $datainsert_items['sales_invoices_auto_serial'] = $request->invoiceautoserial;
+$datainsert_items['sales_invoices_return_id'] = $invoice_data['id'];
 $datainsert_items['store_id'] = $request->store_id;
 $datainsert_items['invoice_date'] = $invoice_data['invoice_date'];
 $datainsert_items['sales_item_type'] = $request->sales_item_type;

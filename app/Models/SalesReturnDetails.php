@@ -15,6 +15,6 @@ class SalesReturnDetails extends Model
           'invoice_date', 'added_by', 'created_at', 'updated_by',
            'updated_at', 'item_code', 'sales_item_type', 'batch_auto_serial',
             'production_date', 'expire_date',
-            'is_normal_orOther','store_id','date','unit_cost_price'
+            'is_normal_orOther','store_id','date','unit_cost_price','sales_invoices_return_id'
     ];
 }

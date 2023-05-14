@@ -15,7 +15,7 @@ class Sales_invoices_details extends Model
           'invoice_date', 'added_by', 'created_at', 'updated_by',
            'updated_at', 'item_code', 'sales_item_type', 'batch_auto_serial',
             'production_date', 'expire_date',
-            'is_normal_orOther','store_id','date','sales_invoices_id'
+            'is_normal_orOther','store_id','date','sales_invoices_id','itemCostPriceFromBatch','taoalitemCostPriceFromBatch','item_total_earnings'
     ];
     }
 

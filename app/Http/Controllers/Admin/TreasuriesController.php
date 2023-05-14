@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Treasuries;
@@ -109,6 +109,7 @@ $data=Treasuries::where('name','LIKE',"%{$search_by_text}%")->orderBy('id','DESC
 return view('admin.treasuries.ajax_search',['data'=>$data]);
 }
 }
+
 public function details($id){
 try{
 $com_code=auth()->user()->com_code;

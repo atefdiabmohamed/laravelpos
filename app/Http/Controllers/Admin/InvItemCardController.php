@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -11,6 +11,7 @@ use App\Models\inv_itemcard_categorie;
 use App\Models\Inv_uom;
 use App\Http\Requests\ItemcardRequest;
 use App\Http\Requests\ItemcardRequestUpdate;
+use App\Models\Admin_panel_setting;
 use App\Models\Inv_itemcard_movements;
 use App\Models\Sales_invoices;
 use App\Models\Sales_invoices_details;
@@ -41,6 +42,13 @@ return view('admin.inv_itemCard.index', ['data' => $data, 'inv_itemcard_categori
 public function create()
 {
 $com_code = auth()->user()->com_code;
+
+$admin_panel_settings=get_cols_where_row(new Admin_panel_setting(),array("is_set_Batches_setting"),array("com_code"=>$com_code));
+if($admin_panel_settings['is_set_Batches_setting']==0){
+    return redirect()->route('admin.itemcard.index')->with(['error' => 'عفوا يجب اولا تحديد  نوع آلية عمل الباتشات بالنظام بالضبط  العام	']);
+}
+
+
 $inv_itemcard_categories = get_cols_where(new inv_itemcard_categorie(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
 $inv_uoms_parent = get_cols_where(new Inv_uom(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1, 'is_master' => 1), 'id', 'DESC');
 $inv_uoms_child = get_cols_where(new Inv_uom(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1, 'is_master' => 0), 'id', 'DESC');
@@ -286,6 +294,7 @@ $inv_itemcard_movements_types = get_cols(new Inv_itemcard_movements_types(), arr
 $stores = get_cols_where(new Store(), array("id", "name"),array("com_code"=>$com_code), "id", "ASC");
 return view('admin.inv_itemCard.show', ['data' => $data, 'inv_itemcard_movements_categories' => $inv_itemcard_movements_categories, 'inv_itemcard_movements_types' => $inv_itemcard_movements_types,'stores'=>$stores]);
 }
+
 public function ajax_search(Request $request)
 {
 if ($request->ajax()) {
@@ -443,6 +452,15 @@ return json_encode('not_allowed');
 }
 
 }
+}
+public function generate_barcode($id)
+{
+$data = get_cols_where_row(new Inv_itemCard(), array("barcode","name"), array("id" => $id));
+if (empty($data)) {
+    return redirect()->route('admin.itemcard.index')->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+    }
+    return view("admin.inv_itemCard.generate_barcode",['data'=>$data]);
+
 }
 
 }

@@ -133,6 +133,38 @@
                   @enderror
                </div>
             </div>
+
+            @if ($data['is_set_Batches_setting']==0)
+          
+            <div class="col-md-4">
+               <div class="form-group">
+                  <label>    نوع آلية عمل الباتشات بالنظام</label>
+                  <select name="Batches_setting_type" id="Batches_setting_type" class="form-control  ">
+                     <option value="">اختر النوع </option>
+                     <option value="1">  يعمل بنظام تعدد الباتشات للصنف طبقا لاختلاف سعر الشراء وتواريخ الانتاج والانتهاء </option>
+                     <option value="2">    لايعمل بنظام الباتشات - فقط كمية لكل صنف</option>
+             
+                  </select>
+                  @error('Batches_setting_type')
+                  <span class="text-danger">{{ $message }}</span>
+                  @enderror
+               </div>
+            </div>
+
+
+            @endif
+            <div class="col-md-4">
+               <div class="form-group">
+                  <label>        وحدة البيع الاساسية بالفواتير</label>
+                  <select name="default_unit" id="default_unit" class="form-control  ">
+                     <option   @if(old('default_unit',$data['default_unit'])==1) selected="selected" @endif value="1">  بيع تلقائي بالوحدة الاساسية الاب</option>
+                     <option  @if(old('default_unit',$data['default_unit'])==2) selected="selected" @endif value="2">  بيع تلقائي بالوحدة الفرعية التجزئة</option>
+                  </select>
+                  @error('default_unit')
+                  <span class="text-danger">{{ $message }}</span>
+                  @enderror
+               </div>
+            </div>
             <div class="col-md-12">
                <div class="form-group">
                   <label>رسالة تنبية اعلي الشاشة </label>

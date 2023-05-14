@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -36,6 +36,10 @@ return view('admin.inv_stores_inventory.index', ['data' => $data, 'stores' => $s
 public function create()
 {
 $com_code = auth()->user()->com_code;
+$admin_panel_settings=get_cols_where_row(new Admin_panel_setting(),array("is_set_Batches_setting"),array("com_code"=>$com_code));
+if($admin_panel_settings['is_set_Batches_setting']==0){
+   return redirect()->route('admin.stores_inventory.index')->with(['error' => 'عفوا يجب اولا تحديد  نوع آلية عمل الباتشات بالنظام بالضبط  العام	']);
+}
 $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code,'active'=>1), 'id', 'ASC');
 return view('admin.inv_stores_inventory.create', ['stores' => $stores]);
 }

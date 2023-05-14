@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -62,7 +62,10 @@ $item_card_Data['retial_uom_name'] = get_field_value(new Inv_uom(), "name", arra
 $item_card_Data['parent_uom_name'] = get_field_value(new Inv_uom(), "name", array("id" => $item_card_Data['uom_id']));
 }
 }
-return view("admin.sales_invoices.get_item_uoms", ['item_card_Data' => $item_card_Data]);
+
+$adminPanelSettings=get_cols_where_row(new Admin_panel_setting(),array("default_unit"),array("com_code"=>$com_code));
+
+return view("admin.sales_invoices.get_item_uoms", ['item_card_Data' => $item_card_Data,'adminPanelSettings'=>$adminPanelSettings]);
 }
 }
 //مرآة فاتوةر موقته للعميل لاتؤثر علي اي شيء  مجرد عرض سعر 
@@ -118,6 +121,7 @@ array("com_code" => $com_code, "store_id" => $requesed['store_id'], "item_code" 
 'ASC'
 );
 }
+
 return view("admin.sales_invoices.get_item_batches", ['item_card_Data' => $item_card_Data, 'requesed' => $requesed, 'uom_Data' => $uom_Data, 'inv_itemcard_batches' => $inv_itemcard_batches]);
 }
 }
@@ -254,6 +258,23 @@ $datainsert_items['sales_item_type'] = $request->sales_item_type;
 $datainsert_items['item_code'] = $request->item_code;
 $datainsert_items['uom_id'] = $request->uom_id;
 $datainsert_items['batch_auto_serial'] = $request->inv_itemcard_batches_autoserial;
+/**  تفاصيل تكلفة الشراء */
+if($request->isparentuom==1){
+    $datainsert_items['itemCostPriceFromBatch'] = round($batch_data['unit_cost_price'],2);
+    $datainsert_items['taoalitemCostPriceFromBatch'] = round($batch_data['unit_cost_price']*$request->item_quantity,2);
+    $datainsert_items['item_total_earnings'] = round($request->item_total-($batch_data['unit_cost_price']*$request->item_quantity),2);
+}else{
+  $unit_cost_price_retail=round(($batch_data['unit_cost_price']/$itemCard_Data['retail_uom_quntToParent']),2);
+
+ $datainsert_items['itemCostPriceFromBatch'] = $unit_cost_price_retail;
+  $datainsert_items['taoalitemCostPriceFromBatch'] = round(($unit_cost_price_retail*$request->item_quantity),2);
+$datainsert_items['item_total_earnings'] = round(($request->item_total-($unit_cost_price_retail*$request->item_quantity)),2);
+
+}
+
+
+/**   انتهاء تفاصيل الشراء */
+
 $datainsert_items['quantity'] = $request->item_quantity;
 $datainsert_items['unit_price'] = $request->item_price;
 $datainsert_items['is_normal_orOther'] = $request->is_normal_orOther;
@@ -264,7 +285,7 @@ $datainsert_items['created_at'] = date("Y-m-d H:i:s");
 $datainsert_items['date'] = date("Y-m-d");
 $datainsert_items['com_code'] = $com_code;
 $flag_datainsert_items = insert(new Sales_invoices_details(), $datainsert_items, true);
-if (!empty($flag_datainsert_items)) {
+if (!empty($flag_datainsert_items)) { 
 //خصم الكمية من الباتش 
 //كمية الصنف بكل المخازن قبل الحركة
 $quantityBeforMove = get_sum_where(
@@ -1064,6 +1085,12 @@ $com_code=auth()->user()->com_code;
 $searchtext=$request->searchtext;
 if($searchtext!=""){
 $customers=Customer::where('name','like',"%{$searchtext}%")->orWhere('customer_code','=',$searchtext)->orderby('id','asc')->limit(10)->get();
+if(!empty($customers)){
+    foreach($customers as $info){
+        $info->SalesInvoicesCounter=get_count_where(new Sales_invoices(),array("customer_code"=>$info->customer_code,'com_code'=>$com_code));
+    }
+}
+
 }else{
 $customers=array();
 }

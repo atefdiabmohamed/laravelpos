@@ -1,9 +1,9 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
    <!-- Brand Logo -->
-   <a href="index3.html" class="brand-link">
+   <a href="{{ route('admin.dashboard') }}" class="brand-link">
    <img src="{{ asset('assets/admin/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
       style="opacity: .8">
-   <span class="brand-text font-weight-light">AdminLTE 3</span>
+   <span class="brand-text font-weight-light">Atef Soft Pos</span>
    </a>
    <!-- Sidebar -->
    <div class="sidebar">
@@ -21,7 +21,9 @@
          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-            <li class="nav-item has-treeview {{ (request()->is('admin/adminpanelsetting*')||request()->is('admin/treasuries*') )?'menu-open':'' }}     ">
+          
+            @if(check_permission_main_menue(1)==true)   
+               <li class="nav-item has-treeview {{ (request()->is('admin/adminpanelsetting*')||request()->is('admin/treasuries*') )?'menu-open':'' }}     ">
                <a href="#" class="nav-link {{ (request()->is('admin/adminpanelsetting*')||request()->is('admin/treasuries*') )?'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
@@ -30,18 +32,24 @@
                   </p>
                </a>
                <ul class="nav nav-treeview">
+                  @if(check_permission_sub_menue(1)==true)  
                   <li class="nav-item">
                      <a href="{{ route('admin.adminPanelSetting.index') }}" class="nav-link {{ (request()->is('admin/adminpanelsetting*')) ?'active':'' }}">
                         <p>الضبط العام</p>
                      </a>
                   </li>
+               @endif
+               @if(check_permission_sub_menue(2)==true)  
                   <li class="nav-item">
                      <a href="{{ route('admin.treasuries.index') }}" class="nav-link {{ (request()->is('admin/treasuries*') )?'active':'' }}">
                         <p>بيانات الخزن</p>
                      </a>
                   </li>
+                  @endif
                </ul>
             </li>
+         @endif
+
             <li class="nav-item has-treeview {{ ( (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*') ||(request()->is('admin/collect_transaction*') ||request()->is('admin/exchange_transaction*') ||request()->is('admin/delegates*') )) && !request()->is('admin/suppliers_orders*')  )?'menu-open':''  }}     ">
                <a href="#" class="nav-link {{ ( (request()->is('admin/accountTypes*')||request()->is('admin/accounts*')  ||request()->is('admin/customer*')  ||request()->is('admin/suppliers_categories*') ||request()->is('admin/supplier*') ||(request()->is('admin/collect_transaction*') ||request()->is('admin/exchange_transaction*') ||request()->is('admin/delegates*'))) && !request()->is('admin/suppliers_orders*')  )?'active':''  }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -327,8 +335,8 @@
                   </li>
                </ul>
             </li>
-            <li class="nav-item has-treeview {{ (request()->is('admin/admins_accounts*'))?'menu-open':'' }}     ">
-               <a href="#" class="nav-link {{ (request()->is('admin/admins_accounts*') )?'active':'' }}">
+            <li class="nav-item has-treeview {{ ( request()->is('admin/admins_accounts*') || request()->is('admin/permission_roles*')  || request()->is('admin/permission_main_menues*') ||request()->is('admin/permission_sub_menues*'))?'menu-open':'' }}     ">
+               <a href="#" class="nav-link {{ (request()->is('admin/admins_accounts*') || request()->is('admin/permission_roles*')  || request()->is('admin/permission_main_menues*') ||request()->is('admin/permission_sub_menues*'))?'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                      الصلاحيات  
@@ -337,6 +345,24 @@
                </a>
                <ul class="nav nav-treeview">
                   <li class="nav-item">
+
+                     <a href="{{ route('admin.permission_roles.index') }}" class="nav-link {{ (request()->is('admin/permission_roles*') )?'active':'' }}">
+                        <p>
+                           أدوار المستخدمين         
+                        </p>
+                     </a>
+
+
+                     <a href="{{ route('admin.permission_main_menues.index') }}" class="nav-link {{ (request()->is('admin/permission_main_menues*') )?'active':'' }}">
+                        <p>
+                    القوائم الرئيسية للصلاحيات        
+                        </p>
+                     </a>
+                     <a href="{{ route('admin.permission_sub_menues.index') }}" class="nav-link {{ (request()->is('admin/permission_sub_menues*') )?'active':'' }}">
+                        <p>
+                    القوائم الفرعية للصلاحيات        
+                        </p>
+                     </a>
                      <a href="{{ route('admin.admins_accounts.index') }}" class="nav-link {{ (request()->is('admin/admins_accounts*') )?'active':'' }}">
                         <p>
                            المستخدمين         

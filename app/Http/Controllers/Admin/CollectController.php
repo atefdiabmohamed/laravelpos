@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء وجزاكم الله خيرا
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -76,6 +76,7 @@ $checkExistsOpenShift = get_cols_where_row(new Admins_Shifts(), array("treasurie
 if (empty($checkExistsOpenShift)) {
 return redirect()->back()->with(['error' => "  عفوا لايوجد شفت خزنة مفتوح حاليا !!"])->withInput();
 }
+
 //first get isal number with treasuries 
 $treasury_date = get_cols_where_row(new Treasuries(), array("last_isal_collect"), array("com_code" => $com_code, "id" => $request->treasuries_id));
 if (empty($treasury_date)) {

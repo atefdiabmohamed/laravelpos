@@ -404,6 +404,7 @@ $(document).ready(function() {
             error: function() {}
         });
     });
+	
     $(document).on('click', '#ShowMovementsBtn', function(e) {
         make_search_movements();
     });

@@ -3,7 +3,7 @@
   @if (@isset($customers) && !@empty($customers) && count($customers))
   @php $i=1; @endphp
   @foreach ($customers as $info )
-  <option @if($i==1) selected @endif  value="{{ $info->customer_code }}"> {{ $info->name }} </option>
+  <option @if($i==1) selected @endif  value="{{ $info->customer_code }}"> {{ $info->name }} ( كود {{ $info->customer_code }}) - (عدد فواتير {{$info->SalesInvoicesCounter}} ) </option>
   @php $i++; @endphp
   @endforeach
   @endif

@@ -28,6 +28,9 @@
       @endif
       @endforeach
       @endif
+      @else
+<option value="">لاتوجد كميات</option>
+
       @endif
    </select>
 </div>

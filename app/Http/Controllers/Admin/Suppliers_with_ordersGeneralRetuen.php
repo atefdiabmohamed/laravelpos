@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
@@ -45,6 +45,11 @@ return view('admin.suppliers_orders_general_return.index', ['data' => $data, 'su
 public function create()
 {
 $com_code = auth()->user()->com_code;
+$admin_panel_settings=get_cols_where_row(new Admin_panel_setting(),array("is_set_Batches_setting"),array("com_code"=>$com_code));
+if($admin_panel_settings['is_set_Batches_setting']==0){
+   return redirect()->route('admin.suppliers_orders_general_return.index')->with(['error' => 'عفوا يجب اولا تحديد  نوع آلية عمل الباتشات بالنظام بالضبط  العام	']);
+}
+
 $suupliers = get_cols_where(new Supplier(), array('suuplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
 $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
 return view('admin.suppliers_orders_general_return.create', ['suupliers' => $suupliers, 'stores' => $stores]);
@@ -77,7 +82,7 @@ $data_insert['date'] = date("Y-m-d");
 $data_insert['com_code'] = $com_code;
 insert(new Suppliers_with_orders(),$data_insert);
 $id = get_field_value(new Suppliers_with_orders(), "id", array("auto_serial" => $data_insert['auto_serial'], "com_code" => $com_code, "order_type" => 3));
-return redirect()->route("admin.suppliers_orders_general_return.index")->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+return redirect()->route("admin.suppliers_orders_general_return.show",$id)->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
 } catch (\Exception $ex) {
 return redirect()->back()
 ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
@@ -367,7 +372,7 @@ $com_code = auth()->user()->com_code;
 $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_approved","store_id"), array("auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 3));
 if (!empty($parent_pill_data)) {
 if ($parent_pill_data['is_approved'] == 0) {
-$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
+$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type","barcode"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
 $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'id' => $parent_pill_data['store_id']), 'id', 'DESC');
 return view("admin.suppliers_orders_general_return.load_add_new_itemdetails", ['parent_pill_data' => $parent_pill_data, 'item_cards' => $item_cards,'stores'=>$stores]);
 }
@@ -779,21 +784,15 @@ $uom_Data = get_cols_where_row(new Inv_uom(), array("name", "is_master"), array(
 if (!empty($uom_Data)) {
 //لو صنف مخزني يبقي ههتم بالتواريخ
 if ($item_card_Data['item_type'] == 2) {
-$inv_itemcard_batches = get_cols_where(
-new Inv_itemcard_batches(),
-array("unit_cost_price", "quantity", "production_date", "expired_date", "auto_serial"),
-array("com_code" => $com_code, "store_id" => $requesed['store_id'], "item_code" => $requesed['item_code'], "inv_uoms_id" => $parent_uom),
-'production_date',
-'ASC'
-);
+$inv_itemcard_batches =Inv_itemcard_batches::select("unit_cost_price", "quantity", "production_date", "expired_date", "auto_serial")->where('com_code','=',$com_code)->
+where('store_id','=',$requesed['store_id'])->where('item_code','=',$requesed['item_code'])->
+where('inv_uoms_id','=',$parent_uom)->where('quantity','>',0)->orderby('production_date','ASC')->get();
+
 } else {
-$inv_itemcard_batches = get_cols_where(
-new Inv_itemcard_batches(),
-array("unit_cost_price", "quantity", "auto_serial"),
-array("com_code" => $com_code, "store_id" => $requesed['store_id'], "item_code" => $requesed['item_code'], "inv_uoms_id" => $parent_uom),
-'id',
-'ASC'
-);
+    $inv_itemcard_batches =Inv_itemcard_batches::select("unit_cost_price", "quantity", "auto_serial")->where('com_code','=',$com_code)->
+    where('store_id','=',$requesed['store_id'])->where('item_code','=',$requesed['item_code'])->
+    where('inv_uoms_id','=',$parent_uom)->where('quantity','>',0)->orderby('id','ASC')->get();
+
 }
 return view("admin.suppliers_orders_general_return.get_item_batches", ['item_card_Data' => $item_card_Data, 'requesed' => $requesed, 'uom_Data' => $uom_Data, 'inv_itemcard_batches' => $inv_itemcard_batches]);
 }
