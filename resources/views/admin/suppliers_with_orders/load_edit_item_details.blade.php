@@ -1,3 +1,7 @@
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @if(!@empty($parent_pill_data) )
 @if($parent_pill_data['is_approved']==0)
 @if(!@empty($item_data_detials))
@@ -9,7 +13,7 @@
             <option value="">اختر الصنف</option>
             @if (@isset($item_cards) && !@empty($item_cards))
             @foreach ($item_cards as $info )
-            <option @if($item_data_detials['item_code']==$info->item_code) selected="selected" @endif data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} </option>
+            <option @if($item_data_detials['item_code']==$info->item_code) selected="selected" @endif data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} - {{ $info->barcode }} </option>
             @endforeach
             @endif
          </select>
@@ -37,13 +41,13 @@
    <div class="col-md-4 relatied_to_itemCard" >
       <div class="form-group">
          <label> الكمية المستلمة</label>
-         <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="quantity_add" class="form-control"  value="{{ $item_data_detials['deliverd_quantity']*1 }}"  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+         <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="quantity_edit" class="form-control"  value="{{ $item_data_detials['deliverd_quantity']*1 }}"  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
       </div>
    </div>
    <div class="col-md-4 relatied_to_itemCard" >
       <div class="form-group">
          <label>  سعر الوحدة</label>
-         <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="price_add" class="form-control"  value="{{ $item_data_detials['unit_price']*1 }}"   oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+         <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="price_edit" class="form-control"  value="{{ $item_data_detials['unit_price']*1 }}"   oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
       </div>
    </div>
    <div class="col-md-4 relatied_to_date" @if($item_data_detials['item_card_type']!=2) style="display: none;" @endif>
@@ -61,11 +65,12 @@
 <div class="col-md-4 relatied_to_itemCard" >
    <div class="form-group">
       <label>   الاجمالي</label>
-      <input   readonly  id="total_add" class="form-control"  value="{{ $item_data_detials['total_price']*1 }}"  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
+      <input   readonly  id="total_edit" class="form-control"  value="{{ $item_data_detials['total_price']*1 }}"  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
    </div>
 </div>
 <div class="col-md-12">
    <div class="form-group text-center">
+      <input type="hidden" id="the_row_id_for_update" value="{{ $item_data_detials['id'] }}" >
       <button  data-id="{{ $item_data_detials['id'] }}" type="button" class="btn btn-sm btn-danger" id="EditDetailsItem">تعديل للفاتورة</button>
    </div>
 </div>
@@ -85,3 +90,6 @@
    عفوا لاتوجد بيانات لعرضها !!
 </div>
 @endif
+@section("script")
+<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+@endsection

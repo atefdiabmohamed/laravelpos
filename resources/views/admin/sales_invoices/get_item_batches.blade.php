@@ -18,7 +18,7 @@
       @foreach ( $inv_itemcard_batches as $info )
       @php
       $quantity=$info->quantity*$item_card_Data['retail_uom_quntToParent'];
-      $unit_cost_price=$info->unit_cost_price/$item_card_Data['retail_uom_quntToParent'];
+      $unit_cost_price= round($info->unit_cost_price/$item_card_Data['retail_uom_quntToParent'],2);
       @endphp
       @if($item_card_Data['item_type']==2)
       //لو كان بتواريخ استهلاكي

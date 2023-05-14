@@ -32,6 +32,9 @@ class Admin_panel_settings_Request extends FormRequest
             'delegate_parent_account_number' => 'required',
             'employees_parent_account_number' => 'required',
             'production_lines_parent_account' => 'required',
+            'Batches_setting_type' => 'required|sometimes',
+
+            
 
 
         ];

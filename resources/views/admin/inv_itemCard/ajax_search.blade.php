@@ -26,6 +26,9 @@ $i=1;
          <td>
             <a href="{{ route('admin.itemcard.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>   
             <a href="{{ route('admin.itemcard.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>   
+            <a target="_blank" href="{{ route('admin.itemcard.generate_barcode',$info->id) }}" class="btn btn-sm   btn-success">باركود <i class="fa fa-print"></i></a>   
+
+       
          </td>
       </tr>
       @php

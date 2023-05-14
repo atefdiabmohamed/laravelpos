@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء وجزاكم الله خيرا
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin_panel_setting;
@@ -13,6 +13,7 @@ class Admin_panel_settingsController extends Controller
 {
 public function index()
 {
+    check_permission_sub_menue_actions_redirect(1);
 $data = Admin_panel_setting::where('com_code', auth()->user()->com_code)->first();
 if (!empty($data)) {
 if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
@@ -29,12 +30,14 @@ return view('admin.admin_panel_settings.index', ['data' => $data]);
 }
 public function edit()
 {
+    check_permission_sub_menue_actions_redirect(2);
 $data = Admin_panel_setting::where('com_code', auth()->user()->com_code)->first();
 $parent_accounts = get_cols_where(new Account(), array("account_number", "name"), array("is_parent" => 1, "com_code" => auth()->user()->com_code), 'id', 'ASC');
 return view('admin.admin_panel_settings.edit', ['data' => $data, 'parent_accounts' => $parent_accounts]);
 }
 public function update(Admin_panel_settings_Request $request)
 {
+    check_permission_sub_menue_actions_redirect(2);
 try {
 $admin_panel_setting = Admin_panel_setting::where('com_code', auth()->user()->com_code)->first();
 $admin_panel_setting->system_name = $request->system_name;
@@ -46,6 +49,16 @@ $admin_panel_setting->suppliers_parent_account_number = $request->suppliers_pare
 $admin_panel_setting->delegate_parent_account_number = $request->delegate_parent_account_number;
 $admin_panel_setting->employees_parent_account_number = $request->employees_parent_account_number;
 $admin_panel_setting->production_lines_parent_account = $request->production_lines_parent_account;
+$admin_panel_setting->default_unit = $request->default_unit;
+
+if($admin_panel_setting['is_set_Batches_setting']==0){
+if(isset($request->Batches_setting_type))
+$admin_panel_setting->is_set_Batches_setting = 1;
+$admin_panel_setting->Batches_setting_type = $request->Batches_setting_type;
+
+}
+
+
 
 $admin_panel_setting->updated_by = auth()->user()->id;
 $admin_panel_setting->updated_at = date("Y-m-d H:i:s");

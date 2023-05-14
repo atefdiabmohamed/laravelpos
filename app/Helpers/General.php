@@ -1,4 +1,80 @@
 <?php
+use App\Models\Permission_roles_main_menus;
+use App\Models\Permission_roles_sub_menu;
+use App\Models\Permission_roles_sub_menues_actions;
+use App\Models\Admin;
+
+
+function check_permission_main_menue($permission_main_menues_id=null){
+if($permission_main_menues_id=="" || $permission_main_menues_id==null){
+    return false;
+}else{
+$permission_roles_id=auth()->user()->permission_roles_id;
+$data=Permission_roles_main_menus::select("id")->where(['permission_roles_id'=>$permission_roles_id,'permission_main_menues_id'=>$permission_main_menues_id])->first();
+if(!empty($data)){
+    return true;
+}else{
+    return false;   
+}
+
+
+}
+
+}
+
+function check_permission_sub_menue($permission_sub_menues_id=null){
+    if($permission_sub_menues_id=="" || $permission_sub_menues_id==null){
+        return false;
+    }else{
+    $permission_roles_id=auth()->user()->permission_roles_id;
+    $data=Permission_roles_sub_menu::select("id")->where(['permission_roles_id'=>$permission_roles_id,'permission_sub_menues_id'=>$permission_sub_menues_id])->first();
+    if(!empty($data)){
+        return true;
+    }else{
+        return false;   
+    }
+    
+    
+    }
+    
+    }
+
+
+    function check_permission_sub_menue_actions($permission_roles_sub_menues_actions=null){
+        if($permission_roles_sub_menues_actions=="" || $permission_roles_sub_menues_actions==null){
+            return false;
+        }else{
+        $permission_roles_id=auth()->user()->permission_roles_id;
+        $data=Permission_roles_sub_menues_actions::select("id")->where(['permission_roles_id'=>$permission_roles_id,'permission_sub_menues_actions_id'=>$permission_roles_sub_menues_actions])->first();
+        if(!empty($data)){
+            return true;
+        }else{
+            return false;   
+        }
+        
+        
+        }
+        
+        }
+
+
+        function check_permission_sub_menue_actions_redirect($permission_roles_sub_menues_actions=null){
+            if($permission_roles_sub_menues_actions=="" || $permission_roles_sub_menues_actions==null){
+                return false;
+            }else{
+            $permission_roles_id=auth()->user()->permission_roles_id;
+            $data=Permission_roles_sub_menues_actions::select("id")->where(['permission_roles_id'=>$permission_roles_id,'permission_sub_menues_actions_id'=>$permission_roles_sub_menues_actions])->first();
+            if(empty($data)){
+        return redirect()->away(route('admin.dashboard'))->send()->with(['error'=>'عفوا لاتمتلك صلاحيات لهذه الصفحة']);;
+           
+            }
+            
+            
+            }
+            
+            }     
+
+
 function uploadImage($folder, $image)
 {
 $extension = strtolower($image->extension());
@@ -243,12 +319,12 @@ $the_net_in_inv_production_exchange=$inv_production_exchangeModel::where(["com_c
 $the_net_inv_production_receive=$inv_production_receiveModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
 //صافي حركة النقديه بالخزن علي حساب خط الانتاج
 $the_net_in_treasuries_transactions=$treasuries_transactionsModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->sum("money_for_account");
-//صافي حركة فواتير الخدمات الخارجية والداخلية المتعلقه بالحساب المالي لخط الانتاج
+// صافي حركة فواتير الخدمات الخارجية والداخلية المتعلقه بالحساب المالي لخط الانتاج
 $the_net_Services_inv_productionLine=$ServicesOrdersModel::where(["com_code"=>$com_code,"account_number"=>$account_number,'is_account_number'=>1])->sum("money_for_account");
-//الرصيد النهائي لخط الانتاج
+// الرصيد النهائي لخط الانتاج
 $the_final_Balance=$AccountData['start_balance']+$the_net_in_inv_production_exchange+$the_net_inv_production_receive+$the_net_Services_inv_productionLine+$the_net_in_treasuries_transactions;
 $dataToUpdateAccount['current_balance']=$the_final_Balance;
-//update in Accounts حندث جدول الحسابات المالية بحقل خط الانتاج
+// update in Accounts حندث جدول الحسابات المالية بحقل خط الانتاج
 $AccountModel::where(["com_code"=>$com_code,"account_number"=>$account_number])->update($dataToUpdateAccount);
 $dataToUpdateLine['current_balance']=$the_final_Balance;
 //update in Accounts حندث جدول الموردين  بحقل المورد

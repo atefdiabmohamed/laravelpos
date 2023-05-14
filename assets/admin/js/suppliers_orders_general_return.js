@@ -32,91 +32,141 @@ $(document).ready(function() {
         }
         get_inv_itemcard_batches(batchSerial);
     });
-    $(document).on('click', '#AddItemToIvoiceDetailsActive', function(e) {
-        var store_id = $("#store_id").val();
-        if (store_id == "") {
-            alert("من فضلك اختر المخزن ");
-            $("#store_id").focus();
-            return false;
-        }
-        var item_code = $("#item_code").val();
-        if (item_code == "") {
-            alert("من فضلك اختر  الصنف ");
-            $("#item_code").focus();
-            return false;
-        }
-        var uom_id = $("#uom_id").val();
-        if (uom_id == "") {
-            alert("من فضلك اختر  وحدة البيع ");
-            $("#uom_id").focus();
-            return false;
-        }
-        var inv_itemcard_batches_autoserial = $("#inv_itemcard_batches_autoserial").val();
-        if (inv_itemcard_batches_autoserial == "") {
-            alert("من فضلك اختر  الباتش ");
-            $("#inv_itemcard_batches_autoserial").focus();
-            return false;
-        }
-        var item_quantity = $("#item_quantity").val();
-        if (item_quantity == "") {
-            alert("من فضلك  ادخل الكمية ");
-            $("#item_quantity").focus();
-            return false;
-        }
-        var BatchQuantity = $("#inv_itemcard_batches_autoserial option:selected").data("qunatity");
-        if (parseFloat(item_quantity) > parseFloat(BatchQuantity)) {
-            alert("عفوا الكمية المطلوبة اكبر من كمية الباتش  الموجوده بالمخزن");
-            return false;
-        }
-        var item_price = $("#item_price").val();
-        if (item_price == "") {
-            alert("من فضلك ادخل  السعر ");
-            $("#item_price").focus();
-            return false;
-        }
-        var is_normal_orOther = $("#is_normal_orOther").val();
-        if (is_normal_orOther == "") {
-            alert("من فضلك اختر هل بيع عادي ؟   ");
-            $("#is_normal_orOther").focus();
-            return false;
-        }
-        var item_total = $("#item_total").val();
-        if (item_total == "") {
-            alert("من فضلك  حقل الاجمالي مطلوب ! ");
-            $("#item_total").focus();
-            return false;
-        }
-        var isparentuom = $("#uom_id option:selected").data("isparentuom");
-        var autoserailparent = $("#autoserailparent").val();
-        var token_search = $("#token_search").val();
-        var url = $("#ajax_Add_item_to_invoice").val();
-        jQuery.ajax({
-            url: url,
-            type: 'post',
-            dataType: 'json',
-            cache: false,
-            data: {
-                "_token": token_search,
-                store_id: store_id,
-                item_code: item_code,
-                uom_id: uom_id,
-                inv_itemcard_batches_autoserial: inv_itemcard_batches_autoserial,
-                item_quantity: item_quantity,
-                item_price: item_price,
-                item_total: item_total,
-                isparentuom: isparentuom,
-                autoserailparent: autoserailparent
-            },
-            success: function(data) {
-                alert("تمت الاضافة");
-                get_inv_itemcard_batches(inv_itemcard_batches_autoserial);
-                reload_parent_pill();
-                reload_itemsdetials();
-            },
-            error: function() {
-                alert("حدث خطاما");
+
+
+    $(document).on('keyup', '#item_price', function(e) {
+        if (e.key == "Enter" || e.keycode == 13) {
+            if ($(this).val() != '') {
+                $("#item_quantity").focus();
+            } else {
+                alert("من فضلك ادخل سعر تكلفة الشراء بالباتش !");
+                $("#item_price").focus();
+                return false;
             }
-        });
+        }
+    });
+
+    $(document).on('keyup', '#item_quantity', function(e) {
+        if (e.key == "Enter" || e.keycode == 13) {
+            if ($(this).val() != '') {
+                make_enter();
+            } else {
+                alert("من فضلك ادخل الكمية المرتجعة !");
+                $("#item_quantity").focus();
+                return false;
+            }
+        }
+    });
+
+function make_enter(){
+    var store_id = $("#store_id").val();
+    if (store_id == "") {
+        alert("من فضلك اختر المخزن ");
+        $("#store_id").focus();
+        return false;
+    }
+    var item_code = $("#item_code").val();
+    if (item_code == "") {
+        alert("من فضلك اختر  الصنف ");
+        $("#item_code").focus();
+        return false;
+    }
+    var uom_id = $("#uom_id").val();
+    if (uom_id == "") {
+        alert("من فضلك اختر  وحدة البيع ");
+        $("#uom_id").focus();
+        return false;
+    }
+    var inv_itemcard_batches_autoserial = $("#inv_itemcard_batches_autoserial").val();
+    if (inv_itemcard_batches_autoserial == "") {
+        alert("من فضلك اختر  الباتش ");
+        $("#inv_itemcard_batches_autoserial").focus();
+        return false;
+    }
+    var item_quantity = $("#item_quantity").val();
+    if (item_quantity == "") {
+        alert("من فضلك  ادخل الكمية ");
+        $("#item_quantity").focus();
+        return false;
+    }
+    var BatchQuantity = $("#inv_itemcard_batches_autoserial option:selected").data("qunatity");
+    if (parseFloat(item_quantity) > parseFloat(BatchQuantity)) {
+        alert("عفوا الكمية المطلوبة اكبر من كمية الباتش  الموجوده بالمخزن");
+        return false;
+    }
+    var item_price = $("#item_price").val();
+    if (item_price == "") {
+        alert("من فضلك ادخل  السعر ");
+        $("#item_price").focus();
+        return false;
+    }
+    var is_normal_orOther = $("#is_normal_orOther").val();
+    if (is_normal_orOther == "") {
+        alert("من فضلك اختر هل بيع عادي ؟   ");
+        $("#is_normal_orOther").focus();
+        return false;
+    }
+    var item_total = $("#item_total").val();
+    if (item_total == "") {
+        alert("من فضلك  حقل الاجمالي مطلوب ! ");
+        $("#item_total").focus();
+        return false;
+    }
+    var isparentuom = $("#uom_id option:selected").data("isparentuom");
+    var autoserailparent = $("#autoserailparent").val();
+    var token_search = $("#token_search").val();
+    var url = $("#ajax_Add_item_to_invoice").val();
+    jQuery.ajax({
+        url: url,
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        data: {
+            "_token": token_search,
+            store_id: store_id,
+            item_code: item_code,
+            uom_id: uom_id,
+            inv_itemcard_batches_autoserial: inv_itemcard_batches_autoserial,
+            item_quantity: item_quantity,
+            item_price: item_price,
+            item_total: item_total,
+            isparentuom: isparentuom,
+            autoserailparent: autoserailparent
+        },
+        success: function(data) {
+            var itemName = $("#item_code option:selected").text();
+            $("#AddEventMessage").text("تمت اضافة الصنف " + itemName + " بنجاح");
+            $("#AddEventMessage").css('color', 'green');
+            $("#item_code").val(0);
+            $(".select2").select2();
+            $("#item_code").val(0);
+            $("#UomDiv").html("");
+            $("#UomDiv").hide();
+            $("#item_price").val("");
+            $("#item_quantity").val("");
+            $("#item_code").select2("open");
+            $("#inv_itemcard_batchesDiv").html("");
+            $("#inv_itemcard_batchesDiv").hide("");
+            $(".relatied_to_itemCard").hide("");
+            
+
+            reload_parent_pill();
+            reload_itemsdetials();
+
+
+
+        },
+        error: function() {
+            alert("حدث خطاما");
+        }
+    });
+
+   
+}
+
+
+    $(document).on('click', '#AddItemToIvoiceDetailsActive', function(e) {
+      make_enter();
     });
 
     function get_item_uoms() {
@@ -178,6 +228,8 @@ $(document).ready(function() {
                         var Batchunitprice = $("#inv_itemcard_batches_autoserial option:selected").data("price");
                         $("#item_price").val(Batchunitprice * 1);
                         $("#item_quantity").focus();
+                    }else{
+                        $("#item_price").val("");    
                     }
                     if (oldBatchId != null) {
                         $("#inv_itemcard_batches_autoserial").val(oldBatchId);
@@ -290,6 +342,7 @@ $(document).ready(function() {
                 $("#Add_item_Modal").modal("show");
                 $("#edit_item_Modal_body").html("");
                 $("#edit_item_Modal").modal("hide");
+                $(".select2").select2();
             },
             error: function() {}
         });

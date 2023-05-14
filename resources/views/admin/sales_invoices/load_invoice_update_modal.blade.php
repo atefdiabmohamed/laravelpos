@@ -106,7 +106,9 @@
    </div>
    <div class="col-md-3">
       <div class="form-group">
-         <input id="searchforitem" class="form-control" type="text" placeholder="باركود - كود -اسم" >
+         <input type="radio" checked value="1" name="searchforitemRadioType"> بحث بالقارئ
+         <input type="radio" value="2" name="searchforitemRadioType"> بحث يدوي
+         <input id="searchforitem" class="form-control" type="text" placeholder=" باركود - اسم" >
          <div id="searchforitemresultDiv">
             <select  id="item_code" name="item_code" class="form-control " style="width: 100%;">
                <option value="">اختر الصنف</option>
@@ -313,6 +315,7 @@
      theme: 'bootstrap4'
    });
 </script>
+@endsection
 @else
 <div class="alert alert-danger">
    عفوا لايمكن التعديل علي فاتورة معتمده وتم ترحيلها !!!!

@@ -36,6 +36,11 @@ use App\Http\Controllers\Admin\Inv_production_exchangeController;
 use App\Http\Controllers\Admin\inv_production_ReceiveController;
 use App\Http\Controllers\Admin\Inv_stores_transferController;
 use App\Http\Controllers\Admin\Inv_stores_transferIncomingController;
+use App\Http\Controllers\Admin\Permission_rolesController;
+use App\Http\Controllers\Admin\Permission_main_menuesController;
+use App\Http\Controllers\Admin\Permission_sub_menuesController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +51,7 @@ use App\Http\Controllers\Admin\Inv_stores_transferIncomingController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 define('PAGINATION_COUNT', 11);
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -113,6 +119,9 @@ Route::get('/itemcard/show/{id}', [InvItemCardController::class, 'show'])->name(
 Route::post('/itemcard/ajax_search_movements', [InvItemCardController::class, 'ajax_search_movements'])->name('admin.itemcard.ajax_search_movements');
 Route::post('/itemcard/ajax_check_barcode', [InvItemCardController::class, 'ajax_check_barcode'])->name('admin.itemcard.ajax_check_barcode');
 Route::post('/itemcard/ajax_check_name', [InvItemCardController::class, 'ajax_check_name'])->name('admin.itemcard.ajax_check_name');
+Route::get('/itemcard/generate_barcode/{id}', [InvItemCardController::class, 'generate_barcode'])->name('admin.itemcard.generate_barcode');
+
+
 /*      ═══════ ೋღ  end Item Card  ღೋ ═══════              */
 
 /*     ═══════ ೋღ start  account types  ღೋ ═══════              */
@@ -187,7 +196,7 @@ Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_with_ordersControl
 Route::get('/suppliers_orders/printsaleswina4/{id}/{size}', [Suppliers_with_ordersController::class, 'printsaleswina4'])->name('admin.suppliers_orders.printsaleswina4');
 /*     ═══════ ೋღ end suppliers_orders ღೋ ═══════                     */
 
-/*    ═══════ ೋღ start treasuries ღೋ ═══════                    */
+/*    ═══════ ೋღ start admins ღೋ ═══════                    */
 Route::get('/admins_accounts/index', [AdminController::class, 'index'])->name('admin.admins_accounts.index');
 Route::get('/admins_accounts/create', [AdminController::class, 'create'])->name('admin.admins_accounts.create');
 Route::post('/admins_accounts/store', [AdminController::class, 'store'])->name('admin.admins_accounts.store');
@@ -195,15 +204,26 @@ Route::get('/admins_accounts/edit/{id}', [AdminController::class, 'edit'])->name
 Route::post('/admins_accounts/update/{id}', [AdminController::class, 'update'])->name('admin.admins_accounts.update');
 Route::post('/admins_accounts/ajax_search', [AdminController::class, 'ajax_search'])->name('admin.admins_accounts.ajax_search');
 Route::get('/admins_accounts/details/{id}', [AdminController::class, 'details'])->name('admin.admins_accounts.details');
-Route::get('/admins_accounts/Add_treasuries_delivery/{id}', [AdminController::class, 'Add_treasuries_delivery'])->name('admin.admins_accounts.Add_treasuries_delivery');
-Route::post('/admins_accounts/Add_treasuries_To_Admin/{id}', [AdminController::class, 'Add_treasuries_To_Admin'])->name('admin.admins_accounts.Add_treasuries_To_Admin');
-Route::get('/admins_accounts/delete_treasuries_delivery/{id}', [AdminController::class, 'delete_treasuries_delivery'])->name('admin.admins_accounts.delete_treasuries_delivery');
-/*     ═══════ ೋღ end treasuries  ღೋ ═══════                     */
+Route::post('/admins_accounts/add_treasuries/{id}', [AdminController::class, 'add_treasuries'])->name('admin.admins_accounts.add_treasuries');
+Route::get('/admins_accounts/delete_treasuries/{rowid}/{userid}', [AdminController::class, 'delete_treasuries'])->name('admin.admins_accounts.delete_treasuries');
+Route::post('/admins_accounts/add_stores/{id}', [AdminController::class, 'add_stores'])->name('admin.admins_accounts.add_stores');
+Route::get('/admins_accounts/delete_stores/{rowid}/{userid}', [AdminController::class, 'delete_stores'])->name('admin.admins_accounts.delete_stores');
+
+
+/*     ═══════ ೋღ end admins  ღೋ ═══════                     */
 
 /*     ═══════ ೋღ  start admins shifts  ღೋ ═══════                  */
 Route::get('/admin_shift/index', [Admins_ShiftsContoller::class, 'index'])->name('admin.admin_shift.index');
 Route::get('/admin_shift/create', [Admins_ShiftsContoller::class, 'create'])->name('admin.admin_shift.create');
 Route::post('/admin_shift/store', [Admins_ShiftsContoller::class, 'store'])->name('admin.admin_shift.store');
+Route::get('/admin_shift/finish/{id}', [Admins_ShiftsContoller::class, 'finish'])->name('admin.admin_shift.finish');
+Route::get('/admin_shift/print_details/{id}', [Admins_ShiftsContoller::class, 'print_details'])->name('admin.admin_shift.print_details');
+Route::post('/admin_shift/review_now', [Admins_ShiftsContoller::class, 'review_now'])->name('admin.admin_shift.review_now');
+Route::post('/admin_shift/ajax_search', [Admins_ShiftsContoller::class, 'ajax_search'])->name('admin.admin_shift.ajax_search');
+Route::post('/admin_shift/do_review_now/{shiftid}', [Admins_ShiftsContoller::class, 'do_review_now'])->name('admin.admin_shift.do_review_now');
+
+
+
 /*     ═══════ ೋღ end admins shifts    ღೋ ═══════                     */
 
 /*     ═══════ ೋღ  start  collect_transaction ღೋ ═══════                   */
@@ -488,6 +508,54 @@ Route::get('/inv_stores_transfer_incoming/cancel_one_details/{id}/{id_parent}', 
 Route::post('/inv_stores_transfer_incoming/load_cancel_one_details', [Inv_stores_transferIncomingController::class, 'load_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.load_cancel_one_details');
 Route::post('/inv_stores_transfer_incoming/do_cancel_one_details/{id}/{id_parent}', [Inv_stores_transferIncomingController::class, 'do_cancel_one_details'])->name('admin.inv_stores_transfer_incoming.do_cancel_one_details');
 /*     ═══════ ೋღ  end  inv_stores_transfer_incoming   ღೋ ═══════                   */
+
+/*     ═══════ ೋღ start  permission  ღೋ ═══════              */
+Route::get('/permission_roles/index', [Permission_rolesController::class, 'index'])->name('admin.permission_roles.index');
+Route::get('/permission_roles/create', [Permission_rolesController::class, 'create'])->name('admin.permission_roles.create');
+Route::get('/permission_roles/edit/{id}', [Permission_rolesController::class, 'edit'])->name('admin.permission_roles.edit');
+Route::post('/permission_roles/store', [Permission_rolesController::class, 'store'])->name('admin.permission_roles.store');
+Route::post('/permission_roles/update/{id}', [Permission_rolesController::class, 'update'])->name('admin.permission_roles.update');
+Route::get('/permission_roles/details/{id}', [Permission_rolesController::class, 'details'])->name('admin.permission_roles.details');
+Route::post('/permission_roles/Add_permission_main_menues/{id}', [Permission_rolesController::class, 'Add_permission_main_menues'])->name('admin.permission_roles.Add_permission_main_menues');
+Route::get('/permission_roles/delete_permission_main_menues/{id}', [Permission_rolesController::class, 'delete_permission_main_menues'])->name('admin.permission_roles.delete_permission_main_menues');
+Route::post('/permission_roles/load_add_permission_roles_sub_menu', [Permission_rolesController::class, 'load_add_permission_roles_sub_menu'])->name('admin.permission_roles.load_add_permission_roles_sub_menu');
+Route::post('/permission_roles/add_permission_roles_sub_menu/{id}', [Permission_rolesController::class, 'add_permission_roles_sub_menu'])->name('admin.permission_roles.add_permission_roles_sub_menu');
+Route::get('/permission_roles/delete_permission_sub_menues/{id}', [Permission_rolesController::class, 'delete_permission_sub_menues'])->name('admin.permission_roles.delete_permission_sub_menues');
+Route::post('/permission_roles/load_add_permission_roles_sub_menues_actions', [Permission_rolesController::class, 'load_add_permission_roles_sub_menues_actions'])->name('admin.permission_roles.load_add_permission_roles_sub_menues_actions');
+Route::post('/permission_roles/add_permission_roles_sub_menues_actions/{id}', [Permission_rolesController::class, 'add_permission_roles_sub_menues_actions'])->name('admin.permission_roles.add_permission_roles_sub_menues_actions');
+Route::get('/permission_roles/delete_permission_sub_menues_actions/{id}', [Permission_rolesController::class, 'delete_permission_sub_menues_actions'])->name('admin.permission_roles.delete_permission_sub_menues_actions');
+
+
+
+/*       ═══════ ೋღ  end permission ღೋ ═══════                 */
+
+/*     ═══════ ೋღ start  permission_main_menues  ღೋ ═══════              */
+Route::get('/permission_main_menues/index', [Permission_main_menuesController::class, 'index'])->name('admin.permission_main_menues.index');
+Route::get('/permission_main_menues/create', [Permission_main_menuesController::class, 'create'])->name('admin.permission_main_menues.create');
+Route::get('/permission_main_menues/edit/{id}', [Permission_main_menuesController::class, 'edit'])->name('admin.permission_main_menues.edit');
+Route::post('/permission_main_menues/store', [Permission_main_menuesController::class, 'store'])->name('admin.permission_main_menues.store');
+Route::post('/permission_main_menues/update/{id}', [Permission_main_menuesController::class, 'update'])->name('admin.permission_main_menues.update');
+Route::get('/permission_main_menues/delete/{id}', [Permission_main_menuesController::class, 'delete'])->name('admin.permission_main_menues.delete');
+
+/*       ═══════ ೋღ  end permission_main_menues ღೋ ═══════                 */
+
+/*     ═══════ ೋღ start  permission_sub_menues  ღೋ ═══════              */
+Route::get('/permission_sub_menues/index', [Permission_sub_menuesController::class, 'index'])->name('admin.permission_sub_menues.index');
+Route::get('/permission_sub_menues/create', [Permission_sub_menuesController::class, 'create'])->name('admin.permission_sub_menues.create');
+Route::get('/permission_sub_menues/edit/{id}', [Permission_sub_menuesController::class, 'edit'])->name('admin.permission_sub_menues.edit');
+Route::post('/permission_sub_menues/store', [Permission_sub_menuesController::class, 'store'])->name('admin.permission_sub_menues.store');
+Route::post('/permission_sub_menues/update/{id}', [Permission_sub_menuesController::class, 'update'])->name('admin.permission_sub_menues.update');
+Route::post('/permission_sub_menues/ajax_search/', [Permission_sub_menuesController::class, 'ajax_search'])->name('admin.permission_sub_menues.ajax_search');
+Route::post('/permission_sub_menues/ajax_do_add_permission/', [Permission_sub_menuesController::class, 'ajax_do_add_permission'])->name('admin.permission_sub_menues.ajax_do_add_permission');
+Route::post('/permission_sub_menues/ajax_load_edit_permission/', [Permission_sub_menuesController::class, 'ajax_load_edit_permission'])->name('admin.permission_sub_menues.ajax_load_edit_permission');
+Route::post('/permission_sub_menues/ajax_do_edit_permission/', [Permission_sub_menuesController::class, 'ajax_do_edit_permission'])->name('admin.permission_sub_menues.ajax_do_edit_permission');
+Route::get('/permission_sub_menues/delete/{id}', [Permission_sub_menuesController::class, 'delete'])->name('admin.permission_sub_menues.delete');
+Route::post('/permission_sub_menues/ajax_do_delete_permission/', [Permission_sub_menuesController::class, 'ajax_do_delete_permission'])->name('admin.permission_sub_menues.ajax_do_delete_permission');
+
+
+/*       ═══════ ೋღ  end permission_sub_menues ღೋ ═══════                 */
+
+
 });
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
 Route::get('login', [LoginController::class, 'show_login_view'])->name('admin.showlogin');

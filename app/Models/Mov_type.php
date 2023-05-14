@@ -11,4 +11,5 @@ class Mov_type extends Model
     protected $table="mov_type";
     protected $fillable=[
         'name', 'active', 'in_screen', 'is_private_internal'      ];
-}
+
+    }

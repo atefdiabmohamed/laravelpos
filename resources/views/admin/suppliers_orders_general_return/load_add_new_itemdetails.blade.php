@@ -1,3 +1,7 @@
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 <div class="row">
   <div class="col-md-4" >
      <div class="form-group">
@@ -22,7 +26,7 @@
            <option value="">اختر الصنف</option>
            @if (@isset($item_cards) && !@empty($item_cards))
            @foreach ($item_cards as $info )
-           <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} </option>
+           <option data-type="{{ $info->item_type }}"   value="{{ $info->item_code }}"> {{ $info->name }} -  {{ $info->barcode }} </option>
            @endforeach
            @endif
         </select>
@@ -38,7 +42,7 @@
   </div>
   <div class="col-md-4 relatied_to_itemCard" style="display: none;">
      <div class="form-group">
-        <label>  سعر الوحدة</label>
+        <label>  سعر تكلفة الشراء بالباتش</label>
         <input   oninput="this.value=this.value.replace(/[^0-9]/g,'');"  id="item_price" class="form-control"  value=""  oninvalid="setCustomValidity('من فضلك ادخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}"  >
      </div>
   </div>
@@ -59,5 +63,9 @@
         <button type="button" style="margin-top: 31px;" class="btn btn-sm btn-danger" id="AddItemToIvoiceDetailsActive">اضف للفاتورة</button>
      </div>
   </div>
+  <p  id="AddEventMessage"></p>
 </div>
 </div>
+@section("script")
+<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+@endsection

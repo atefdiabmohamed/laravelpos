@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Store;
@@ -23,6 +23,8 @@ $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
 }
 return view('admin.stores.index', ['data' => $data]);
 }
+
+
 public function create()
 {
 return view('admin.stores.create');
@@ -55,6 +57,7 @@ return redirect()->back()
 ->withInput();
 }
 }
+
 public function edit($id)
 {
 $data = Store::select()->find($id);

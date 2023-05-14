@@ -150,6 +150,9 @@ $(document).ready(function() {
             success: function(data) {
                 $("#AddNewInvoiceModalActiveInvoiceBody").html(data);
                 $("#AddNewInvoiceModalActiveInvoice").modal("show");
+           
+
+          
             },
             error: function() {
                 alert("حدث خطاما");
@@ -157,6 +160,17 @@ $(document).ready(function() {
         });
     });
 
+    $('#AddNewInvoiceModalActiveInvoice').on('shown.bs.modal', function () {
+        $('#searchbytextforcustomer').focus();
+    })  
+
+
+    $('#updateInvoiceModalActiveInvoice').on('shown.bs.modal', function () {
+        $('#searchforitem').focus();
+    })  
+
+
+ 
     function recalculate_itemTotlaRow() {
         var item_quantity = $("#item_quantity").val();
         if (item_quantity == "") item_quantity = 0;
@@ -471,6 +485,7 @@ $(document).ready(function() {
                 $("#AddNewInvoiceModalActiveInvoice").modal("hide");
                 $("#updateInvoiceModalActiveInvoiceBody").html(data);
                 $("#updateInvoiceModalActiveInvoice").modal("show");
+                
             },
             error: function() {
                 alert("حدث خطاما");
@@ -481,6 +496,7 @@ $(document).ready(function() {
         var auto_serial = $(this).data("autoserial");
         load_invoice_update_modal(auto_serial);
     });
+    /*
     $(document).on('mouseenter', '#AddItemToIvoiceDetailsActive', function(e) {
         if ($("#inv_itemcard_batches_autoserial").length) {
             var batchSerial = $("#inv_itemcard_batches_autoserial").val();
@@ -489,6 +505,7 @@ $(document).ready(function() {
         }
         get_inv_itemcard_batches(batchSerial);
     });
+*/
 
     function make_enter_add() {
         var Sales_matrial_types_id = $("#Sales_matrial_types_id").val();
@@ -595,6 +612,19 @@ $(document).ready(function() {
                 invoiceautoserial: invoiceautoserial
             },
             success: function(data) {
+          $("#searchforitem").val("");
+          $("#item_code option:not(:first)").remove();
+          $("#item_code").attr("size",1);
+          $("#item_code").val("");
+          $("#UomDiv").html("");
+          $("#UomDiv").hide();
+          $("#inv_itemcard_batchesDiv").html("");
+          $("#inv_itemcard_batchesDiv").hide();
+          $("#item_price").val("");
+          $("#item_total").val("");
+          $("#is_normal_orOther").val(1);
+
+
                 reload_items_in_invoice();
                 get_inv_itemcard_batches();
             },
@@ -1207,6 +1237,8 @@ $(document).ready(function() {
         });
     });
     $(document).on('input', '#searchforitem', function(e) {
+   var searchforitemRadioType=  $("input[name='searchforitemRadioType']:checked").val();
+    if(searchforitemRadioType=="2"){
         var searchtext = $(this).val();
         var token = $("#token_search").val();
         var url = $("#ajax_searchforitems").val();
@@ -1225,12 +1257,161 @@ $(document).ready(function() {
             },
             error: function() {}
         });
+    }
+   
+
+
     });
+
+
+
     $(document).on('keypress', '#searchforitem', function(e) {
         if (e.keyCode == 13) {
-            make_enter_add();
+             var searchtext = $(this).val();
+         
+        var token = $("#token_search").val();
+        var url = $("#ajax_searchforitems").val();
+        jQuery.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                "_token": token,
+                searchtext: searchtext
+            },
+            success: function(data) {
+                $("#searchforitemresultDiv").html(data);
+       
+                var item_code = $("#item_code").val();
+                if (item_code != "") {
+                    var token_search = $("#token_search").val();
+                    var ajax_get_item_uoms_url = $("#ajax_get_item_uoms").val();
+                    jQuery.ajax({
+                        url: ajax_get_item_uoms_url,
+                        type: 'post',
+                        dataType: 'html',
+                        cache: false,
+                        data: {
+                            item_code: item_code,
+                            "_token": token_search
+                        },
+                        success: function(data) {
+                            $("#UomDiv").html(data);
+                            $("#UomDiv").show();
+                            //ثانيا  الكميات بالباتشات للصنف
+                            var item_code = $("#item_code").val();
+                            var oldBatchId=null;
+        var uom_id = $("#uom_id").val();
+        var store_id = $("#store_id").val();
+        if (item_code != "" && uom_id != "" && store_id != "") {
+            var token_search = $("#token_search").val();
+            var url = $("#ajax_get_item_batches").val();
+            jQuery.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'html',
+                cache: false,
+                data: {
+                    item_code: item_code,
+                    uom_id: uom_id,
+                    store_id: store_id,
+                    "_token": token_search
+                },
+                success: function(data) {
+                    $("#inv_itemcard_batchesDiv").html(data);
+                    $("#inv_itemcard_batchesDiv").show();
+                    if (oldBatchId != null) {
+                        $("#inv_itemcard_batches_autoserial").val(oldBatchId);
+                    }
+                     
+        var item_code = $("#item_code").val();
+        var uom_id = $("#uom_id").val();
+        var sales_item_type = $("#sales_item_type").val();
+        var token = $("#token_search").val();
+        var url = $("#ajax_get_item_unit_price").val();
+        jQuery.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            data: {
+                item_code: item_code,
+                uom_id: uom_id,
+                sales_item_type: sales_item_type,
+                "_token": token
+            },
+            success: function(data) {
+                $("#item_price").val(data * 1);
+                var item_quantity = $("#item_quantity").val();
+                if (item_quantity == "") item_quantity = 0;
+                var item_price = $("#item_price").val();
+                if (item_price == "") item_price = 0;
+                $("#item_total").val((parseFloat(item_quantity) * parseFloat(item_price)) * 1);
+               make_enter_add();
+
+
+
+
+
+
+                
+            },
+            error: function() {
+                $("#item_price").val("");
+            }
+        });
+
+
+
+                    
+                },
+                error: function() {
+                    $("#inv_itemcard_batchesDiv").hide();
+                }
+            });
+        } else {
+            $("#UomDiv").hide();
+            $("#inv_itemcard_batchesDiv").hide();
+        }
+
+        
+
+
+
+
+
+                        },
+                        error: function() {
+                            $("#UomDiv").hide();
+                            alert("حدث خطاما");
+                        }
+                    });
+                } else {
+                    $("#UomDiv").html("");
+                    $("#UomDiv").hide();
+                    $("#inv_itemcard_batchesDiv").html("");
+                    $("#inv_itemcard_batchesDiv").hide();
+                }
+
+
+         
+
+
+
+              
+            },
+            error: function() {}
+        });
+       
+
+
+
         }
     });
+
+
+    
     $(document).on('change', '#sales_item_type_mainUpdate', function(e) {
         if (!$(".remove_active_row_item").length) {
             var sales_item_type_parent = $(this).val();

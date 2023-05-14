@@ -74,6 +74,39 @@
                      </div>
                   </td>
                </tr>
+
+               <tr>
+                  <td class="width30">  نوع آلية عمل الباتشات بالنظام</td>
+                  <td >
+               @if ($data['is_set_Batches_setting']==1)
+               @if($data['Batches_setting_type']==1)
+               يعمل بنظام تعدد الباتشات للصنف طبقا لاختلاف سعر الشراء وتواريخ الانتاج والانتهاء
+               @else
+               لايعمل بنظام الباتشات - فقط كمية لكل صنف
+               @endif
+
+
+               @else
+               لم يتم تحديد النوع بعد يرجي التحديث
+               @endif
+
+
+                  </td>
+
+
+
+                  
+               </tr>
+               <tr>
+               <td> نوع الوحده الاساسية للبيع بفواتير المبيعات</td>  
+               
+               <td> 
+
+                  @if($data['default_unit']==1)  البيع بالوحده الاب الاساسية  @else  البيع بالوحدة الفرعية التجزئة @endif
+               </td>
+               </tr>
+
+
                <tr>
                   <td class="width30">  تاريخ اخر تحديث</td>
                   <td > 
@@ -93,7 +126,9 @@
                      @else
                      لايوجد تحديث
                      @endif
+                     @if(check_permission_sub_menue_actions(2)==true) 
                      <a href="{{ route('admin.adminPanelSetting.edit') }}" class="btn btn-sm btn-success">تعديل</a>
+                     @endif
                   </td>
                </tr>
             </table>

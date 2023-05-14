@@ -21,6 +21,7 @@
       @yield('css')
    </head>
    <body class="hold-transition sidebar-mini">
+      
       <div class="wrapper">
          <!-- Navbar -->
          @include('admin.includes.navbar')

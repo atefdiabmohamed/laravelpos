@@ -1,6 +1,6 @@
 <?php
 //لاتنسونا من صالح الدعاء
-//أخي الكريم هذا الكود هو اول 127 ساعة بالكورس الي الفيدو رقم 190 - اما باقي الاكواد موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
+//أخي الكريم هذا الكود هو اول 130 ساعة بالكورس الي نهاية الدورة الفيدو رقم  231- اما باقي أكواد دورة التطوير موجوده بالدورة ولابد ان تكتبها بنفسك لأهميتها وللإستفادة
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
@@ -45,7 +45,12 @@ return view('admin.suppliers_with_orders.index', ['data' => $data, 'suupliers' =
 }
 public function create()
 {
-$com_code = auth()->user()->com_code;
+    $com_code = auth()->user()->com_code;
+ $admin_panel_settings=get_cols_where_row(new Admin_panel_setting(),array("is_set_Batches_setting"),array("com_code"=>$com_code));
+if($admin_panel_settings['is_set_Batches_setting']==0){
+    return redirect()->route('admin.suppliers_orders.index')->with(['error' => 'عفوا يجب اولا تحديد  نوع آلية عمل الباتشات بالنظام بالضبط  العام	']);
+}
+
 $suupliers = get_cols_where(new Supplier(), array('suuplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
 $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
 return view('admin.suppliers_with_orders.create', ['suupliers' => $suupliers, 'stores' => $stores]);
@@ -275,7 +280,7 @@ $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_ap
 if (!empty($parent_pill_data)) {
 if ($parent_pill_data['is_approved'] == 0) {
 $item_data_detials = get_cols_where_row(new Suppliers_with_orders_details(), array("*"), array("suppliers_with_orders_auto_serial" => $request->autoserailparent, "com_code" => $com_code, 'order_type' => 1, 'id' => $request->id));
-$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
+$item_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type","barcode"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
 $item_card_Data = get_cols_where_row(new Inv_itemCard(), array("does_has_retailunit", "retail_uom_id", "uom_id"), array("item_code" => $item_data_detials['item_code'], "com_code" => $com_code));
 if (!empty($item_card_Data)) {
 if ($item_card_Data['does_has_retailunit'] == 1) {
@@ -311,8 +316,8 @@ $parent_pill_data = get_cols_where_row(new Suppliers_with_orders(), array("is_ap
 if (!empty($parent_pill_data)) {
 if ($parent_pill_data['is_approved'] == 0) {
 $data_to_update['item_code'] = $request->item_code_add;
-$data_to_update['deliverd_quantity'] = $request->quantity_add;
-$data_to_update['unit_price'] = $request->price_add;
+$data_to_update['deliverd_quantity'] = $request->quantity_edit;
+$data_to_update['unit_price'] = $request->price_edit;
 $data_to_update['uom_id'] = $request->uom_id_Add;
 $data_to_update['isparentuom'] = $request->isparentuom;
 if ($request->type == 2) {
@@ -320,7 +325,7 @@ $data_to_update['production_date'] = $request->production_date;
 $data_to_update['expire_date'] = $request->expire_date;
 }
 $data_to_update['item_card_type'] = $request->type;
-$data_to_update['total_price'] = $request->total_add;
+$data_to_update['total_price'] = $request->total_edit;
 $data_to_update['order_date'] = $parent_pill_data['order_date'];
 $data_to_update['updated_by'] = auth()->user()->id;
 $data_to_update['updated_at'] = date("Y-m-d H:i:s");
@@ -564,6 +569,9 @@ $unit_price = $info->unit_price * $itemCard_Data['retail_uom_quntToParent'];
 //بندخل الكميات للمخزن بوحده القياس الاب  اجباري 
 //لو الصنف استهلاكي له تاريخ صلاحيه وانتاج فبعمل تحقق بسعر الشراء مع التواريخ
 //لو الصنف  غير استهلاكي يبقي بعمل تحقق فقط بسعر الشراء
+
+$admin_panel_settings=get_cols_where_row(new Admin_panel_setting(),array("Batches_setting_type"),array("com_code"=>$com_code));
+
 if ($info->item_card_type == 2) {
 //استهلاكي بتواريخ 
 $dataInsertBatch["store_id"] = $data['store_id'];
@@ -579,11 +587,25 @@ $dataInsertBatch["item_code"] = $info->item_code;
 $dataInsertBatch["unit_cost_price"] = $unit_price;
 $dataInsertBatch["inv_uoms_id"] = $itemCard_Data['uom_id'];
 }
+
+if($admin_panel_settings['Batches_setting_type']==1){
 $OldBatchExsists = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "id", "unit_cost_price"), $dataInsertBatch);
+}else{
+    $OldBatchExsists = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "id", "unit_cost_price"), array("item_code"=>$info->item_code,"com_code"=>$com_code));
+    
+}
+
+
 if (!empty($OldBatchExsists)) {
 //update current Batch تحديث علي الباتش القديمة
 $dataUpdateOldBatch['quantity'] = $OldBatchExsists['quantity'] + $quntity;
+if($admin_panel_settings['Batches_setting_type']==1){
 $dataUpdateOldBatch['total_cost_price'] = $OldBatchExsists['unit_cost_price'] * $dataUpdateOldBatch['quantity'];
+}else{
+    $dataUpdateOldBatch['total_cost_price'] = $unit_price* $dataUpdateOldBatch['quantity'];
+    $dataUpdateOldBatch['unit_cost_price']=$unit_price; 
+}
+
 $dataUpdateOldBatch["updated_at"] = date("Y-m-d H:i:s");
 $dataUpdateOldBatch["updated_by"] = auth()->user()->id;
 update(new Inv_itemcard_batches(), $dataUpdateOldBatch, array("id" => $OldBatchExsists['id'], "com_code" => $com_code));
