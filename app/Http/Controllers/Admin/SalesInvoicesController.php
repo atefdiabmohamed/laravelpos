@@ -245,10 +245,16 @@ $invoice_data = get_cols_where_row(new Sales_invoices(), array("is_approved", "i
 if (!empty($invoice_data)) {
 if ($invoice_data['is_approved'] == 0) {
 $batch_data = get_cols_where_row(new Inv_itemcard_batches(), array("quantity", "unit_cost_price", "id"), array("com_code" => $com_code, "auto_serial" => $request->inv_itemcard_batches_autoserial, 'store_id' => $request->store_id, 'item_code' => $request->item_code));
-if (!empty($batch_data)) {
-if ($batch_data['quantity'] >= $request->item_quantity) {
 $itemCard_Data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quntToParent", "retail_uom_id", "does_has_retailunit"), array("com_code" => $com_code, "item_code" => $request->item_code));
-if (!empty($itemCard_Data)) {
+if (!empty($batch_data) and !empty($itemCard_Data)) {
+    if($request->isparentuom==1){
+        $theQuantity= $request->item_quantity;
+    }else{
+        $theQuantity=$request->item_quantity/$itemCard_Data['retail_uom_quntToParent'];
+    }
+   
+if ($batch_data['quantity'] >=  $theQuantity) {
+
 $MainUomName = get_field_value(new Inv_uom(), "name", array("com_code" => $com_code, "id" => $itemCard_Data['uom_id']));
 $datainsert_items['sales_invoices_auto_serial'] = $request->invoiceautoserial;
 $datainsert_items['sales_invoices_id'] = $invoice_data['id'];
@@ -377,7 +383,7 @@ echo  json_encode("done");
 
 }
 }
-}
+
 }
 }
 }
