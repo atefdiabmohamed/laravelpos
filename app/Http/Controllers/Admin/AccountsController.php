@@ -16,6 +16,7 @@ class AccountsController extends Controller
 {
 public function index()
 {
+    
 $com_code = auth()->user()->com_code;
 $data = get_cols_where_p(new Account(), array("*"), array("com_code" => $com_code), 'id', 'DESC', PAGINATION_COUNT);
 if (!empty($data)) {
