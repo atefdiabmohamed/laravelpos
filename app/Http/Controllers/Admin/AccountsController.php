@@ -8,7 +8,7 @@ use App\Models\Account;
 use App\Models\Account_types;
 use App\Models\Admin;
 use App\Models\Customer;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountsRequest;
 use App\Http\Requests\AccountsRequestUpdate;
